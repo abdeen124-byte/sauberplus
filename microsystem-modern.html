@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Microsystem - أنظمة حماية متكاملة وكاميرات مراقبة احترافية">
+    <title>Microsystem | مايكرو سستم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #1e88e5;
+            --dark-blue: #1565c0;
+            --lighter-blue: #42a5f5;
+            --accent-blue: #0d47a1;
+            --dark-bg: #0a0e27;
+            --card-bg: #0f1535;
+            --border-color: #1e3a5f;
+            --text-primary: #ffffff;
+            --text-secondary: #b0bec5;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-lg: 0 20px 60px rgba(30, 136, 229, 0.15);
+            --shadow-md: 0 10px 30px rgba(30, 136, 229, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cairo', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0d1a3a 50%, #0a0e27 100%);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(30, 136, 229, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(13, 71, 161, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 14, 39, 0.8);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* ===== LANGUAGE SWITCHER ===== */
+        .lang-switcher {
+            display: flex;
+            gap: 10px;
+            background: rgba(30, 136, 229, 0.1);
+            padding: 8px 12px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+
+        .lang-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--lighter-blue));
+            color: white;
+        }
+
+        .lang-btn:hover {
+            color: var(--primary-blue);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-blue), var(--lighter-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo i {
+            font-size: 32px;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--lighter-blue));
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--primary-blue);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, var(--primary-blue), var(--lighter-blue));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 8px 20px rgba(30, 136, 229, 0.3);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(30, 136, 229, 0.4);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            margin-top: 80px;
+            padding: 120px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(30, 136, 229, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        .hero-content {
+            flex: 1;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--lighter-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--lighter-blue));
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 50px rgba(30, 136, 229, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            padding: 14px 38px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(30, 136, 229, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .hero-image {
+            flex: 1;
+            position: relative;
+            height: 400px;
+        }
+
+        .hero-image-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.15) 0%, rgba(13, 71, 161, 0.1) 100%);
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            color: var(--primary-blue);
+            opacity: 0.8;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--lighter-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title p {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.05) 0%, rgba(13, 71, 161, 0.05) 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(30, 136, 229, 0.1), transparent);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--lighter-blue);
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* ===== STATS SECTION ===== */
+        .stats {
+            padding: 80px 0;
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.08) 0%, rgba(13, 71, 161, 0.08) 100%);
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            margin: 60px 0;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about {
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about::before {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(30, 136, 229, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .about-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--lighter-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-text p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.9;
+        }
+
+        .about-text ul {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .about-text li {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .about-text li::before {
+            content: '✓';
+            color: var(--primary-blue);
+            font-weight: bold;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.15) 0%, rgba(13, 71, 161, 0.1) 100%);
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            padding: 40px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+        }
+
+        .about-image i {
+            font-size: 120px;
+            color: var(--primary-blue);
+            opacity: 0.8;
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact {
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: -15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(30, 136, 229, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite reverse;
+            z-index: 0;
+        }
+
+        .contact-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .contact-header h2 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--lighter-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-header p {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.08) 0%, rgba(13, 71, 161, 0.08) 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(30, 136, 229, 0.1), transparent);
+            transition: var(--transition);
+        }
+
+        .contact-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .contact-card:hover::before {
+            left: 100%;
+        }
+
+        .contact-icon {
+            font-size: 48px;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .contact-card:hover .contact-icon {
+            color: var(--lighter-blue);
+            transform: scale(1.2) rotateZ(15deg);
+        }
+
+        .contact-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .contact-card p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .contact-card a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .contact-card a:hover {
+            color: var(--lighter-blue);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 60px;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.15) 0%, rgba(13, 71, 161, 0.15) 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-size: 28px;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: linear-gradient(135deg, var(--primary-blue), var(--lighter-blue));
+            color: white;
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: rgba(13, 71, 161, 0.1);
+            border-top: 1px solid var(--border-color);
+            padding: 60px 0 30px;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-blue);
+            transform: translateX(-5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .header-content {
+                padding: 0 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav {
+                gap: 20px;
+                font-size: 14px;
+            }
+
+            .lang-switcher {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero {
+                flex-direction: column;
+                padding: 80px 0;
+                gap: 40px;
+            }
+
+            .hero-content h1 {
+                font-size: 42px;
+            }
+
+            .hero-content p {
+                font-size: 16px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+            }
+
+            .section-title h2 {
+                font-size: 36px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .about-text h2 {
+                font-size: 32px;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-cube"></i>
+                Microsystem
+            </div>
+            <nav>
+                <a href="#features" data-ar="المميزات" data-en="Features" data-de="Funktionen">المميزات</a>
+                <a href="#about" data-ar="عننا" data-en="About" data-de="Über uns">عننا</a>
+                <a href="#contact" data-ar="التواصل" data-en="Contact" data-de="Kontakt">التواصل</a>
+            </nav>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="changeLanguage('ar')">العربية</button>
+                <button class="lang-btn" onclick="changeLanguage('en')">English</button>
+                <button class="lang-btn" onclick="changeLanguage('de')">Deutsch</button>
+            </div>
+            <button class="cta-btn" data-ar="احصل على عرض" data-en="Get Offer" data-de="Angebot erhalten">احصل على عرض</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 data-ar="أنظمة حماية ذكية من الجيل الجديد" data-en="Next Generation Smart Security Systems" data-de="Intelligente Sicherheitssysteme der nächsten Generation">أنظمة حماية ذكية من الجيل الجديد</h1>
+            <p data-ar="نحن نقدم حلول حماية متكاملة وكاميرات مراقبة احترافية عالية الجودة مع تقنيات ذكية متقدمة." data-en="We provide integrated security solutions and professional high-quality surveillance cameras with advanced intelligent technologies." data-de="Wir bieten integrierte Sicherheitslösungen und professionelle hochwertige Überwachungskameras mit fortschrittlichen intelligenten Technologien.">نحن نقدم حلول حماية متكاملة وكاميرات مراقبة احترافية عالية الجودة مع تقنيات ذكية متقدمة.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" data-ar="ابدأ الآن" data-en="Start Now" data-de="Jetzt starten">ابدأ الآن</button>
+                <button class="btn-secondary" data-ar="اعرف أكثر" data-en="Learn More" data-de="Mehr erfahren">اعرف أكثر</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-image-wrapper">
+                <i class="fas fa-camera"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-ar="مميزاتنا الاحترافية" data-en="Our Professional Features" data-de="Unsere professionellen Funktionen">مميزاتنا الاحترافية</h2>
+                <p data-ar="تجربة أمان وحماية بدون مثيل" data-en="An unparalleled security and protection experience" data-de="Ein beispielloses Sicherheits- und Schutzerlebnis">تجربة أمان وحماية بدون مثيل</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-video"></i></div>
+                    <h3 data-ar="كاميرات 4K" data-en="4K Cameras" data-de="4K-Kameras">كاميرات 4K</h3>
+                    <p data-ar="كاميرات عالية الدقة بتقنية 4K لرؤية واضحة وتفاصيل دقيقة في أي وقت." data-en="High-resolution 4K cameras for clear viewing and precise details at any time." data-de="Hochauflösende 4K-Kameras für klare Sicht und präzise Details jederzeit.">كاميرات عالية الدقة بتقنية 4K لرؤية واضحة وتفاصيل دقيقة في أي وقت.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                    <h3 data-ar="ذكاء اصطناعي" data-en="Artificial Intelligence" data-de="Künstliche Intelligenz">ذكاء اصطناعي</h3>
+                    <p data-ar="تحليل ذكي للفيديو باستخدام AI لكشف التهديدات والتنبيهات الفورية." data-en="Smart video analysis using AI to detect threats and instant alerts." data-de="Intelligente Videoanalyse mit KI zur Bedrohungserkennung und sofortigen Benachrichtigungen.">تحليل ذكي للفيديو باستخدام AI لكشف التهديدات والتنبيهات الفورية.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                    <h3 data-ar="أمان عالي" data-en="High Security" data-de="Hohe Sicherheit">أمان عالي</h3>
+                    <p data-ar="تشفير من الدرجة العسكرية وحماية كاملة لبيانات وخصوصيتك." data-en="Military-grade encryption and complete protection of your data and privacy." data-de="Verschlüsselung auf Militärebene und umfassender Schutz Ihrer Daten und Privatsphäre.">تشفير من الدرجة العسكرية وحماية كاملة لبيانات وخصوصيتك.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3 data-ar="تطبيق جوال" data-en="Mobile App" data-de="Mobile App">تطبيق جوال</h3>
+                    <p data-ar="تحكم كامل من هاتفك الذكي وتلقي التنبيهات الفورية في أي مكان." data-en="Full control from your smartphone and receive instant alerts anywhere." data-de="Volle Kontrolle von Ihrem Smartphone und Empfang von Benachrichtigungen überall.">تحكم كامل من هاتفك الذكي وتلقي التنبيهات الفورية في أي مكان.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-cloud"></i></div>
+                    <h3 data-ar="التخزين السحابي" data-en="Cloud Storage" data-de="Cloud-Speicher">التخزين السحابي</h3>
+                    <p data-ar="حفظ آمن للفيديوهات في السحابة مع إمكانية الوصول من أي جهاز." data-en="Secure video storage in the cloud with access from any device." data-de="Sichere Videospeicherung in der Cloud mit Zugriff von jedem Gerät.">حفظ آمن للفيديوهات في السحابة مع إمكانية الوصول من أي جهاز.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3 data-ar="دعم 24/7" data-en="24/7 Support" data-de="24/7 Unterstützung">دعم 24/7</h3>
+                    <p data-ar="فريق دعم فني متخصص متاح في جميع الأوقات لخدمتك." data-en="Specialized technical support team available at all times to serve you." data-de="Spezialisiertes technisches Support-Team, das Ihnen jederzeit zur Verfügung steht.">فريق دعم فني متخصص متاح في جميع الأوقات لخدمتك.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <h3>10K+</h3>
+                    <p data-ar="عميل راضي" data-en="Satisfied Clients" data-de="Zufriedene Kunden">عميل راضي</p>
+                </div>
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p data-ar="مشروع منجز" data-en="Completed Projects" data-de="Abgeschlossene Projekte">مشروع منجز</p>
+                </div>
+                <div class="stat-item">
+                    <h3>99.9%</h3>
+                    <p data-ar="توفر النظام" data-en="System Uptime" data-de="Systemverfügbarkeit">توفر النظام</p>
+                </div>
+                <div class="stat-item">
+                    <h3>15+</h3>
+                    <p data-ar="سنة خبرة" data-en="Years Experience" data-de="Jahre Erfahrung">سنة خبرة</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 data-ar="عن Microsystem" data-en="About Microsystem" data-de="Über Microsystem">عن Microsystem</h2>
+                    <p data-ar="تأسست شركة Microsystem عام 2018 لتقديم أفضل حلول الحماية والمراقبة الذكية. نحن متخصصون في تركيب وصيانة الكاميرات الاحترافية وأنظمة الحماية المتقدمة." data-en="Microsystem was founded in 2018 to provide the best smart security and surveillance solutions. We specialize in installation and maintenance of professional cameras and advanced security systems." data-de="Microsystem wurde 2018 gegründet, um die besten intelligenten Sicherheits- und Überwachungslösungen bereitzustellen. Wir sind auf die Installation und Wartung professioneller Kameras und fortschrittlicher Sicherheitssysteme spezialisiert.">تأسست شركة Microsystem عام 2018 لتقديم أفضل حلول الحماية والمراقبة الذكية. نحن متخصصون في تركيب وصيانة الكاميرات الاحترافية وأنظمة الحماية المتقدمة.</p>
+                    <ul>
+                        <li data-ar="أجود المنتجات والخدمات" data-en="Best Products and Services" data-de="Beste Produkte und Dienstleistungen">أجود المنتجات والخدمات</li>
+                        <li data-ar="فريق عمل محترف وخبير" data-en="Professional and Expert Team" data-de="Professionelles und fachkundiges Team">فريق عمل محترف وخبير</li>
+                        <li data-ar="دعم فني متميز على مدار الساعة" data-en="Excellent 24/7 Technical Support" data-de="Ausgezeichneter 24/7 technischer Support">دعم فني متميز على مدار الساعة</li>
+                        <li data-ar="تقنيات حديثة وابتكارية" data-en="Modern and Innovative Technologies" data-de="Moderne und innovative Technologien">تقنيات حديثة وابتكارية</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <i class="fas fa-building"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-header">
+                    <h2 data-ar="اتصل بنا" data-en="Contact Us" data-de="Kontaktieren Sie uns">اتصل بنا</h2>
+                    <p data-ar="نحن هنا لمساعدتك وتقديم أفضل الحلول" data-en="We are here to help you and provide the best solutions" data-de="Wir sind hier, um Ihnen zu helfen und die besten Lösungen anzubieten">نحن هنا لمساعدتك وتقديم أفضل الحلول</p>
+                </div>
+                <div class="contact-grid">
+                    <a href="tel:+249999989993" class="contact-card">
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                        <h3 data-ar="الهاتف" data-en="Phone" data-de="Telefon">الهاتف</h3>
+                        <p>+249 999 989 993</p>
+                    </a>
+                    <a href="mailto:info@microsystem.sd" class="contact-card">
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <h3 data-ar="البريد الإلكتروني" data-en="Email" data-de="E-Mail">البريد الإلكتروني</h3>
+                        <p>info@microsystem.sd</p>
+                    </a>
+                    <div class="contact-card">
+                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <h3 data-ar="الموقع" data-en="Location" data-de="Standort">الموقع</h3>
+                        <p data-ar="الخرطوم، السودان" data-en="Khartoum, Sudan" data-de="Khartum, Sudan">الخرطوم، السودان</p>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 50px;">
+                    <h3 data-ar="تابعنا على وسائل التواصل" data-en="Follow Us on Social Media" data-de="Folgen Sie uns in den sozialen Medien" style="margin-bottom: 30px; color: var(--text-primary);">تابعنا على وسائل التواصل</h3>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/microsystem" target="_blank" class="social-link" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://wa.me/249999989993" target="_blank" class="social-link" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://instagram.com/microsystem" target="_blank" class="social-link" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://twitter.com/microsystem" target="_blank" class="social-link" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 data-ar="عن Microsystem" data-en="About Microsystem" data-de="Über Microsystem">عن Microsystem</h4>
+                    <ul>
+                        <li><a href="#about" data-ar="عننا" data-en="About Us" data-de="Über uns">عننا</a></li>
+                        <li><a href="#" data-ar="فريقنا" data-en="Our Team" data-de="Unser Team">فريقنا</a></li>
+                        <li><a href="#" data-ar="الرؤية والرسالة" data-en="Vision & Mission" data-de="Vision & Mission">الرؤية والرسالة</a></li>
+                        <li><a href="#" data-ar="الأخبار" data-en="News" data-de="Nachrichten">الأخبار</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-ar="منتجاتنا" data-en="Our Products" data-de="Unsere Produkte">منتجاتنا</h4>
+                    <ul>
+                        <li><a href="#" data-ar="كاميرات مراقبة" data-en="Surveillance Cameras" data-de="Überwachungskameras">كاميرات مراقبة</a></li>
+                        <li><a href="#" data-ar="أنظمة إنذار" data-en="Alarm Systems" data-de="Alarmsysteme">أنظمة إنذار</a></li>
+                        <li><a href="#" data-ar="التحكم والأتمتة" data-en="Control & Automation" data-de="Steuerung & Automatisierung">التحكم والأتمتة</a></li>
+                        <li><a href="#" data-ar="التطبيقات" data-en="Applications" data-de="Anwendungen">التطبيقات</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-ar="الدعم" data-en="Support" data-de="Unterstützung">الدعم</h4>
+                    <ul>
+                        <li><a href="#" data-ar="مركز المساعدة" data-en="Help Center" data-de="Hilfezentrum">مركز المساعدة</a></li>
+                        <li><a href="#" data-ar="الوثائق" data-en="Documentation" data-de="Dokumentation">الوثائق</a></li>
+                        <li><a href="mailto:info@microsystem.sd" data-ar="البريد الإلكتروني" data-en="Email" data-de="E-Mail">البريد الإلكتروني</a></li>
+                        <li><a href="tel:+249999989993" data-ar="الهاتف" data-en="Phone" data-de="Telefon">الهاتف</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-ar="تابعنا" data-en="Follow Us" data-de="Folgen Sie uns">تابعنا</h4>
+                    <ul>
+                        <li><a href="https://facebook.com/microsystem" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="https://wa.me/249999989993" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="https://instagram.com/microsystem" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="https://twitter.com/microsystem" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Microsystem. <span data-ar="جميع الحقوق محفوظة" data-en="All rights reserved" data-de="Alle Rechte vorbehalten">جميع الحقوق محفوظة</span>. | <a href="#" style="color: var(--primary-blue); text-decoration: none;" data-ar="سياسة الخصوصية" data-en="Privacy Policy" data-de="Datenschutzrichtlinie">سياسة الخصوصية</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentLang = 'ar';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`button[onclick="changeLanguage('${lang}')"]`).classList.add('active');
+            
+            // Update HTML direction and lang
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            
+            // Update all elements with data attributes
+            document.querySelectorAll('[data-ar][data-en][data-de]').forEach(element => {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text) {
+                    if (element.children.length === 0) {
+                        element.textContent = text;
+                    } else {
+                        // For elements with children, update only the text nodes
+                        const firstChild = element.firstChild;
+                        if (firstChild && firstChild.nodeType === 3) {
+                            firstChild.textContent = text;
+                        }
+                    }
+                }
+            });
+            
+            // Save preference
+            localStorage.setItem('language', lang);
+        }
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('language') || 'ar';
+            changeLanguage(savedLang);
+        });
+    </script>
+</body>
+</html>
