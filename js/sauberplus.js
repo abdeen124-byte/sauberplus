@@ -437,7 +437,7 @@
       "Gesendet über www.SauberPlus.plus"
     ].join("\n");
     var whatsappUrl = "https://wa.me/4915210316162?text=" + encodeURIComponent(message);
-    var mailUrl = "mailto:SauberPlus1@gmail.com?subject=" + encodeURIComponent("[SauberPlus] " + typeLabel + " - " + nameInput.value.trim()) + "&body=" + encodeURIComponent(emailBody);
+    var mailUrl = "mailto:info@sauberplus.plus?subject=" + encodeURIComponent("[SauberPlus] " + typeLabel + " - " + nameInput.value.trim()) + "&body=" + encodeURIComponent(emailBody);
 
     setDisplay(getElement("formBody"), "none");
     setDisplay(getElement("formOk"), "block");
