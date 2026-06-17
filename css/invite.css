@@ -359,7 +359,7 @@
     .scroll-cue {
       position: absolute;
       left: 50%;
-      bottom: 38px;
+      bottom: 58px;
       transform: translateX(-50%);
       z-index: 9;
       display: grid;
@@ -668,16 +668,17 @@
     }
 
     .gallery-caption {
-      position: absolute;
-      right: 30px;
-      bottom: 34px;
+      position: relative;
       z-index: 2;
+      display: block;
+      padding: 26px 18px 18px;
+      text-align: center;
       font-family: "Aref Ruqaa", "Amiri", serif;
       font-size: clamp(2.7rem, 9vw, 4.6rem);
       font-weight: 700;
       line-height: 1;
-      color: rgba(250, 248, 245, 0.96);
-      text-shadow: 0 3px 18px rgba(45, 74, 62, 0.55);
+      color: var(--foreground);
+      text-shadow: 0 2px 12px rgba(250, 248, 245, 0.86);
     }
 
     .gallery-fallback {
