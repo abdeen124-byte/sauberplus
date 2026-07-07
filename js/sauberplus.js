@@ -51,58 +51,70 @@
     });
   }
 
-  function readVisitorCount(key, fallback) {
-    try {
-      var storedValue = parseInt(localStorage.getItem(key) || fallback, 10);
-      return Number.isNaN(storedValue) || storedValue < fallback ? fallback : storedValue;
-    } catch (error) {
-      return fallback;
-    }
-  }
-
-  function saveVisitorCount(key, value) {
-    try {
-      localStorage.setItem(key, value);
-    } catch (error) {
-      return false;
-    }
-
-    return true;
-  }
-
   function initializeVisitorCounter() {
     var element = getElement("vcount");
     if (!element) return;
 
-    var storageKey = "sp_v5_total";
-    var baseCount = 500;
-    var total = readVisitorCount(storageKey, baseCount) + 1;
-    var start = Math.max(baseCount, total - 34);
-    var duration = 1300;
-    var startTime = null;
+    element.textContent = "...";
 
-    saveVisitorCount(storageKey, total);
+    var config = window.SAUBERPLUS_CONFIG || {};
+    var visitorCounterApiUrl = config.visitorCounterApiUrl || "/api/visitor-count";
+    var sessionKey = "sauberplus_visitor_counted";
+    var hasCountedThisSession = false;
+    var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var timeoutId = null;
 
-    function easeOutCubic(value) {
-      return 1 - Math.pow(1 - value, 3);
+    try {
+      hasCountedThisSession = sessionStorage.getItem(sessionKey) === "1";
+    } catch (error) {
+      hasCountedThisSession = false;
     }
 
-    function tick(timestamp) {
-      if (!startTime) {
-        startTime = timestamp;
-      }
-
-      var progress = Math.min((timestamp - startTime) / duration, 1);
-      var current = Math.round(start + (total - start) * easeOutCubic(progress));
-
-      element.textContent = current.toLocaleString("de-DE");
-
-      if (progress < 1) {
-        requestAnimationFrame(tick);
-      }
+    if (controller) {
+      timeoutId = setTimeout(function () {
+        controller.abort();
+      }, 8000);
     }
 
-    requestAnimationFrame(tick);
+    fetch(visitorCounterApiUrl, {
+      method: hasCountedThisSession ? "GET" : "POST",
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      signal: controller ? controller.signal : undefined
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Visitor counter request failed");
+        }
+
+        return response.json();
+      })
+      .then(function (data) {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+
+        if (!data || typeof data.total !== "number") {
+          throw new Error("Visitor counter response is invalid");
+        }
+
+        element.textContent = data.total.toLocaleString("de-DE");
+
+        if (!hasCountedThisSession && data.counted) {
+          try {
+            sessionStorage.setItem(sessionKey, "1");
+          } catch (error) {
+            return;
+          }
+        }
+      })
+      .catch(function () {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+
+        element.textContent = "...";
+      });
   }
 
   function setLang(language) {
@@ -236,7 +248,6 @@
     countersStarted = true;
 
     [
-      ["c1", 5, 300],
       ["c2", 5, 300],
       ["c3", 5, 300],
       ["c4", 10, 150]
