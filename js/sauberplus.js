@@ -4,6 +4,7 @@
   var starRating = 0;
   var countersStarted = false;
   var visitorCounterFailed = false;
+  var visitorSessionCookieName = "sp_visitor_session";
 
   function getElement(id) {
     return document.getElementById(id);
@@ -60,6 +61,7 @@
 
     var config = window.SAUBERPLUS_CONFIG || {};
     var visitorCounterApiUrl = config.visitorCounterApiUrl || "/api/visitor-count";
+    var visitorSessionId = getVisitorSessionId();
     var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
     var timeoutId = null;
 
@@ -71,7 +73,10 @@
 
     fetch(visitorCounterApiUrl, {
       method: "POST",
-      headers: { Accept: "application/json" },
+      headers: {
+        Accept: "application/json",
+        "X-Visitor-Session": visitorSessionId
+      },
       cache: "no-store",
       credentials: "include",
       signal: controller ? controller.signal : undefined
@@ -105,6 +110,80 @@
         element.textContent = getVisitorCounterError(currentLanguage);
         setText(getElement("v-label"), "");
       });
+  }
+
+  function getVisitorSessionId() {
+    var sessionId = readCookie(visitorSessionCookieName);
+
+    if (isValidVisitorSessionId(sessionId)) {
+      return sessionId;
+    }
+
+    sessionId = createVisitorSessionId();
+    writeVisitorSessionCookie(sessionId);
+
+    return sessionId;
+  }
+
+  function readCookie(name) {
+    var cookies = document.cookie ? document.cookie.split(";") : [];
+    var prefix = name + "=";
+    var index;
+    var cookie;
+
+    for (index = 0; index < cookies.length; index += 1) {
+      cookie = cookies[index].trim();
+
+      if (cookie.indexOf(prefix) === 0) {
+        return decodeURIComponent(cookie.slice(prefix.length));
+      }
+    }
+
+    return "";
+  }
+
+  function writeVisitorSessionCookie(sessionId) {
+    var maxAge = 60 * 60 * 24 * 30;
+    var cookieParts = [
+      visitorSessionCookieName + "=" + encodeURIComponent(sessionId),
+      "Max-Age=" + maxAge,
+      "Path=/",
+      "SameSite=Lax",
+      "Secure"
+    ];
+
+    if (window.location.hostname === "sauberplus.plus" || window.location.hostname.endsWith(".sauberplus.plus")) {
+      cookieParts.push("Domain=.sauberplus.plus");
+    }
+
+    document.cookie = cookieParts.join("; ");
+  }
+
+  function isValidVisitorSessionId(sessionId) {
+    return /^[A-Za-z0-9_-]{32,80}$/.test(sessionId || "");
+  }
+
+  function createVisitorSessionId() {
+    var bytes;
+    var index;
+    var id = "";
+
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID().replace(/-/g, "");
+    }
+
+    if (window.crypto && typeof window.crypto.getRandomValues === "function") {
+      bytes = new Uint8Array(32);
+      window.crypto.getRandomValues(bytes);
+
+      for (index = 0; index < bytes.length; index += 1) {
+        id += bytes[index].toString(16).padStart(2, "0");
+      }
+
+      return id;
+    }
+
+    return String(Date.now()) + String(Math.random()).slice(2) + String(Math.random()).slice(2);
   }
 
   function getVisitorLabel(language) {

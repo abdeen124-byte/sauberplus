@@ -72,7 +72,8 @@ PORT=3000
 
 ## Behavior
 
-- `POST /api/visitor-count` creates or reads an HTTP-only visitor session cookie.
+- `POST /api/visitor-count` creates or reads a visitor session.
+- The API accepts the HTTP-only API cookie first, then the first-party SauberPlus session cookie header for browsers that block third-party cookies while the public Vercel API URL is in use.
 - Redis stores both the persistent total and server-side session keys.
 - The counter increments only when Redis creates a new session key.
 - `GET /api/visitor-count` reads the total without incrementing.

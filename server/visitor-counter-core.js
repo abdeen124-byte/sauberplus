@@ -2,6 +2,7 @@ const crypto = require("node:crypto");
 
 const COUNTER_KEY = process.env.VISITOR_COUNTER_KEY || "sauberplus:visitor-count";
 const SESSION_COOKIE_NAME = process.env.VISITOR_COUNTER_COOKIE_NAME || "sp_visitor_session";
+const SESSION_HEADER_NAME = "x-visitor-session";
 const SESSION_TTL_SECONDS = Number(process.env.VISITOR_COUNTER_SESSION_TTL_SECONDS || 60 * 60 * 24 * 30);
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://www.SauberPlus.plus",
@@ -43,7 +44,7 @@ function applyCors(request, response) {
   }
 
   response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+  response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Visitor-Session");
 }
 
 function sendJson(request, response, statusCode, payload) {
@@ -206,7 +207,12 @@ async function handleVisitorCount(request, response) {
 
     const cookies = parseCookies(request);
     const existingSessionId = cookies[SESSION_COOKIE_NAME];
-    const sessionId = isValidSessionId(existingSessionId) ? existingSessionId : createSessionId();
+    const headerSessionId = getHeader(request, SESSION_HEADER_NAME);
+    const sessionId = isValidSessionId(existingSessionId)
+      ? existingSessionId
+      : isValidSessionId(headerSessionId)
+        ? headerSessionId
+        : createSessionId();
     const result = await countSession(sessionId);
 
     response.setHeader("Set-Cookie", buildSessionCookie(request, sessionId));
