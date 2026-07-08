@@ -431,6 +431,18 @@
     });
   }
 
+  function previewStars(rating) {
+    document.querySelectorAll(".star").forEach(function (star, index) {
+      star.classList.toggle("preview", index < rating);
+    });
+  }
+
+  function clearStarPreview() {
+    document.querySelectorAll(".star").forEach(function (star) {
+      star.classList.remove("preview");
+    });
+  }
+
   function markInvalidField(field) {
     if (!field) return;
 
@@ -566,6 +578,17 @@
 
   function initializeKeyboardRating() {
     document.querySelectorAll(".star").forEach(function (star, index) {
+      star.addEventListener("mouseenter", function () {
+        previewStars(index + 1);
+      });
+
+      star.addEventListener("focus", function () {
+        previewStars(index + 1);
+      });
+
+      star.addEventListener("mouseleave", clearStarPreview);
+      star.addEventListener("blur", clearStarPreview);
+
       star.addEventListener("keydown", function (event) {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();

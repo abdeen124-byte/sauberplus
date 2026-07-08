@@ -159,6 +159,7 @@ body.ar .why-text h2{font-family:'Cairo',sans-serif}
 .leadership-kicker{font-size:12px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;color:var(--green);margin-bottom:12px}
 .leadership-content h3{font-family:'Montserrat',sans-serif;font-size:clamp(30px,4vw,54px);line-height:1.05;font-weight:900;margin-bottom:12px}
 .leadership-role{color:rgba(255,255,255,.72);font-size:16px;font-weight:700;line-height:1.55;max-width:520px}
+.leadership-partners{width:min(920px,100%);box-sizing:border-box;margin:0 auto 18px;padding:12px 18px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.045);color:rgba(255,255,255,.72);font-size:13px;font-weight:700;text-align:center}
 .leadership-rule{width:72px;height:3px;border-radius:999px;background:linear-gradient(90deg,var(--blue2),var(--green));margin:26px 0}
 .leadership-description{color:rgba(255,255,255,.58);font-size:15px;line-height:1.85;max-width:620px}
 body.ar .leadership-content h3{font-family:'Montserrat',sans-serif}
@@ -288,10 +289,12 @@ body.ar .step:not(:last-child)::after{left:auto;right:25px}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue2);background:rgba(46,107,230,.08)}
 .fg select option{background:var(--dark)}
 .fg textarea{resize:vertical;min-height:85px}
-.stars-row{display:flex;gap:7px;margin-top:4px}
+.stars-row{display:flex;align-items:center;gap:8px;margin-top:4px}
 .stars-row.invalid{padding:7px 9px;border:1px solid #ff6b6b;border-radius:12px;background:rgba(255,107,107,.08)}
-.star{font-size:22px;cursor:pointer;filter:grayscale(1);transition:filter .2s,transform .2s}
-.star:hover,.star.lit{filter:none;transform:scale(1.2)}
+.star{font-size:28px;line-height:1;cursor:pointer;color:rgba(255,255,255,.32);text-shadow:0 0 0 transparent;-webkit-text-stroke:1px rgba(255,255,255,.2);transition:color .18s,text-shadow .18s,transform .18s,-webkit-text-stroke-color .18s}
+.star:hover,.star:focus-visible,.star.preview,.star.lit{color:#ffc107;-webkit-text-stroke-color:#ffc107;text-shadow:0 0 14px rgba(255,193,7,.55),0 3px 12px rgba(255,166,0,.28);transform:scale(1.16)}
+.star:focus-visible{outline:2px solid rgba(255,193,7,.7);outline-offset:4px;border-radius:6px}
+.star.lit{color:#ffd54a}
 .btn-send{width:100%;min-height:48px;padding:12px 18px;border-radius:50px;background:linear-gradient(135deg,var(--blue2),var(--green));color:#fff;border:none;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;transition:all .3s;box-shadow:0 4px 18px rgba(46,107,230,.3);margin-top:4px;display:inline-flex;align-items:center;justify-content:center;gap:10px}
 .btn-send:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(46,107,230,.5)}
 .btn-send-icon{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
@@ -310,12 +313,14 @@ footer{position:relative;z-index:2;background:#050b14;background:rgba(0,0,0,.72)
 .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 .foot-col ul li a{color:rgba(255,255,255,.42);text-decoration:none;font-size:12px;transition:color .3s}
 .foot-col ul li a:hover{color:var(--green)}
-.foot-col ul li a.social-link{width:max-content;max-width:100%;min-height:34px;padding:6px 12px 6px 7px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s,background .3s,border-color .3s,box-shadow .3s}
+.foot-col ul li a.social-link{width:max-content;max-width:100%;box-sizing:border-box;min-height:34px;padding:6px 12px 6px 7px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s,background .3s,border-color .3s,box-shadow .3s}
 .foot-col ul li a.social-link:hover{color:#fff;background:rgba(46,107,230,.16);border-color:rgba(46,107,230,.38);box-shadow:0 8px 22px rgba(46,107,230,.18),inset 0 1px 0 rgba(255,255,255,.12);transform:translateY(-2px)}
-.social-icon{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;color:#fff;background:linear-gradient(135deg,#1877f2,var(--blue2));box-shadow:0 6px 16px rgba(24,119,242,.28),inset 0 1px 0 rgba(255,255,255,.34)}
-.instagram-link .social-icon{background:linear-gradient(135deg,#f58529,#dd2a7b 52%,#515bd4);box-shadow:0 6px 16px rgba(221,42,123,.24),inset 0 1px 0 rgba(255,255,255,.34)}
-.social-icon svg{width:14px;height:14px;fill:currentColor;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.instagram-link .social-icon svg{fill:none}
+.social-icon{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;color:#fff;background:#1877f2;box-shadow:0 6px 16px rgba(24,119,242,.28),inset 0 1px 0 rgba(255,255,255,.34)}
+.instagram-link .social-icon{background:radial-gradient(circle at 30% 110%,#ffdc80 0 18%,#f77737 34%,#fd1d1d 48%,#c13584 66%,#833ab4 82%,#5851db 100%);box-shadow:0 6px 16px rgba(221,42,123,.24),inset 0 1px 0 rgba(255,255,255,.34)}
+.tiktok-link .social-icon{background:#050505;box-shadow:0 6px 16px rgba(0,242,234,.2),0 0 0 1px rgba(255,0,80,.26),inset 0 1px 0 rgba(255,255,255,.18)}
+.social-icon svg{width:15px;height:15px;fill:currentColor;stroke:none;display:block}
+.instagram-link .social-icon svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tiktok-link .social-icon svg{width:16px;height:16px}
 .social-icon-text{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:900;line-height:1}
 .site-legal-footer{border-top:1px solid rgba(255,255,255,.1);margin-top:26px;padding:18px 0 0;text-align:center;color:#c9d2df;color:rgba(255,255,255,.68)}
 .site-legal-footer p{margin:6px auto 0;max-width:920px;font-size:12px;line-height:1.65}
