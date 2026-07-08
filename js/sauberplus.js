@@ -241,14 +241,14 @@
     });
 
     var headerTexts = {
-      de: 'Sauber Plus · <span style="color:var(--green);font-weight:700">www.SauberPlus.plus</span>',
-      en: 'Sauber Plus · <span style="color:var(--green);font-weight:700">www.SauberPlus.plus</span>',
-      ar: 'سوبر بلس · <span style="color:var(--green);font-weight:700">www.SauberPlus.plus</span>'
+      de: 'SauberPlus · <span style="color:var(--green);font-weight:700">www.sauberplus.plus</span>',
+      en: 'SauberPlus · <span style="color:var(--green);font-weight:700">www.sauberplus.plus</span>',
+      ar: 'SauberPlus · <span style="color:var(--green);font-weight:700">www.sauberplus.plus</span>'
     };
     var placeholders = {
-      de: ["Max Mustermann", "+49 ...", "Ihre Nachricht hier..."],
-      en: ["John Smith", "+49 ...", "Your message here..."],
-      ar: ["الاسم الكامل", "+49 ...", "اكتب رسالتك هنا..."]
+      de: ["Ihr Name", "Telefonnummer oder WhatsApp", "Beschreiben Sie kurz Ihr Objekt und die gewünschte Leistung."],
+      en: ["Your name", "Phone or WhatsApp number", "Briefly describe the property and service you need."],
+      ar: ["اسمك", "رقم الهاتف أو واتساب", "صف المكان والخدمة المطلوبة باختصار."]
     };
     var languagePlaceholders = placeholders[language] || placeholders.de;
     var languageBarText = getElement("lb-text");
@@ -587,7 +587,7 @@
       messageText,
       "",
       "---",
-      "Gesendet über www.SauberPlus.plus"
+      "Gesendet über www.sauberplus.plus"
     ].join("\n");
     var whatsappUrl = "https://wa.me/4915210316162?text=" + encodeURIComponent(message);
     var mailUrl = "mailto:SauberPlus1@gmail.com?subject=" + encodeURIComponent("[SauberPlus] " + typeLabel + " - " + name) + "&body=" + encodeURIComponent(emailBody);

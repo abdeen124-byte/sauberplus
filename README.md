@@ -2,7 +2,7 @@
 
 Static production website for SauberPlus.
 
-Production URL: https://www.SauberPlus.plus
+Production URL: https://www.sauberplus.plus
 
 ## Project Structure
 
@@ -15,12 +15,11 @@ Production URL: https://www.SauberPlus.plus
 │   └── sauberplus.js
 ├── images/                 # Production image assets
 │   └── sauberplus/
-├── icons/                  # Future standalone icon assets
-├── fonts/                  # Future self-hosted fonts
-├── legal/                  # Separated legal pages
-│   ├── impressum.html
-│   └── datenschutz.html
-├── assets/                 # Reserved for future shared static assets
+├── impressum.html          # Legal notice
+├── datenschutz.html        # Privacy policy
+├── impressum/              # Compatibility redirect
+├── datenschutz/            # Compatibility redirect
+├── legal/                  # Compatibility redirects
 ├── backups/                # Local backup drop-zone, not for production files
 ├── docs/                   # Maintenance documentation
 ├── CNAME                   # GitHub Pages custom domain
@@ -38,7 +37,7 @@ The live site is currently deployed with GitHub Pages from the `main` branch.
 3. Check links and layout on desktop and mobile.
 4. Commit changes to `main`.
 5. Push to `origin main`.
-6. Wait for GitHub Pages cache to refresh, then verify https://www.SauberPlus.plus.
+6. Wait for GitHub Pages cache to refresh, then verify https://www.sauberplus.plus.
 
 GitHub Pages does not apply custom HTTP response headers from `_headers`, `vercel.json`, or `.htaccess`. These files are kept for future migration to Netlify, Cloudflare Pages, Vercel, or Apache-compatible hosting.
 
@@ -48,7 +47,7 @@ GitHub Pages does not apply custom HTTP response headers from `_headers`, `verce
 - Styling belongs in `css/sauberplus.css`.
 - Browser behavior belongs in `js/sauberplus.js`.
 - Production photos belong in `images/sauberplus/`.
-- Legal text belongs in `legal/impressum.html` and `legal/datenschutz.html`.
+- Legal text belongs in root `impressum.html` and `datenschutz.html`.
 - Maintenance notes belong in `docs/`.
 - Record every meaningful change in `CHANGELOG.md`.
 

@@ -2,7 +2,7 @@
 
 Project Name: SauberPlus
 
-Production URL: https://www.SauberPlus.plus
+Production URL: https://www.sauberplus.plus
 
 Main branch: `main`
 
@@ -14,7 +14,7 @@ Deployment method: GitHub Pages from the `main` branch with `CNAME` set to `saub
 
 - Work only inside the SauberPlus repository.
 - The production homepage is `index.html`.
-- Legal pages are stored in `legal/`.
+- Legal pages are stored as root `impressum.html` and `datenschutz.html`; routed legal folders are compatibility redirects.
 - Production images are stored in `images/sauberplus/`.
 - CSS is stored in `css/sauberplus.css`.
 - JavaScript is stored in `js/sauberplus.js`.

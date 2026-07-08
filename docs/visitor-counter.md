@@ -65,8 +65,10 @@ UPSTASH_REDIS_REST_TOKEN
 Optional:
 
 ```text
-ALLOWED_ORIGINS=https://www.SauberPlus.plus,https://SauberPlus.plus
+ALLOWED_ORIGINS=https://www.sauberplus.plus,https://sauberplus.plus
 VISITOR_COUNTER_KEY=sauberplus:visitor-count
+VISITOR_COUNTER_RATE_LIMIT_MAX_REQUESTS=120
+VISITOR_COUNTER_RATE_LIMIT_WINDOW_SECONDS=60
 PORT=3000
 ```
 
@@ -77,5 +79,6 @@ PORT=3000
 - Redis stores both the persistent total and server-side session keys.
 - The counter increments only when Redis creates a new session key.
 - `GET /api/visitor-count` reads the total without incrementing.
+- The API only allows the production SauberPlus origins and applies Redis-backed request limiting.
 - No `localStorage`, `sessionStorage`, random number, or browser-only fallback is used for the real counter.
 - The total persists in Redis and does not reset after deployment or server restart.
