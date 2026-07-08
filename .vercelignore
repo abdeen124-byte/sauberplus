@@ -6,6 +6,7 @@ test-results/
 backups/
 qa-*.cjs
 qa-*.spec.js
+WhatsApp Image*.jpeg
 *.log
 live-*.html
 *-screenshot.png

@@ -5,6 +5,7 @@
 *.log
 qa-*.cjs
 qa-*.spec.js
+WhatsApp Image*.jpeg
 live-*.html
 *-screenshot.png
 node_modules/
