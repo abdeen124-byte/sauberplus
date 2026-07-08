@@ -5,6 +5,12 @@
   var countersStarted = false;
   var visitorCounterFailed = false;
   var visitorSessionCookieName = "sp_visitor_session";
+  var formLimits = {
+    name: 80,
+    phone: 40,
+    message: 1200,
+    maxUrls: 2
+  };
 
   function getElement(id) {
     return document.getElementById(id);
@@ -452,13 +458,43 @@
     }, 2500);
   }
 
+  function sanitizeFormValue(value, maxLength) {
+    return String(value || "")
+      .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "")
+      .trim()
+      .slice(0, maxLength);
+  }
+
+  function hasUnsafeFormContent(value) {
+    return /<\s*\/?\s*script|javascript:|data:text\/html|on[a-z]+\s*=/i.test(value || "");
+  }
+
+  function hasSpamSignals(value) {
+    var matches = String(value || "").match(/https?:\/\/|www\./gi);
+
+    return matches ? matches.length > formLimits.maxUrls : false;
+  }
+
   function doSend() {
     var nameInput = getElement("f-name");
     var phoneInput = getElement("f-tel");
     var messageInput = getElement("f-msg");
     var serviceSelect = getElement("f-srv");
+    var honeypotInput = getElement("f-company");
     var requiredFields = [nameInput, phoneInput, messageInput];
     var isValid = true;
+
+    if (honeypotInput && honeypotInput.value.trim()) {
+      return;
+    }
+
+    var name = sanitizeFormValue(nameInput ? nameInput.value : "", formLimits.name);
+    var phone = sanitizeFormValue(phoneInput ? phoneInput.value : "", formLimits.phone);
+    var messageText = sanitizeFormValue(messageInput ? messageInput.value : "", formLimits.message);
+
+    if (nameInput) nameInput.value = name;
+    if (phoneInput) phoneInput.value = phone;
+    if (messageInput) messageInput.value = messageText;
 
     requiredFields.forEach(function (field) {
       if (!field || !field.value.trim()) {
@@ -479,6 +515,11 @@
         starsRow.classList.add("invalid");
       }
 
+      isValid = false;
+    }
+
+    if (hasUnsafeFormContent(name) || hasUnsafeFormContent(phone) || hasUnsafeFormContent(messageText) || hasSpamSignals(messageText)) {
+      markInvalidField(messageInput);
       isValid = false;
     }
 
@@ -522,8 +563,8 @@
     var messageLines = [
       "SauberPlus",
       labels.type + ": " + typeLabel,
-      labels.name + ": " + nameInput.value.trim(),
-      labels.phone + ": " + phoneInput.value.trim(),
+      labels.name + ": " + name,
+      labels.phone + ": " + phone,
       labels.service + ": " + selectedService
     ];
 
@@ -531,25 +572,25 @@
       messageLines.push(labels.rating + ": " + starRating + "/5");
     }
 
-    messageLines.push(labels.message + ": " + messageInput.value.trim());
+    messageLines.push(labels.message + ": " + messageText);
 
     var message = messageLines.join("\n");
     var emailBody = [
       "SauberPlus",
       labels.type + ": " + typeLabel,
-      labels.name + ": " + nameInput.value.trim(),
-      labels.phone + ": " + phoneInput.value.trim(),
+      labels.name + ": " + name,
+      labels.phone + ": " + phone,
       labels.service + ": " + selectedService,
       formType === "praise" ? labels.rating + ": " + starRating + "/5" : "",
       "",
       labels.message + ":",
-      messageInput.value.trim(),
+      messageText,
       "",
       "---",
       "Gesendet über www.SauberPlus.plus"
     ].join("\n");
     var whatsappUrl = "https://wa.me/4915210316162?text=" + encodeURIComponent(message);
-    var mailUrl = "mailto:SauberPlus1@gmail.com?subject=" + encodeURIComponent("[SauberPlus] " + typeLabel + " - " + nameInput.value.trim()) + "&body=" + encodeURIComponent(emailBody);
+    var mailUrl = "mailto:SauberPlus1@gmail.com?subject=" + encodeURIComponent("[SauberPlus] " + typeLabel + " - " + name) + "&body=" + encodeURIComponent(emailBody);
 
     setDisplay(getElement("formBody"), "none");
     setDisplay(getElement("formOk"), "block");

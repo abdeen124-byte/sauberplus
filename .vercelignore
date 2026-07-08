@@ -1,0 +1,11 @@
+.env*
+.vercel/
+.git/
+node_modules/
+test-results/
+backups/
+qa-*.cjs
+qa-*.spec.js
+*.log
+live-*.html
+*-screenshot.png

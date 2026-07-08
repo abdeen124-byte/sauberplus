@@ -1,0 +1,19 @@
+exclude:
+  - api/
+  - server/
+  - docs/
+  - backups/
+  - node_modules/
+  - test-results/
+  - .vercel/
+  - .env*
+  - README.md
+  - PROJECT_INFO.md
+  - CHANGELOG.md
+  - vercel.json
+  - _headers
+  - .htaccess
+  - qa-*.cjs
+  - qa-*.spec.js
+  - live-*.html
+  - "*-screenshot.png"

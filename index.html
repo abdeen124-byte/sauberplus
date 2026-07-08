@@ -497,13 +497,17 @@
           </button>
         </div>
       <div id="formBody">
+        <div class="fg form-honeypot" aria-hidden="true">
+          <label for="f-company">Company</label>
+          <input type="text" id="f-company" name="company" tabindex="-1" autocomplete="off">
+        </div>
         <div class="fg">
           <label class="t" data-de="Name" data-en="Name" data-ar="الاسم">Name</label>
-          <input type="text" id="f-name" placeholder="Max Mustermann">
+          <input type="text" id="f-name" placeholder="Max Mustermann" autocomplete="name" maxlength="80">
         </div>
         <div class="fg">
           <label class="t" data-de="Telefon / WhatsApp" data-en="Phone / WhatsApp" data-ar="الهاتف / واتساب">Telefon / WhatsApp</label>
-          <input type="tel" id="f-tel" placeholder="+49 ...">
+          <input type="tel" id="f-tel" placeholder="+49 ..." autocomplete="tel" inputmode="tel" maxlength="40">
         </div>
         <div class="fg">
           <label class="t" data-de="Leistung" data-en="Service" data-ar="الخدمة">Leistung</label>
@@ -529,7 +533,7 @@
         </div>
         <div class="fg">
           <label class="t" data-de="Nachricht" data-en="Message" data-ar="الرسالة">Nachricht</label>
-          <textarea id="f-msg" placeholder="..."></textarea>
+          <textarea id="f-msg" placeholder="..." maxlength="1200"></textarea>
         </div>
         <button class="btn-send" type="button" onclick="doSend()">
           <span class="btn-send-icon" aria-hidden="true">

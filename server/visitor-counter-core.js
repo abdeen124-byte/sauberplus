@@ -1,25 +1,33 @@
 const crypto = require("node:crypto");
 
+function getPositiveInteger(value, fallback) {
+  const number = Number(value);
+
+  return Number.isInteger(number) && number > 0 ? number : fallback;
+}
+
 const COUNTER_KEY = process.env.VISITOR_COUNTER_KEY || "sauberplus:visitor-count";
 const SESSION_COOKIE_NAME = process.env.VISITOR_COUNTER_COOKIE_NAME || "sp_visitor_session";
 const SESSION_HEADER_NAME = "x-visitor-session";
-const SESSION_TTL_SECONDS = Number(process.env.VISITOR_COUNTER_SESSION_TTL_SECONDS || 60 * 60 * 24 * 30);
-const DEFAULT_ALLOWED_ORIGINS = [
-  "https://www.SauberPlus.plus",
-  "https://SauberPlus.plus",
+const SESSION_TTL_SECONDS = getPositiveInteger(process.env.VISITOR_COUNTER_SESSION_TTL_SECONDS, 60 * 60 * 24 * 30);
+const RATE_LIMIT_WINDOW_SECONDS = getPositiveInteger(process.env.VISITOR_COUNTER_RATE_LIMIT_WINDOW_SECONDS, 60);
+const RATE_LIMIT_MAX_REQUESTS = getPositiveInteger(process.env.VISITOR_COUNTER_RATE_LIMIT_MAX_REQUESTS, 120);
+const DEFAULT_ALLOWED_ORIGINS = Object.freeze([
   "https://www.sauberplus.plus",
   "https://sauberplus.plus"
-];
+]);
 
 function getAllowedOrigins() {
   if (!process.env.ALLOWED_ORIGINS) {
     return DEFAULT_ALLOWED_ORIGINS;
   }
 
-  return process.env.ALLOWED_ORIGINS
+  const configuredOrigins = process.env.ALLOWED_ORIGINS
     .split(",")
     .map((origin) => origin.trim())
-    .filter(Boolean);
+    .filter((origin) => DEFAULT_ALLOWED_ORIGINS.includes(origin));
+
+  return configuredOrigins.length ? configuredOrigins : DEFAULT_ALLOWED_ORIGINS;
 }
 
 function getRedisConfig() {
@@ -33,7 +41,17 @@ function getHeader(request, name) {
   return request.headers[name.toLowerCase()] || request.headers[name] || "";
 }
 
+function applySecurityHeaders(response) {
+  response.setHeader("Content-Security-Policy", "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
+  response.setHeader("X-Content-Type-Options", "nosniff");
+  response.setHeader("X-Frame-Options", "DENY");
+  response.setHeader("Referrer-Policy", "no-referrer");
+  response.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=()");
+}
+
 function applyCors(request, response) {
+  applySecurityHeaders(response);
+
   const origin = getHeader(request, "origin");
   const allowedOrigins = getAllowedOrigins();
 
@@ -45,6 +63,7 @@ function applyCors(request, response) {
 
   response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Visitor-Session");
+  response.setHeader("Access-Control-Max-Age", "600");
 }
 
 function sendJson(request, response, statusCode, payload) {
@@ -154,6 +173,46 @@ function normalizeTotal(value) {
   return Number.isFinite(total) && total >= 0 ? total : 0;
 }
 
+function getClientFingerprint(request) {
+  const forwardedFor = getHeader(request, "x-forwarded-for").split(",")[0].trim();
+  const realIp = getHeader(request, "x-real-ip").trim();
+  const remoteAddress = request.socket && request.socket.remoteAddress ? request.socket.remoteAddress : "";
+  const userAgent = getHeader(request, "user-agent").slice(0, 200);
+  const source = `${forwardedFor || realIp || remoteAddress || "unknown"}|${userAgent}`;
+
+  return crypto.createHash("sha256").update(source).digest("hex").slice(0, 32);
+}
+
+async function checkRateLimit(request) {
+  const rateLimitKey = `${COUNTER_KEY}:rate:${getClientFingerprint(request)}`;
+  const created = await requestRedis([
+    "SET",
+    rateLimitKey,
+    "1",
+    "EX",
+    RATE_LIMIT_WINDOW_SECONDS,
+    "NX"
+  ]);
+  const current = created === "OK" ? 1 : normalizeTotal(await requestRedis(["INCR", rateLimitKey]));
+
+  if (created !== "OK" && current === 1) {
+    await requestRedis(["EXPIRE", rateLimitKey, RATE_LIMIT_WINDOW_SECONDS]);
+  }
+
+  return {
+    allowed: current <= RATE_LIMIT_MAX_REQUESTS,
+    limit: RATE_LIMIT_MAX_REQUESTS,
+    remaining: Math.max(RATE_LIMIT_MAX_REQUESTS - current, 0),
+    reset: RATE_LIMIT_WINDOW_SECONDS
+  };
+}
+
+function setRateLimitHeaders(response, rateLimit) {
+  response.setHeader("RateLimit-Limit", String(rateLimit.limit));
+  response.setHeader("RateLimit-Remaining", String(rateLimit.remaining));
+  response.setHeader("RateLimit-Reset", String(rateLimit.reset));
+}
+
 async function readTotal() {
   return normalizeTotal(await requestRedis(["GET", COUNTER_KEY]));
 }
@@ -197,6 +256,17 @@ async function handleVisitorCount(request, response) {
   }
 
   try {
+    const rateLimit = await checkRateLimit(request);
+    setRateLimitHeaders(response, rateLimit);
+
+    if (!rateLimit.allowed) {
+      response.setHeader("Retry-After", String(rateLimit.reset));
+      sendJson(request, response, 429, {
+        error: "Too many requests"
+      });
+      return;
+    }
+
     if (request.method === "GET") {
       sendJson(request, response, 200, {
         total: await readTotal(),

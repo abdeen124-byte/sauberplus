@@ -2,9 +2,13 @@
 .env*
 .chrome-*/
 *.tmp
+*.log
+qa-*.cjs
+qa-*.spec.js
 live-*.html
 *-screenshot.png
 node_modules/
+test-results/
 
 backups/*
 !backups/.gitkeep

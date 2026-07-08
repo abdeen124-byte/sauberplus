@@ -289,6 +289,7 @@ body.ar .step:not(:last-child)::after{left:auto;right:25px}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue2);background:rgba(46,107,230,.08)}
 .fg select option{background:var(--dark)}
 .fg textarea{resize:vertical;min-height:85px}
+.form-honeypot{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
 .stars-row{display:flex;align-items:center;gap:8px;margin-top:4px}
 .stars-row.invalid{padding:7px 9px;border:1px solid #ff6b6b;border-radius:12px;background:rgba(255,107,107,.08)}
 .star{font-size:28px;line-height:1;cursor:pointer;color:rgba(255,255,255,.32);text-shadow:0 0 0 transparent;-webkit-text-stroke:1px rgba(255,255,255,.2);transition:color .18s,text-shadow .18s,transform .18s,-webkit-text-stroke-color .18s}
