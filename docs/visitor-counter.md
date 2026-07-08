@@ -66,7 +66,9 @@ PORT=3000
 
 ## Behavior
 
-- `POST /api/visitor-count` increments the Redis counter by 1.
+- `POST /api/visitor-count` creates or reads an HTTP-only visitor session cookie.
+- Redis stores both the persistent total and server-side session keys.
+- The counter increments only when Redis creates a new session key.
 - `GET /api/visitor-count` reads the total without incrementing.
-- The browser uses `sessionStorage` only to avoid counting the same browser session twice.
+- No `localStorage`, `sessionStorage`, random number, or browser-only fallback is used for the real counter.
 - The total persists in Redis and does not reset after deployment or server restart.

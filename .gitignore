@@ -1,4 +1,5 @@
 .vercel/
+.env*
 .chrome-*/
 *.tmp
 live-*.html

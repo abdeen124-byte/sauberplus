@@ -3,13 +3,14 @@
   var formType = "inquiry";
   var starRating = 0;
   var countersStarted = false;
+  var visitorCounterFailed = false;
 
   function getElement(id) {
     return document.getElementById(id);
   }
 
   function setText(element, value) {
-    if (element && value) {
+    if (element && value !== undefined && value !== null) {
       element.textContent = value;
     }
   }
@@ -55,20 +56,12 @@
     var element = getElement("vcount");
     if (!element) return;
 
-    element.textContent = "...";
+    element.textContent = "0";
 
     var config = window.SAUBERPLUS_CONFIG || {};
     var visitorCounterApiUrl = config.visitorCounterApiUrl || "/api/visitor-count";
-    var sessionKey = "sauberplus_visitor_counted";
-    var hasCountedThisSession = false;
     var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
     var timeoutId = null;
-
-    try {
-      hasCountedThisSession = sessionStorage.getItem(sessionKey) === "1";
-    } catch (error) {
-      hasCountedThisSession = false;
-    }
 
     if (controller) {
       timeoutId = setTimeout(function () {
@@ -77,9 +70,10 @@
     }
 
     fetch(visitorCounterApiUrl, {
-      method: hasCountedThisSession ? "GET" : "POST",
+      method: "POST",
       headers: { Accept: "application/json" },
       cache: "no-store",
+      credentials: "include",
       signal: controller ? controller.signal : undefined
     })
       .then(function (response) {
@@ -98,23 +92,34 @@
           throw new Error("Visitor counter response is invalid");
         }
 
+        visitorCounterFailed = false;
         element.textContent = data.total.toLocaleString("de-DE");
-
-        if (!hasCountedThisSession && data.counted) {
-          try {
-            sessionStorage.setItem(sessionKey, "1");
-          } catch (error) {
-            return;
-          }
-        }
+        setText(getElement("v-label"), getVisitorLabel(currentLanguage));
       })
       .catch(function () {
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
 
-        element.textContent = "...";
+        visitorCounterFailed = true;
+        element.textContent = getVisitorCounterError(currentLanguage);
+        setText(getElement("v-label"), "");
       });
+  }
+
+  function getVisitorLabel(language) {
+    var visitorLabels = { de: "Besucher", en: "Visitors", ar: "زائر" };
+    return visitorLabels[language] || visitorLabels.de;
+  }
+
+  function getVisitorCounterError(language) {
+    var counterErrors = {
+      de: "Backend fehlt",
+      en: "Backend missing",
+      ar: "الخادم غير متاح"
+    };
+
+    return counterErrors[language] || counterErrors.de;
   }
 
   function setLang(language) {
@@ -150,7 +155,6 @@
       }
     });
 
-    var visitorLabels = { de: "Besucher", en: "Visitors", ar: "زائر" };
     var headerTexts = {
       de: 'Sauber Plus · <span style="color:var(--green);font-weight:700">www.SauberPlus.plus</span>',
       en: 'Sauber Plus · <span style="color:var(--green);font-weight:700">www.SauberPlus.plus</span>',
@@ -166,7 +170,13 @@
     var navButton = document.querySelector(".nav-cta");
     var currentLabel = getElement("currentLangLabel");
 
-    setText(getElement("v-label"), visitorLabels[language] || visitorLabels.de);
+    if (visitorCounterFailed) {
+      setText(getElement("vcount"), getVisitorCounterError(language));
+      setText(getElement("v-label"), "");
+    } else {
+      setText(getElement("v-label"), getVisitorLabel(language));
+    }
+
     setText(currentLabel, language.toUpperCase());
 
     if (languageBarText) {
