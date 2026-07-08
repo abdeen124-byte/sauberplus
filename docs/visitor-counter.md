@@ -13,14 +13,20 @@ window.SAUBERPLUS_CONFIG.visitorCounterApiUrl
 Current production value:
 
 ```text
-https://api.sauberplus.plus/api/visitor-count
+https://sauberplus.vercel.app/api/visitor-count
 ```
 
 ## Backend options
 
 ### Option 1: Vercel serverless
 
-Deploy this repository to Vercel and point `api.sauberplus.plus` to the Vercel project. The serverless endpoint is:
+Deploy this repository to Vercel. The current public Vercel endpoint is:
+
+```text
+https://sauberplus.vercel.app/api/visitor-count
+```
+
+After DNS is configured, `api.sauberplus.plus` can point to the same Vercel project. The serverless endpoint is:
 
 ```text
 api/visitor-count.js
