@@ -4,7 +4,7 @@ html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--dark);color:#fff;overflow-x:hidden}
 body.ar{font-family:'Cairo',sans-serif}
 
-.bg-fx{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 15% 25%,#0d2878 0%,transparent 50%),radial-gradient(ellipse at 85% 75%,#0d4a1e 0%,transparent 50%),#0a1628;overflow:hidden}
+.bg-fx{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 15% 25%,#0d2878 0%,transparent 50%),radial-gradient(ellipse at 85% 75%,#0d4a1e 0%,transparent 50%),#0a1628;overflow:hidden;pointer-events:none}
 .bg-fx::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(46,107,230,.12) 0%,transparent 70%);top:-200px;left:-200px;animation:bgf1 14s ease-in-out infinite}
 .bg-fx::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(45,179,74,.1) 0%,transparent 70%);bottom:-100px;right:-100px;animation:bgf2 17s ease-in-out infinite}
 @keyframes bgf1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(120px,90px) scale(1.3)}}
