@@ -377,3 +377,27 @@ body.ar .legal-header-actions{direction:rtl}
   .float-wa{right:4px;bottom:172px;width:54px;height:54px;border-radius:18px}
   body.ar .site-legal-footer{text-align:right}
 }
+
+/* ---- CMS-driven content (Admin Dashboard, additive, empty by default) ---- */
+#cms-top-bar:empty,#cms-homepage-banner:empty,#cms-seasonal:empty,#cms-promo-section:empty{display:none}
+#cms-homepage-banner,#cms-seasonal,#cms-promo-section{max-width:1180px;margin:44px auto;padding:0 5%}
+#cms-top-bar{position:relative;z-index:70;background:linear-gradient(90deg,var(--blue),var(--blue2));padding:9px 5%;text-align:center;font-size:13px;font-weight:600;color:#fff}
+#cms-top-bar a{color:#fff;text-decoration:underline;margin-left:8px;font-weight:700}
+.cms-banner{padding:26px 30px;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.cms-banner-media{flex:none;width:120px;height:120px;border-radius:14px;overflow:hidden}
+.cms-banner-media img{width:100%;height:100%;object-fit:cover;display:block}
+.cms-banner-body{flex:1;min-width:220px}
+.cms-banner-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:19px;margin:0 0 6px}
+.cms-banner-desc{color:rgba(255,255,255,.7);font-size:13.5px;line-height:1.6;margin:0 0 14px}
+.cms-banner-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue2),var(--green));color:#fff;padding:10px 22px;border-radius:30px;text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 6px 20px rgba(46,107,230,.4);transition:all .3s}
+.cms-banner-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(46,107,230,.55)}
+.cms-popup-scrim{position:fixed;inset:0;background:rgba(5,12,24,.7);backdrop-filter:blur(4px);z-index:400;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.cms-popup-scrim[data-open="true"]{opacity:1;visibility:visible}
+.cms-popup-card{position:relative;max-width:420px;width:100%;background:rgba(10,22,40,.97);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:30px;box-shadow:0 30px 90px rgba(0,0,0,.5);transform:translateY(16px) scale(.97);transition:transform .3s cubic-bezier(.25,.8,.25,1)}
+.cms-popup-scrim[data-open="true"] .cms-popup-card{transform:translateY(0) scale(1)}
+.cms-popup-close{position:absolute;top:14px;right:14px;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;padding:4px}
+.cms-popup-close:hover{color:#fff}
+.cms-popup-close svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.cms-popup-media{width:100%;max-height:180px;border-radius:14px;overflow:hidden;margin-bottom:16px}
+.cms-popup-media img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:768px){.cms-banner{flex-direction:column;text-align:center;padding:22px 6%}.cms-banner-media{width:100%;height:160px}}

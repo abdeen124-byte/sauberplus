@@ -21,4 +21,5 @@ Deployment method: GitHub Pages from the `main` branch with `CNAME` set to `saub
 - GitHub Pages does not serve custom HTTP security headers from repository config files.
 - `_headers`, `vercel.json`, and `.htaccess` are retained for future hosting platforms that support custom response headers.
 - Do not mix files from InviteLux, Smart Lab, Microsystem, MS-Invitation, noor-islam-shop, or any other project.
+- The `/admin` CMS (see `docs/admin-cms-setup.md`) runs on its own dedicated Supabase project. Never connect or share it with any other client project's Supabase account/organization, same rule as the file isolation above.
 - Record future changes in `CHANGELOG.md`.

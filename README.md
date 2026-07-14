@@ -20,6 +20,8 @@ Production URL: https://www.sauberplus.plus
 ├── impressum/              # Compatibility redirect
 ├── datenschutz/            # Compatibility redirect
 ├── legal/                  # Compatibility redirects
+├── admin/                  # Admin dashboard / CMS (static, Supabase-backed — see docs/admin-cms-setup.md)
+├── supabase/               # Committed schema.sql (RLS/functions/triggers) for the admin backend
 ├── backups/                # Local backup drop-zone, not for production files
 ├── docs/                   # Maintenance documentation
 ├── CNAME                   # GitHub Pages custom domain
@@ -52,6 +54,10 @@ GitHub Pages does not apply custom HTTP response headers from `_headers`, `verce
 - Record every meaningful change in `CHANGELOG.md`.
 
 Do not copy files from other projects into this repository. Keep SauberPlus isolated from InviteLux, Smart Lab, Microsystem, noor-islam-shop, and every other project.
+
+## Admin Dashboard
+
+`/admin` is a separate, static, Supabase-backed CMS for partners to manage announcements/banners and the gallery without touching code — it does not change anything about the public site above. See `docs/admin-cms-setup.md` for the full design, provisioning steps, and current build status.
 
 ## Safety Rules
 

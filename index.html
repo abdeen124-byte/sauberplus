@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; frame-src https://www.google.com; connect-src 'self' https://sauberplus.vercel.app https://api.sauberplus.plus; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://kgkrgbkiqitnvntbyyct.supabase.co; frame-src https://www.google.com; connect-src 'self' https://sauberplus.vercel.app https://api.sauberplus.plus https://kgkrgbkiqitnvntbyyct.supabase.co; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>SauberPlus Reinigungsservice – Solingen</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='8' y1='8' x2='56' y2='56'%3E%3Cstop stop-color='%232e6be6'/%3E%3Cstop offset='1' stop-color='%232db34a'/%3E%3C/linearGradient%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='4' stdDeviation='4' flood-color='%23000' flood-opacity='.35'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='%230a1628'/%3E%3Ccircle cx='32' cy='32' r='24' fill='url(%23g)' filter='url(%23s)'/%3E%3Cpath d='M20 38c4 5 20 5 24-2 2-4-1-8-7-8h-8c-5 0-7-4-4-8 3-4 12-5 18 0' fill='none' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M45 18l2.2 4.4 4.8.7-3.5 3.4.8 4.8-4.3-2.3-4.3 2.3.8-4.8-3.5-3.4 4.8-.7z' fill='white' opacity='.92'/%3E%3C/svg%3E">
@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/sauberplus.css">
 </head>
 <body>
+<div id="cms-top-bar"></div>
 <div class="bg-fx"></div>
 <div class="bubbles" id="bubs"></div>
 
@@ -104,6 +105,9 @@
     <div class="arr"></div>
   </div>
 </section>
+
+<div id="cms-homepage-banner"></div>
+<div id="cms-seasonal"></div>
 
 <section id="services">
   <div class="sec-title rv">
@@ -349,6 +353,8 @@
   </div>
 </section>
 
+<div id="cms-promo-section"></div>
+
 <section id="feedback" style="background:rgba(255,255,255,.015)">
   <div class="sec-title rv">
     <div class="sec-tag has-icon">
@@ -529,8 +535,11 @@
   <svg viewBox="0 0 24 24"><path d="M20 11.7a8.1 8.1 0 0 1-11.9 7.1l-3.8 1 1-3.7A8.1 8.1 0 1 1 20 11.7z"></path><path d="M9.1 8.8c.3 2.8 2.2 4.8 5.1 5.6"></path><path d="m9 8.4.8-.6 1.2 1.7-.8.8"></path><path d="m14.3 14.2.8-.8 1.8 1-.5.9"></path></svg>
 </a>
 
+<div id="cms-popup-root"></div>
+
 <script src="js/sauberplus-config.js"></script>
 <script src="js/sauberplus.js"></script>
+<script src="js/sauberplus-content.js"></script>
 <footer>
   <div class="foot-grid">
     <div class="foot-col">
