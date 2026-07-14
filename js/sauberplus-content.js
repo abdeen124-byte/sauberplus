@@ -204,6 +204,53 @@
     }, 1200);
   }
 
+  function buildGalleryImg(src, alt) {
+    var img = document.createElement("img");
+    img.src = src;
+    img.alt = alt || "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    return img;
+  }
+
+  function buildGalleryCard(row) {
+    var card = document.createElement("div");
+    var caption = row.caption || "";
+
+    if (row.kind === "before_after") {
+      card.className = "ba-card ba-pair";
+      card.appendChild(buildGalleryImg(storagePublicUrl(row.before_path), caption));
+      card.appendChild(buildGalleryImg(storagePublicUrl(row.after_path), caption));
+      return card;
+    }
+
+    card.className = "ba-card";
+    var img = buildGalleryImg(storagePublicUrl(row.image_path), caption);
+    img.className = "ba-comparison";
+    card.appendChild(img);
+    return card;
+  }
+
+  function initGallery() {
+    restFetch("gallery_images?select=kind,image_path,before_path,after_path,caption&hidden=eq.false&order=sort_order.asc")
+      .then(function (rows) {
+        if (!rows.length) {
+          return; // keep the static fallback grid already in index.html
+        }
+        var grid = document.querySelector(".gal-grid");
+        if (!grid) {
+          return;
+        }
+        grid.innerHTML = "";
+        rows.forEach(function (row) {
+          grid.appendChild(buildGalleryCard(row));
+        });
+      })
+      .catch(function () {
+        // Fail-soft: static fallback grid in index.html stays as-is.
+      });
+  }
+
   function initAnnouncements() {
     restFetch(
       "announcements?select=id,placement,title,description,image_path,button_label,button_url&status=eq.active&order=sort_order.asc"
@@ -230,5 +277,6 @@
 
   if (isConfigured()) {
     initAnnouncements();
+    initGallery();
   }
 })();

@@ -219,6 +219,10 @@
         deleteConfirmTitle: "Bild löschen?",
         deleteConfirmMessage: "Dieses Galeriebild wird dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
         hiddenToggleLabel: "Ausgeblendet (nicht auf der Website sichtbar)",
+        usedOnLabel: "Startseite → Galerie",
+        legacyImportRunning: "Bestehende Website-Bilder werden importiert …",
+        legacyImportSuccess: "Bestehende Website-Bilder wurden importiert.",
+        legacyImportPartialError: "Einige Website-Bilder konnten nicht importiert werden.",
         kind: {
           all: "Alle",
           single: "Einzelbilder",
@@ -520,6 +524,10 @@
         deleteConfirmTitle: "حذف الصورة؟",
         deleteConfirmMessage: "سيتم حذف صورة المعرض هذه نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
         hiddenToggleLabel: "مخفي (غير ظاهر على الموقع)",
+        usedOnLabel: "الصفحة الرئيسية → المعرض",
+        legacyImportRunning: "جارٍ استيراد صور الموقع الحالية …",
+        legacyImportSuccess: "تم استيراد صور الموقع الحالية.",
+        legacyImportPartialError: "تعذّر استيراد بعض صور الموقع.",
         kind: {
           all: "الكل",
           single: "صور مفردة",

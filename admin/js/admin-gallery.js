@@ -1,8 +1,9 @@
 /**
  * Gallery page: single + before/after images, drag-and-drop reorder, hide/
- * unhide, replace, delete. Separate from the 10 images hardcoded in the
- * public index.html#gallery grid today (see supabase/schema.sql's comment
- * on gallery_images) — this manages new CMS-driven gallery content only.
+ * unhide, replace, delete. On first load (table still empty), the images
+ * already hardcoded in the public index.html#gallery grid are imported
+ * automatically — see importLegacyImages() below — so the CMS always
+ * reflects what the public site actually shows.
  */
 (function () {
   "use strict";
@@ -25,6 +26,109 @@
     removedExisting: { single: false, before: false, after: false },
     draggedId: null
   };
+
+  // ---------------------------------------------------------------
+  // One-time import of the images already hardcoded on the public site
+  // (see index.html#gallery). Only runs when this table is still empty,
+  // so it never fights with staff who've since edited/deleted rows.
+  // ---------------------------------------------------------------
+
+  var LEGACY_IMAGES = [
+    { kind: "single", src: "/assets/images/before-after/5372830450818161500_121.jpg", caption: "Reinigungsergebnis 1" },
+    { kind: "single", src: "/assets/images/before-after/5372830450818161501_121.jpg", caption: "Reinigungsergebnis 2" },
+    { kind: "single", src: "/assets/images/before-after/5372830450818161502_121.jpg", caption: "Reinigungsergebnis 3" },
+    { kind: "single", src: "/assets/images/before-after/5372830450818161503_121.jpg", caption: "Reinigungsergebnis 4" },
+    {
+      kind: "before_after",
+      before: "/assets/images/before-after/additional/faucet-before.jpg",
+      after: "/assets/images/before-after/additional/faucet-after.jpg",
+      caption: "Wasserhahn Reinigung"
+    },
+    {
+      kind: "before_after",
+      before: "/assets/images/before-after/additional/oven-01-before.jpg",
+      after: "/assets/images/before-after/additional/oven-01-after.jpg",
+      caption: "Backofen Reinigung 1"
+    },
+    {
+      kind: "before_after",
+      before: "/assets/images/before-after/additional/oven-02-before.jpg",
+      after: "/assets/images/before-after/additional/oven-02-after.jpg",
+      caption: "Backofen Reinigung 2"
+    }
+  ];
+
+  function fetchAsFile(src) {
+    return fetch(src)
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("fetch failed: " + src);
+        }
+        return response.blob();
+      })
+      .then(function (blob) {
+        var filename = src.split("/").pop();
+        return new File([blob], filename, { type: blob.type });
+      });
+  }
+
+  function importLegacyEntry(entry, index) {
+    var uploads;
+    if (entry.kind === "before_after") {
+      uploads = Promise.all([fetchAsFile(entry.before), fetchAsFile(entry.after)]).then(function (files) {
+        return Promise.all([
+          window.AdminImageUpload.uploadImage(files[0], "gallery"),
+          window.AdminImageUpload.uploadImage(files[1], "gallery")
+        ]);
+      });
+    } else {
+      uploads = fetchAsFile(entry.src)
+        .then(function (file) {
+          return window.AdminImageUpload.uploadImage(file, "gallery");
+        })
+        .then(function (result) {
+          return [result];
+        });
+    }
+
+    return uploads.then(function (results) {
+      var payload = {
+        kind: entry.kind,
+        caption: entry.caption,
+        hidden: false,
+        sort_order: (index + 1) * SORT_ORDER_GAP,
+        created_by: state.profile.id
+      };
+      if (entry.kind === "before_after") {
+        payload.before_path = results[0].path;
+        payload.after_path = results[1].path;
+      } else {
+        payload.image_path = results[0].path;
+      }
+      return state.client
+        .from("gallery_images")
+        .insert(payload)
+        .then(function (result) {
+          if (result.error) {
+            throw result.error;
+          }
+        });
+    });
+  }
+
+  function importLegacyImages() {
+    return Promise.allSettled(LEGACY_IMAGES.map(importLegacyEntry)).then(function (outcomes) {
+      var failures = outcomes.filter(function (outcome) {
+        return outcome.status === "rejected";
+      }).length;
+      if (failures > 0) {
+        window.AdminUI.toast(t("gallery.legacyImportPartialError"), "error");
+      } else {
+        window.AdminUI.toast(t("gallery.legacyImportSuccess"), "success");
+      }
+      return loadImages();
+    });
+  }
 
   // ---------------------------------------------------------------
   // Loading + rendering
@@ -76,7 +180,17 @@
     return '<div class="admin-item-card-media"><img src="' + url + '" alt="" draggable="false"></div>';
   }
 
-  function renderCard(row) {
+  function basename(path) {
+    return path ? path.split("/").pop() : "";
+  }
+
+  function cardFilenameLabel(row) {
+    return row.kind === "before_after"
+      ? basename(row.before_path) + " / " + basename(row.after_path)
+      : basename(row.image_path);
+  }
+
+  function renderCard(row, index) {
     var toggleIcon = row.hidden
       ? '<svg viewBox="0 0 24 24"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>'
       : '<svg viewBox="0 0 24 24"><path d="M3 3l18 18"></path><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c7 0 10.5 7 10.5 7a13.2 13.2 0 0 1-3.1 3.9M6.5 6.6C3.5 8.5 1.5 12 1.5 12s3.5 7 10.5 7a10.4 10.4 0 0 0 4.2-.9"></path><path d="M9.5 9.8a3 3 0 0 0 4.2 4.2"></path></svg>';
@@ -96,6 +210,14 @@
       (row.kind === "before_after" ? t("gallery.kind.beforeAfterLabel") : t("gallery.kind.singleLabel")) +
       "</span>" +
       "</div>" +
+      '<div class="admin-item-card-meta">' +
+      "<span>#" +
+      (index + 1) +
+      " · " +
+      escapeHtml(cardFilenameLabel(row)) +
+      "</span><span>" +
+      t("gallery.usedOnLabel") +
+      "</span></div>" +
       '<p class="admin-item-card-desc" style="min-height:16px">' +
       escapeHtml(row.caption || "") +
       "</p>" +
@@ -125,7 +247,14 @@
       return;
     }
 
-    container.innerHTML = '<div class="admin-card-grid" id="cardGrid">' + rows.map(renderCard).join("") + "</div>";
+    container.innerHTML =
+      '<div class="admin-card-grid" id="cardGrid">' +
+      rows
+        .map(function (row, index) {
+          return renderCard(row, index);
+        })
+        .join("") +
+      "</div>";
 
     container.querySelectorAll("[data-action]").forEach(function (button) {
       var card = button.closest("[data-id]");
@@ -561,9 +690,16 @@
     });
     getElement("editorForm").addEventListener("submit", handleSave);
 
-    loadImages().catch(function () {
-      getElement("listContainer").innerHTML = '<div class="admin-empty-state">' + escapeHtml(t("gallery.loadError")) + "</div>";
-    });
+    loadImages()
+      .then(function () {
+        if (state.all.length === 0) {
+          window.AdminUI.toast(t("gallery.legacyImportRunning"), "success");
+          return importLegacyImages();
+        }
+      })
+      .catch(function () {
+        getElement("listContainer").innerHTML = '<div class="admin-empty-state">' + escapeHtml(t("gallery.loadError")) + "</div>";
+      });
   });
 
   getElement("logoutBtn").addEventListener("click", function () {
