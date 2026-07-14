@@ -12,19 +12,7 @@
     return document.getElementById(id);
   }
 
-  var PLACEMENT_LABELS = {
-    top_bar: "Top-Leiste",
-    homepage_banner: "Homepage-Banner",
-    promo_section: "Promo-Bereich",
-    popup: "Popup",
-    seasonal: "Saisonale Kampagne"
-  };
-
-  var STATUS_LABELS = {
-    active: "Aktiv",
-    draft: "Entwurf",
-    hidden: "Ausgeblendet"
-  };
+  var t = window.AdminI18N.t;
 
   var state = {
     client: null,
@@ -67,16 +55,38 @@
     if (!value) {
       return null;
     }
-    return new Date(value).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
+    var locale = window.AdminI18N.getLang() === "ar" ? "ar" : "de-DE";
+    return new Date(value).toLocaleDateString(locale, { day: "2-digit", month: "2-digit", year: "numeric" });
   }
 
   function dateRangeLabel(row) {
     var start = formatDate(row.start_date);
     var end = formatDate(row.end_date);
     if (!start && !end) {
-      return "Kein Zeitraum";
+      return t("announcements.noDateRange");
     }
     return (start || "…") + " – " + (end || "…");
+  }
+
+  /**
+   * Display-only status derivation — never written back to the database.
+   * The stored `status` stays exactly draft/active/hidden as designed; this
+   * only decides which badge/label an "active" row shows, based on its own
+   * start/end dates, so partners see "Scheduled"/"Expired" instead of a
+   * misleading "Active" for a not-yet-started or already-finished item.
+   */
+  function getDisplayStatus(row) {
+    if (row.status !== "active") {
+      return row.status;
+    }
+    var now = Date.now();
+    if (row.start_date && new Date(row.start_date).getTime() > now) {
+      return "scheduled";
+    }
+    if (row.end_date && new Date(row.end_date).getTime() < now) {
+      return "expired";
+    }
+    return "active";
   }
 
   function escapeHtml(value) {
@@ -99,6 +109,7 @@
 
   function renderCard(row) {
     var canToggleVisibility = row.status === "active" || row.status === "hidden";
+    var displayStatus = getDisplayStatus(row);
     var toggleIcon =
       row.status === "hidden"
         ? '<svg viewBox="0 0 24 24"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>'
@@ -111,29 +122,37 @@
       cardMedia(row) +
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">' +
       '<span class="admin-badge" data-status="' +
-      row.status +
+      displayStatus +
       '">' +
-      STATUS_LABELS[row.status] +
+      t("status." + displayStatus) +
       "</span>" +
       '<span style="font-size:11px;color:var(--gray)">' +
-      PLACEMENT_LABELS[row.placement] +
+      t("announcements.placement." + row.placement) +
       "</span>" +
       "</div>" +
       '<h3 class="admin-item-card-title">' +
       escapeHtml(row.title) +
       "</h3>" +
       '<p class="admin-item-card-desc">' +
-      escapeHtml(row.description || "Keine Beschreibung") +
+      escapeHtml(row.description || t("announcements.noDescription")) +
       "</p>" +
       '<div class="admin-item-card-meta"><span>' +
       dateRangeLabel(row) +
       "</span></div>" +
       '<div class="admin-item-card-actions">' +
-      '<button type="button" class="admin-icon-btn" data-action="edit" aria-label="Bearbeiten"><svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></button>' +
+      '<button type="button" class="admin-icon-btn" data-action="edit" aria-label="' +
+      t("common.edit") +
+      '"><svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></button>' +
       (canToggleVisibility
-        ? '<button type="button" class="admin-icon-btn" data-action="toggle-visibility" aria-label="Sichtbarkeit umschalten">' + toggleIcon + "</button>"
+        ? '<button type="button" class="admin-icon-btn" data-action="toggle-visibility" aria-label="' +
+          t("common.toggleVisibility") +
+          '">' +
+          toggleIcon +
+          "</button>"
         : "") +
-      '<button type="button" class="admin-icon-btn danger" data-action="delete" aria-label="Löschen"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="M6 7l1 13h10l1-13"></path></svg></button>' +
+      '<button type="button" class="admin-icon-btn danger" data-action="delete" aria-label="' +
+      t("common.delete") +
+      '"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="M6 7l1 13h10l1-13"></path></svg></button>' +
       "</div>" +
       "</div>"
     );
@@ -144,7 +163,7 @@
     var rows = filteredAnnouncements();
 
     if (rows.length === 0) {
-      container.innerHTML = '<div class="admin-empty-state">Keine Ankündigungen in dieser Ansicht.</div>';
+      container.innerHTML = '<div class="admin-empty-state">' + escapeHtml(t("announcements.emptyState")) + "</div>";
       return;
     }
 
@@ -207,7 +226,7 @@
     resetEditorState();
     state.editingRecord = record || null;
 
-    getElement("editorTitle").textContent = record ? "Ankündigung bearbeiten" : "Neue Ankündigung";
+    getElement("editorTitle").textContent = record ? t("announcements.editorTitleEdit") : t("announcements.editorTitleNew");
     getElement("editorForm").reset();
     hideEditorError();
 
@@ -315,8 +334,8 @@
     var buttonLabel = getElement("fieldButtonLabel").value.trim();
     var buttonUrl = getElement("fieldButtonUrl").value.trim();
 
-    getElement("previewTitle").textContent = title || "(Ohne Titel)";
-    getElement("previewDesc").textContent = description || "(Keine Beschreibung)";
+    getElement("previewTitle").textContent = title || t("announcements.preview.noTitle");
+    getElement("previewDesc").textContent = description || t("announcements.preview.noDescription");
 
     var imageWrap = getElement("previewImageWrap");
     var previewImg = getElement("previewImage");
@@ -381,19 +400,19 @@
     var payload = buildPayloadBase();
 
     if (!payload.title) {
-      showEditorError("Bitte geben Sie einen Titel ein.");
+      showEditorError(t("announcements.errors.titleRequired"));
       return;
     }
     if (!isValidHttpUrl(payload.button_url)) {
-      showEditorError("Der Button-Link muss mit http:// oder https:// beginnen.");
+      showEditorError(t("announcements.errors.buttonUrlInvalid"));
       return;
     }
     if (payload.button_label && !payload.button_url) {
-      showEditorError("Bitte geben Sie einen Button-Link an oder entfernen Sie den Button-Text.");
+      showEditorError(t("announcements.errors.buttonUrlMissing"));
       return;
     }
     if (payload.button_url && !payload.button_label) {
-      showEditorError("Bitte geben Sie einen Button-Text an oder entfernen Sie den Button-Link.");
+      showEditorError(t("announcements.errors.buttonLabelMissing"));
       return;
     }
 
@@ -442,20 +461,20 @@
 
         setSaving(false);
         window.AdminUI.closeModal(getElement("editorScrim"));
-        window.AdminUI.toast(state.editingRecord ? "Ankündigung aktualisiert." : "Ankündigung erstellt.", "success");
+        window.AdminUI.toast(state.editingRecord ? t("announcements.saveSuccessUpdate") : t("announcements.saveSuccessCreate"), "success");
         return loadAnnouncements();
       })
       .catch(function (error) {
         setSaving(false);
-        showEditorError(error && error.message ? error.message : "Speichern fehlgeschlagen. Bitte erneut versuchen.");
+        showEditorError(error && error.message ? error.message : t("common.saveFailedRetry"));
       });
   }
 
   function handleDelete(record) {
     window.AdminUI.confirmDialog({
-      title: "Ankündigung löschen?",
-      message: '"' + record.title + '" wird dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.',
-      confirmLabel: "Löschen",
+      title: t("announcements.deleteConfirmTitle"),
+      message: t("announcements.deleteConfirmMessage", { title: record.title }),
+      confirmLabel: t("common.delete"),
       danger: true
     }).then(function (confirmed) {
       if (!confirmed) {
@@ -467,13 +486,13 @@
         .eq("id", record.id)
         .then(function (result) {
           if (result.error) {
-            window.AdminUI.toast("Löschen fehlgeschlagen.", "error");
+            window.AdminUI.toast(t("common.deleteFailed"), "error");
             return;
           }
           if (record.image_path) {
             window.AdminImageUpload.deleteImage(record.image_path);
           }
-          window.AdminUI.toast("Ankündigung gelöscht.", "success");
+          window.AdminUI.toast(t("announcements.deleteSuccess"), "success");
           loadAnnouncements();
         });
     });
@@ -487,10 +506,10 @@
       .eq("id", record.id)
       .then(function (result) {
         if (result.error) {
-          window.AdminUI.toast("Aktion fehlgeschlagen.", "error");
+          window.AdminUI.toast(t("common.actionFailed"), "error");
           return;
         }
-        window.AdminUI.toast(nextStatus === "hidden" ? "Ausgeblendet." : "Wieder sichtbar.", "success");
+        window.AdminUI.toast(nextStatus === "hidden" ? t("announcements.hiddenToast") : t("announcements.shownToast"), "success");
         loadAnnouncements();
       });
   }
@@ -522,7 +541,7 @@
     getElement("editorForm").addEventListener("submit", handleSave);
 
     loadAnnouncements().catch(function () {
-      getElement("listContainer").innerHTML = '<div class="admin-empty-state">Ankündigungen konnten nicht geladen werden.</div>';
+      getElement("listContainer").innerHTML = '<div class="admin-empty-state">' + escapeHtml(t("announcements.loadError")) + "</div>";
     });
   });
 

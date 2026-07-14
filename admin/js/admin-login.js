@@ -45,7 +45,7 @@
       var showing = input.type === "text";
       input.type = showing ? "password" : "text";
       toggle.setAttribute("aria-pressed", String(!showing));
-      toggle.setAttribute("aria-label", showing ? "Passwort anzeigen" : "Passwort verbergen");
+      toggle.setAttribute("aria-label", window.AdminI18N.t(showing ? "login.passwordShow" : "login.passwordHide"));
     });
   }
 
@@ -129,7 +129,7 @@
         })
         .catch(function () {
           setLoading(submitBtn, false);
-          showError(errorEl, "Verbindung zum Server nicht möglich. Bitte versuchen Sie es erneut.");
+          showError(errorEl, window.AdminI18N.t("common.connectionError"));
         });
     });
   }
@@ -159,12 +159,12 @@
           setLoading(submitBtn, false);
           // Always shows the same success message whether or not the email
           // exists — same enumeration-safety principle as the sign-in error.
-          showError(successEl, "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Link zum Zurücksetzen gesendet.");
+          showError(successEl, window.AdminI18N.t("login.forgotSuccess"));
           form.reset();
         })
         .catch(function () {
           setLoading(submitBtn, false);
-          showError(errorEl, "Verbindung zum Server nicht möglich. Bitte versuchen Sie es erneut.");
+          showError(errorEl, window.AdminI18N.t("common.connectionError"));
         });
     });
   }
@@ -186,13 +186,13 @@
       return;
     }
 
-    var messages = {
-      idle: "Sie wurden wegen Inaktivität automatisch abgemeldet.",
-      disabled: "Dieses Konto ist deaktiviert. Bitte wenden Sie sich an einen Super Admin."
+    var messageKeys = {
+      idle: "login.errors.idleLogout",
+      disabled: "login.errors.accountDisabled"
     };
 
-    if (messages[reason]) {
-      showError(getElement("loginError"), messages[reason]);
+    if (messageKeys[reason]) {
+      showError(getElement("loginError"), window.AdminI18N.t(messageKeys[reason]));
     }
   }
 

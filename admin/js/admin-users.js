@@ -13,10 +13,7 @@
     return document.getElementById(id);
   }
 
-  var ROLE_LABELS = {
-    super_admin: "Super Admin",
-    content_manager: "Content Manager"
-  };
+  var t = window.AdminI18N.t;
 
   var state = {
     client: null,
@@ -69,7 +66,7 @@
       '<div class="user-info">' +
       '<div class="user-name">' +
       escapeHtml(row.display_name) +
-      (isSelf ? ' <span style="color:var(--gray);font-weight:400">(Sie)</span>' : "") +
+      (isSelf ? ' <span style="color:var(--gray);font-weight:400">' + t("common.you") + "</span>" : "") +
       "</div>" +
       '<div class="user-email">' +
       escapeHtml(row.email) +
@@ -78,7 +75,7 @@
       '<span class="admin-badge" data-status="' +
       (row.disabled ? "hidden" : "active") +
       '">' +
-      (row.disabled ? "Deaktiviert" : "Aktiv") +
+      (row.disabled ? t("status.disabled") : t("status.active")) +
       "</span>" +
       '<div class="user-actions">' +
       '<select class="user-role-select" data-action="role" ' +
@@ -86,18 +83,24 @@
       ">" +
       '<option value="content_manager"' +
       (row.role === "content_manager" ? " selected" : "") +
-      ">Content Manager</option>" +
+      ">" +
+      t("role.content_manager") +
+      "</option>" +
       '<option value="super_admin"' +
       (row.role === "super_admin" ? " selected" : "") +
-      ">Super Admin</option>" +
+      ">" +
+      t("role.super_admin") +
+      "</option>" +
       "</select>" +
-      '<button type="button" class="btn-secondary btn-sm" data-action="reset-password">Passwort zurücksetzen</button>' +
+      '<button type="button" class="btn-secondary btn-sm" data-action="reset-password">' +
+      t("users.resetPasswordButton") +
+      "</button>" +
       (isSelf
         ? ""
         : '<button type="button" class="' +
           (row.disabled ? "btn-secondary" : "btn-danger") +
           ' btn-sm" data-action="toggle-disabled">' +
-          (row.disabled ? "Aktivieren" : "Deaktivieren") +
+          (row.disabled ? t("users.enableButton") : t("users.disableButton")) +
           "</button>") +
       "</div>" +
       "</div>"
@@ -107,7 +110,7 @@
   function renderList() {
     var container = getElement("listContainer");
     if (state.all.length === 0) {
-      container.innerHTML = '<div class="admin-empty-state">Noch keine Partnerkonten.</div>';
+      container.innerHTML = '<div class="admin-empty-state">' + escapeHtml(t("users.emptyState")) + "</div>";
       return;
     }
 
@@ -143,8 +146,8 @@
 
   function handleRoleChange(record, newRole) {
     window.AdminUI.confirmDialog({
-      title: "Rolle ändern?",
-      message: escapeHtml(record.display_name) + " erhält die Rolle „" + ROLE_LABELS[newRole] + "“."
+      title: t("users.roleChangeConfirmTitle"),
+      message: t("users.roleChangeConfirmMessage", { name: record.display_name, role: t("role." + newRole) })
     }).then(function (confirmed) {
       if (!confirmed) {
         renderList();
@@ -156,10 +159,10 @@
         .eq("id", record.id)
         .then(function (result) {
           if (result.error) {
-            window.AdminUI.toast("Rolle konnte nicht geändert werden.", "error");
+            window.AdminUI.toast(t("users.roleChangeFailed"), "error");
             return;
           }
-          window.AdminUI.toast("Rolle aktualisiert.", "success");
+          window.AdminUI.toast(t("users.roleChangeSuccess"), "success");
           loadUsers();
         });
     });
@@ -168,9 +171,9 @@
   function handleToggleDisabled(record) {
     var nextDisabled = !record.disabled;
     window.AdminUI.confirmDialog({
-      title: nextDisabled ? "Konto deaktivieren?" : "Konto aktivieren?",
-      message: escapeHtml(record.display_name) + (nextDisabled ? " kann sich danach nicht mehr anmelden." : " kann sich danach wieder anmelden."),
-      confirmLabel: nextDisabled ? "Deaktivieren" : "Aktivieren",
+      title: nextDisabled ? t("users.disableConfirmTitle") : t("users.enableConfirmTitle"),
+      message: t(nextDisabled ? "users.disableConfirmMessage" : "users.enableConfirmMessage", { name: record.display_name }),
+      confirmLabel: nextDisabled ? t("users.disableButton") : t("users.enableButton"),
       danger: nextDisabled
     }).then(function (confirmed) {
       if (!confirmed) {
@@ -182,10 +185,10 @@
         .eq("id", record.id)
         .then(function (result) {
           if (result.error) {
-            window.AdminUI.toast("Aktion fehlgeschlagen.", "error");
+            window.AdminUI.toast(t("common.actionFailed"), "error");
             return;
           }
-          window.AdminUI.toast(nextDisabled ? "Konto deaktiviert." : "Konto aktiviert.", "success");
+          window.AdminUI.toast(nextDisabled ? t("users.disableSuccess") : t("users.enableSuccess"), "success");
           loadUsers();
         });
     });
@@ -193,8 +196,8 @@
 
   function handleResetPassword(record) {
     window.AdminUI.confirmDialog({
-      title: "Passwort zurücksetzen?",
-      message: "Eine E-Mail zum Zurücksetzen des Passworts wird an " + escapeHtml(record.email) + " gesendet."
+      title: t("users.resetPasswordConfirmTitle"),
+      message: t("users.resetPasswordConfirmMessage", { email: record.email })
     }).then(function (confirmed) {
       if (!confirmed) {
         return;
@@ -202,10 +205,10 @@
       var redirectTo = window.location.origin + window.location.pathname.replace(/users\.html$/, "") + "reset-password.html";
       state.client.auth.resetPasswordForEmail(record.email, { redirectTo: redirectTo }).then(function (result) {
         if (result.error) {
-          window.AdminUI.toast("E-Mail konnte nicht gesendet werden.", "error");
+          window.AdminUI.toast(t("users.resetPasswordEmailFailed"), "error");
           return;
         }
-        window.AdminUI.toast("E-Mail zum Zurücksetzen gesendet.", "success");
+        window.AdminUI.toast(t("users.resetPasswordEmailSent"), "success");
       });
     });
   }
@@ -261,17 +264,18 @@
       .then(function (result) {
         setSaving(false);
         if (!result.ok) {
-          showEditorError(result.data.error || "Konto konnte nicht erstellt werden.");
+          var serverMessage = result.data.error || "Konto konnte nicht erstellt werden.";
+          showEditorError(window.AdminI18N.translateServerError(serverMessage));
           return;
         }
         window.AdminUI.closeModal(getElement("editorScrim"));
-        window.AdminUI.toast("Einladung gesendet.", "success");
+        window.AdminUI.toast(t("users.inviteSent"), "success");
         getElement("editorForm").reset();
         loadUsers();
       })
       .catch(function () {
         setSaving(false);
-        showEditorError("Verbindung zum Server nicht möglich. Bitte erneut versuchen.");
+        showEditorError(t("common.connectionError"));
       });
   }
 
@@ -303,7 +307,7 @@
     getElement("editorForm").addEventListener("submit", handleCreate);
 
     loadUsers().catch(function () {
-      getElement("listContainer").innerHTML = '<div class="admin-empty-state">Team konnte nicht geladen werden.</div>';
+      getElement("listContainer").innerHTML = '<div class="admin-empty-state">' + escapeHtml(t("users.loadError")) + "</div>";
     });
   });
 

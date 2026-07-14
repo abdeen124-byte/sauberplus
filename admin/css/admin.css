@@ -982,6 +982,18 @@
   border: 1px solid rgba(255, 193, 7, 0.4);
 }
 
+.admin-badge[data-status="scheduled"] {
+  background: rgba(77, 140, 255, 0.13);
+  color: #4d8cff;
+  border: 1px solid rgba(77, 140, 255, 0.4);
+}
+
+.admin-badge[data-status="expired"] {
+  background: rgba(255, 107, 107, 0.1);
+  color: #ff9c9c;
+  border: 1px solid rgba(255, 107, 107, 0.35);
+}
+
 .admin-empty-state {
   text-align: center;
   padding: 70px 20px;
@@ -1040,6 +1052,86 @@
 @media (max-width: 560px) {
   .admin-form-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+.admin-back-link::before {
+  content: "\2190\0020";
+}
+
+html[dir="rtl"] .admin-back-link::before {
+  content: "\2192\0020";
+}
+
+/* ---------- Language switcher ---------- */
+/* Reuses the public site's .lang-select/.lang-toggle/.lang-menu recipe
+   (already available — admin.css links css/sauberplus.css first) with only
+   2 options instead of 3. */
+
+.admin-topbar-right .admin-lang-select {
+  position: relative;
+}
+
+.admin-login-lang-mount,
+.admin-resetpw-lang-mount {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 80;
+}
+
+html[dir="rtl"] .admin-login-lang-mount,
+html[dir="rtl"] .admin-resetpw-lang-mount {
+  right: auto;
+  left: 20px;
+}
+
+/* ---------- RTL overrides ---------- */
+/* Flexbox/grid layouts mirror automatically under dir="rtl" — these are
+   only the spots using physical left/right/transform values that don't. */
+
+html[dir="rtl"] body {
+  font-family: "Cairo", sans-serif;
+}
+
+html[dir="rtl"] .admin-pw-toggle {
+  right: auto;
+  left: 4px;
+}
+
+html[dir="rtl"] .admin-pw-field input {
+  padding-right: 13px;
+  padding-left: 42px;
+}
+
+html[dir="rtl"] .admin-toggle-track::after {
+  left: auto;
+  right: 2px;
+}
+
+html[dir="rtl"] .admin-toggle input:checked ~ .admin-toggle-track::after {
+  transform: translateX(-14px);
+}
+
+html[dir="rtl"] .admin-toast-stack {
+  right: auto;
+  left: 20px;
+}
+
+html[dir="rtl"] .admin-login-brand-shape {
+  clip-path: polygon(100% 0, 38% 0, 62% 100%, 100% 100%);
+  background: linear-gradient(232deg, rgba(46, 107, 230, 0.32), rgba(45, 179, 74, 0.22) 55%, transparent 78%);
+}
+
+@media (max-width: 900px) {
+  html[dir="rtl"] .admin-sidebar {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+  }
+
+  html[dir="rtl"] .admin-sidebar[data-open="true"] {
+    transform: translateX(0);
   }
 }
 

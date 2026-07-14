@@ -60,12 +60,12 @@
 
     var lockedCheck = await client.rpc("is_locked_out", { p_email: normalizedEmail });
     if (lockedCheck.error) {
-      return { ok: false, message: "Anmeldung derzeit nicht möglich. Bitte später erneut versuchen." };
+      return { ok: false, message: window.AdminI18N.t("login.errors.serviceUnavailable") };
     }
     if (lockedCheck.data === true) {
       return {
         ok: false,
-        message: "Zu viele Fehlversuche. Bitte warten Sie 15 Minuten oder setzen Sie Ihr Passwort zurück."
+        message: window.AdminI18N.t("login.errors.tooManyAttempts")
       };
     }
 
@@ -76,14 +76,14 @@
 
     if (signInResult.error) {
       await client.rpc("register_failed_login", { p_email: normalizedEmail });
-      return { ok: false, message: "E-Mail-Adresse oder Passwort ist falsch." };
+      return { ok: false, message: window.AdminI18N.t("login.errors.invalidCredentials") };
     }
 
     var profile = await fetchProfile(signInResult.data.user.id);
 
     if (!profile || profile.disabled) {
       await client.auth.signOut();
-      return { ok: false, message: "Dieses Konto ist deaktiviert. Bitte wenden Sie sich an einen Super Admin." };
+      return { ok: false, message: window.AdminI18N.t("login.errors.accountDisabled") };
     }
 
     window.AdminSupabase.setRememberPreference(Boolean(remember));
@@ -152,8 +152,15 @@
     var el = document.createElement("div");
     el.className = "admin-idle-banner";
     el.setAttribute("role", "alert");
-    el.innerHTML =
-      '<span>Ihre Sitzung läuft bald ab.</span><button type="button">Angemeldet bleiben</button>';
+
+    var textSpan = document.createElement("span");
+    textSpan.textContent = window.AdminI18N.t("session.expiringSoon");
+    var stayButton = document.createElement("button");
+    stayButton.type = "button";
+    stayButton.textContent = window.AdminI18N.t("session.staySignedIn");
+    el.appendChild(textSpan);
+    el.appendChild(stayButton);
+
     el.querySelector("button").addEventListener("click", function () {
       resetIdleTimer();
       hideIdleBanner();

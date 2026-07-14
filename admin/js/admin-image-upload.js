@@ -52,11 +52,11 @@
 
   function validateFile(file) {
     if (file.size > MAX_BYTES) {
-      return Promise.resolve({ ok: false, message: "Datei ist zu groß (maximal 5 MB)." });
+      return Promise.resolve({ ok: false, message: window.AdminI18N.t("imageUpload.tooLarge") });
     }
     return detectImageType(file).then(function (detectedType) {
       if (!detectedType) {
-        return { ok: false, message: "Nur JPG-, PNG- oder WEBP-Bilder sind erlaubt." };
+        return { ok: false, message: window.AdminI18N.t("imageUpload.invalidType") };
       }
       return { ok: true, detectedType: detectedType };
     });
@@ -127,7 +127,7 @@
           .upload(path, optimizedBlob, { contentType: "image/webp", upsert: false })
           .then(function (result) {
             if (result.error) {
-              return Promise.reject(new Error("Upload fehlgeschlagen. Bitte erneut versuchen."));
+              return Promise.reject(new Error(window.AdminI18N.t("imageUpload.uploadFailed")));
             }
             var publicUrlResult = client.storage.from("cms-media").getPublicUrl(path);
             return { path: path, publicUrl: publicUrlResult.data.publicUrl };

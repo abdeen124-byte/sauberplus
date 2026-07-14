@@ -12,6 +12,8 @@
     return document.getElementById(id);
   }
 
+  var t = window.AdminI18N.t;
+
   var state = {
     client: null,
     profile: null
@@ -73,10 +75,10 @@
         });
       })
       .then(function () {
-        window.AdminUI.toast("Backup heruntergeladen.", "success");
+        window.AdminUI.toast(t("settings.exportSuccess"), "success");
       })
       .catch(function () {
-        window.AdminUI.toast("Export fehlgeschlagen.", "error");
+        window.AdminUI.toast(t("settings.exportFailed"), "error");
       });
   }
 
@@ -137,9 +139,9 @@
       .then(function () {
         showMessage(
           "importSuccess",
-          announcementRows.length + " Ankündigung(en) und " + galleryRows.length + " Galeriebild(er) wurden hinzugefügt."
+          t("settings.importResultMessage", { count1: announcementRows.length, count2: galleryRows.length })
         );
-        window.AdminUI.toast("Import abgeschlossen.", "success");
+        window.AdminUI.toast(t("settings.importSuccess"), "success");
       });
   }
 
@@ -153,20 +155,19 @@
         try {
           data = JSON.parse(text);
         } catch (error) {
-          throw new Error("Datei ist kein gültiges JSON.");
+          throw new Error(t("settings.invalidJson"));
         }
 
         if (!validateBackupShape(data)) {
-          throw new Error("Diese Datei sieht nicht wie ein SauberPlus-Backup aus.");
+          throw new Error(t("settings.notABackupFile"));
         }
 
         return window.AdminUI.confirmDialog({
-          title: "Backup importieren?",
-          message:
-            data.announcements.length +
-            " Ankündigung(en) und " +
-            data.gallery_images.length +
-            " Galeriebild(er) werden als neue Einträge hinzugefügt. Bestehende Daten bleiben unverändert."
+          title: t("settings.importConfirmTitle"),
+          message: t("settings.importConfirmMessage", {
+            count1: data.announcements.length,
+            count2: data.gallery_images.length
+          })
         }).then(function (confirmed) {
           if (!confirmed) {
             return;
@@ -175,7 +176,7 @@
         });
       })
       .catch(function (error) {
-        showMessage("importError", error && error.message ? error.message : "Import fehlgeschlagen.");
+        showMessage("importError", error && error.message ? error.message : t("settings.importFailed"));
       });
   }
 
@@ -189,7 +190,7 @@
     getElement("adminShell").hidden = false;
 
     if (profile.role !== "super_admin") {
-      document.querySelector(".admin-main").innerHTML = '<div class="admin-empty-state">Kein Zugriff.</div>';
+      document.querySelector(".admin-main").innerHTML = '<div class="admin-empty-state">' + t("common.noAccess") + "</div>";
       return;
     }
 

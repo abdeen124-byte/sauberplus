@@ -10,10 +10,7 @@
     return document.getElementById(id);
   }
 
-  var ROLE_LABELS = {
-    super_admin: "Super Admin",
-    content_manager: "Content Manager"
-  };
+  var t = window.AdminI18N.t;
 
   var ICONS = {
     megaphone: '<svg viewBox="0 0 24 24"><path d="M4 10v4a2 2 0 0 0 2 2h1l9 5V3l-9 5H6a2 2 0 0 0-2 2z"></path><path d="M18 9a4 4 0 0 1 0 6"></path></svg>',
@@ -47,11 +44,11 @@
   function renderStats(counts) {
     var grid = getElement("statsGrid");
     grid.innerHTML =
-      statCard("Aktive Ankündigungen", counts.activeAnnouncements, ICONS.megaphone) +
-      statCard("Entwürfe", counts.draftAnnouncements, ICONS.draft) +
-      statCard("Galeriebilder", counts.galleryTotal, ICONS.gallery) +
-      statCard("Vorher/Nachher-Paare", counts.beforeAfter, ICONS.compare) +
-      statCard("Uploads (7 Tage)", counts.recentUploads, ICONS.upload);
+      statCard(t("dashboard.stat.activeAnnouncements"), counts.activeAnnouncements, ICONS.megaphone) +
+      statCard(t("dashboard.stat.drafts"), counts.draftAnnouncements, ICONS.draft) +
+      statCard(t("dashboard.stat.galleryImages"), counts.galleryTotal, ICONS.gallery) +
+      statCard(t("dashboard.stat.beforeAfterPairs"), counts.beforeAfter, ICONS.compare) +
+      statCard(t("dashboard.stat.recentUploads"), counts.recentUploads, ICONS.upload);
   }
 
   function loadStats(client) {
@@ -83,45 +80,40 @@
     });
   }
 
-  var ACTION_LABELS = {
-    create: "erstellt",
-    update: "aktualisiert",
-    delete: "gelöscht",
-    login: "angemeldet"
-  };
-
-  var ENTITY_LABELS = {
-    announcements: "Ankündigung",
-    gallery_images: "Galeriebild",
-    user_profiles: "Konto"
-  };
-
   function formatActivityRow(row) {
-    var when = new Date(row.created_at).toLocaleString("de-DE", {
+    var locale = window.AdminI18N.getLang();
+    var when = new Date(row.created_at).toLocaleString(locale === "ar" ? "ar" : "de-DE", {
       day: "2-digit",
       month: "2-digit",
       hour: "2-digit",
       minute: "2-digit"
     });
-    var entityLabel = ENTITY_LABELS[row.entity_type] || row.entity_type;
-    var actionLabel = ACTION_LABELS[row.action] || row.action;
+    var actor = row.actor_email || t("common.system");
+    var sentence =
+      row.action === "login"
+        ? t("activityFeed.loggedIn", { actor: actor })
+        : t("activityFeed.action", {
+            actor: actor,
+            entity: t("entityLabel." + row.entity_type) || row.entity_type,
+            action: t("action." + row.action) || row.action
+          });
 
     return (
       '<div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px">' +
-      "<span>" +
-      "<strong style=\"color:#fff\">" +
-      (row.actor_email || "System") +
-      "</strong>" +
-      '<span style="color:var(--gray)"> hat ' +
-      entityLabel +
-      " " +
-      actionLabel +
-      "</span></span>" +
+      '<span style="color:var(--gray)">' +
+      escapeHtml(sentence) +
+      "</span>" +
       '<span style="color:rgba(255,255,255,.35);white-space:nowrap">' +
       when +
       "</span>" +
       "</div>"
     );
+  }
+
+  function escapeHtml(value) {
+    var div = document.createElement("div");
+    div.textContent = value || "";
+    return div.innerHTML;
   }
 
   function loadRecentActivity(client) {
@@ -134,7 +126,7 @@
       .limit(8)
       .then(function (result) {
         if (result.error || !result.data || result.data.length === 0) {
-          container.innerHTML = '<p class="admin-page-sub">Noch keine Aktivität.</p>';
+          container.innerHTML = '<p class="admin-page-sub">' + escapeHtml(t("dashboard.noActivity")) + "</p>";
           return;
         }
         container.innerHTML = result.data.map(formatActivityRow).join("");
@@ -148,20 +140,20 @@
 
     window.AdminUI.applyRoleGatedNav(profile.role);
 
-    getElement("welcomeName").textContent = profile.display_name || profile.email;
-    getElement("roleNote").textContent = "Angemeldet als " + (ROLE_LABELS[profile.role] || profile.role) + ".";
+    getElement("welcomeHeading").textContent = t("dashboard.welcome", { name: profile.display_name || profile.email });
+    getElement("roleNote").textContent = t("dashboard.signedInAs", { role: t("role." + profile.role) || profile.role });
     getElement("topbarUser").textContent = profile.email;
     getElement("adminShell").hidden = false;
 
     var client = window.AdminSupabase.getClient();
 
     loadStats(client).catch(function () {
-      getElement("statsGrid").innerHTML = '<p class="admin-page-sub">Statistiken konnten nicht geladen werden.</p>';
+      getElement("statsGrid").innerHTML = '<p class="admin-page-sub">' + escapeHtml(t("dashboard.statsLoadError")) + "</p>";
     });
 
     if (profile.role === "super_admin") {
       loadRecentActivity(client).catch(function () {
-        getElement("recentActivity").innerHTML = '<p class="admin-page-sub">Aktivität konnte nicht geladen werden.</p>';
+        getElement("recentActivity").innerHTML = '<p class="admin-page-sub">' + escapeHtml(t("dashboard.activityLoadError")) + "</p>";
       });
     } else {
       getElement("recentActivity").parentElement.style.display = "none";

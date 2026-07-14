@@ -11,6 +11,7 @@
     return document.getElementById(id);
   }
 
+  var t = window.AdminI18N.t;
   var SORT_ORDER_GAP = 1000;
 
   var state = {
@@ -62,9 +63,13 @@
       return (
         '<div class="admin-item-card-media split"><img src="' +
         beforeUrl +
-        '" alt="Vorher" draggable="false"><img src="' +
+        '" alt="' +
+        t("gallery.field.before") +
+        '" draggable="false"><img src="' +
         afterUrl +
-        '" alt="Nachher" draggable="false"></div>'
+        '" alt="' +
+        t("gallery.field.after") +
+        '" draggable="false"></div>'
       );
     }
     var url = window.AdminImageUpload.getPublicUrl(row.image_path);
@@ -85,21 +90,27 @@
       '<span class="admin-badge" data-status="' +
       (row.hidden ? "hidden" : "active") +
       '">' +
-      (row.hidden ? "Ausgeblendet" : "Sichtbar") +
+      (row.hidden ? t("status.hidden") : t("status.visible")) +
       "</span>" +
       '<span style="font-size:11px;color:var(--gray)">' +
-      (row.kind === "before_after" ? "Vorher/Nachher" : "Einzelbild") +
+      (row.kind === "before_after" ? t("gallery.kind.beforeAfterLabel") : t("gallery.kind.singleLabel")) +
       "</span>" +
       "</div>" +
       '<p class="admin-item-card-desc" style="min-height:16px">' +
       escapeHtml(row.caption || "") +
       "</p>" +
       '<div class="admin-item-card-actions">' +
-      '<button type="button" class="admin-icon-btn" data-action="edit" aria-label="Bearbeiten"><svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></button>' +
-      '<button type="button" class="admin-icon-btn" data-action="toggle-visibility" aria-label="Sichtbarkeit umschalten">' +
+      '<button type="button" class="admin-icon-btn" data-action="edit" aria-label="' +
+      t("common.edit") +
+      '"><svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></button>' +
+      '<button type="button" class="admin-icon-btn" data-action="toggle-visibility" aria-label="' +
+      t("common.toggleVisibility") +
+      '">' +
       toggleIcon +
       "</button>" +
-      '<button type="button" class="admin-icon-btn danger" data-action="delete" aria-label="Löschen"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="M6 7l1 13h10l1-13"></path></svg></button>' +
+      '<button type="button" class="admin-icon-btn danger" data-action="delete" aria-label="' +
+      t("common.delete") +
+      '"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M9 7V4h6v3"></path><path d="M6 7l1 13h10l1-13"></path></svg></button>' +
       "</div>" +
       "</div>"
     );
@@ -110,7 +121,7 @@
     var rows = filteredImages();
 
     if (rows.length === 0) {
-      container.innerHTML = '<div class="admin-empty-state">Keine Bilder in dieser Ansicht.</div>';
+      container.innerHTML = '<div class="admin-empty-state">' + escapeHtml(t("gallery.emptyState")) + "</div>";
       return;
     }
 
@@ -296,7 +307,11 @@
     resetEditorState(kind);
     state.editingRecord = record || null;
 
-    getElement("editorTitle").textContent = record ? "Bild bearbeiten" : kind === "before_after" ? "Vorher/Nachher hinzufügen" : "Einzelbild hinzufügen";
+    getElement("editorTitle").textContent = record
+      ? t("gallery.editTitle")
+      : kind === "before_after"
+      ? t("gallery.addPairTitle")
+      : t("gallery.addSingleTitle");
     getElement("editorForm").reset();
     hideEditorError();
 
@@ -387,11 +402,11 @@
       var needsBefore = isNew && !state.pendingFiles.before;
       var needsAfter = isNew && !state.pendingFiles.after;
       if (needsBefore || needsAfter) {
-        showEditorError("Bitte wählen Sie beide Bilder (Vorher und Nachher) aus.");
+        showEditorError(t("gallery.errors.needBothImages"));
         return;
       }
     } else if (isNew && !state.pendingFiles.single) {
-      showEditorError("Bitte wählen Sie ein Bild aus.");
+      showEditorError(t("gallery.errors.needImage"));
       return;
     }
 
@@ -460,20 +475,20 @@
       .then(function () {
         setSaving(false);
         window.AdminUI.closeModal(getElement("editorScrim"));
-        window.AdminUI.toast(state.editingRecord ? "Bild aktualisiert." : "Bild hinzugefügt.", "success");
+        window.AdminUI.toast(state.editingRecord ? t("gallery.saveSuccessUpdate") : t("gallery.saveSuccessCreate"), "success");
         return loadImages();
       })
       .catch(function (error) {
         setSaving(false);
-        showEditorError(error && error.message ? error.message : "Speichern fehlgeschlagen. Bitte erneut versuchen.");
+        showEditorError(error && error.message ? error.message : t("common.saveFailedRetry"));
       });
   }
 
   function handleDelete(record) {
     window.AdminUI.confirmDialog({
-      title: "Bild löschen?",
-      message: "Dieses Galeriebild wird dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
-      confirmLabel: "Löschen",
+      title: t("gallery.deleteConfirmTitle"),
+      message: t("gallery.deleteConfirmMessage"),
+      confirmLabel: t("common.delete"),
       danger: true
     }).then(function (confirmed) {
       if (!confirmed) {
@@ -485,7 +500,7 @@
         .eq("id", record.id)
         .then(function (result) {
           if (result.error) {
-            window.AdminUI.toast("Löschen fehlgeschlagen.", "error");
+            window.AdminUI.toast(t("common.deleteFailed"), "error");
             return;
           }
           if (record.kind === "before_after") {
@@ -494,7 +509,7 @@
           } else {
             window.AdminImageUpload.deleteImage(record.image_path);
           }
-          window.AdminUI.toast("Bild gelöscht.", "success");
+          window.AdminUI.toast(t("gallery.deleteSuccess"), "success");
           loadImages();
         });
     });
@@ -507,10 +522,10 @@
       .eq("id", record.id)
       .then(function (result) {
         if (result.error) {
-          window.AdminUI.toast("Aktion fehlgeschlagen.", "error");
+          window.AdminUI.toast(t("common.actionFailed"), "error");
           return;
         }
-        window.AdminUI.toast(record.hidden ? "Wieder sichtbar." : "Ausgeblendet.", "success");
+        window.AdminUI.toast(record.hidden ? t("announcements.shownToast") : t("announcements.hiddenToast"), "success");
         loadImages();
       });
   }
@@ -547,7 +562,7 @@
     getElement("editorForm").addEventListener("submit", handleSave);
 
     loadImages().catch(function () {
-      getElement("listContainer").innerHTML = '<div class="admin-empty-state">Galerie konnte nicht geladen werden.</div>';
+      getElement("listContainer").innerHTML = '<div class="admin-empty-state">' + escapeHtml(t("gallery.loadError")) + "</div>";
     });
   });
 

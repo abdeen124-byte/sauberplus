@@ -1,0 +1,811 @@
+/**
+ * SauberPlus Admin — DE/AR localization engine.
+ *
+ * Loaded in <head> (blocking, before <body> is parsed) so `dir`/`lang` on
+ * <html> are correct before anything paints — avoids a flash of the wrong
+ * direction/font. The dictionary walk of the DOM (`applyStaticTranslations`)
+ * still has to wait for DOMContentLoaded since the body doesn't exist yet
+ * when this script runs; it's wired up automatically at the bottom of this
+ * file, so no other page needs to call it.
+ *
+ * Switching language reloads the page rather than hot-swapping in place.
+ * Every admin page loads its data async and renders it via string-built
+ * markup; re-translating already-rendered DOM nodes in place would mean
+ * re-running that same render pipeline anyway, so a reload is simpler and
+ * cannot leave the page half-translated. Dynamic content (toasts, rendered
+ * cards, confirm dialogs, etc.) just needs to call `AdminI18N.t(...)` at
+ * render time — since render always happens fresh after a reload, it's
+ * automatically in the right language.
+ */
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "sp_admin_lang";
+  var DEFAULT_LANG = "de";
+
+  var DICT = {
+    de: {
+      common: {
+        logout: "Abmelden",
+        save: "Speichern",
+        cancel: "Abbrechen",
+        delete: "Löschen",
+        edit: "Bearbeiten",
+        close: "Schließen",
+        confirm: "Bestätigen",
+        pleaseConfirm: "Bitte bestätigen",
+        loading: "Wird geladen …",
+        actionFailed: "Aktion fehlgeschlagen.",
+        saveFailedRetry: "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+        connectionError: "Verbindung zum Server nicht möglich. Bitte versuchen Sie es erneut.",
+        system: "System",
+        you: "(Sie)",
+        emailLabel: "E-Mail-Adresse",
+        passwordLabel: "Passwort",
+        allStatuses: "Alle Status",
+        noAccess: "Kein Zugriff.",
+        deleteFailed: "Löschen fehlgeschlagen.",
+        menuOpen: "Menü öffnen",
+        languageSwitcher: "Sprache wechseln",
+        toggleVisibility: "Sichtbarkeit umschalten"
+      },
+      nav: {
+        dashboard: "Übersicht",
+        announcements: "Ankündigungen",
+        gallery: "Galerie",
+        management: "Verwaltung",
+        users: "Team",
+        activityLog: "Aktivitätsprotokoll",
+        settings: "Einstellungen"
+      },
+      role: {
+        super_admin: "Super Admin",
+        content_manager: "Content Manager"
+      },
+      status: {
+        active: "Aktiv",
+        activeOption: "Aktiv (veröffentlicht)",
+        draft: "Entwurf",
+        scheduled: "Geplant",
+        expired: "Abgelaufen",
+        hidden: "Ausgeblendet",
+        disabled: "Deaktiviert",
+        visible: "Sichtbar"
+      },
+      session: {
+        expiringSoon: "Ihre Sitzung läuft bald ab.",
+        staySignedIn: "Angemeldet bleiben"
+      },
+      login: {
+        brandTag: "ADMIN-BEREICH",
+        brandTitle: "Alles, was Sie zur Pflege Ihrer Website brauchen – an einem Ort.",
+        brandDesc: "Verwalten Sie Ankündigungen, Banner und die Galerie selbst – ganz ohne Code, GitHub oder Vercel.",
+        feature1: "Ankündigungen & Banner verwalten",
+        feature2: "Galerie mit Vorher/Nachher-Bildern pflegen",
+        feature3: "Team & Zugriffsrechte steuern",
+        feature4: "Jede Änderung wird protokolliert",
+        welcomeBack: "Willkommen zurück",
+        signInPrompt: "Melden Sie sich an, um fortzufahren.",
+        rememberMe: "Angemeldet bleiben",
+        forgotPassword: "Passwort vergessen?",
+        signInButton: "Anmelden",
+        footerNote: "Nur für autorisierte SauberPlus Partner.",
+        passwordShow: "Passwort anzeigen",
+        passwordHide: "Passwort verbergen",
+        resetTitle: "Passwort zurücksetzen",
+        resetPrompt: "Geben Sie Ihre E-Mail-Adresse ein. Wir senden Ihnen einen Link zum Zurücksetzen.",
+        sendLink: "Link senden",
+        backToLogin: "Zurück zum Login",
+        forgotSuccess: "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Link zum Zurücksetzen gesendet.",
+        errors: {
+          serviceUnavailable: "Anmeldung derzeit nicht möglich. Bitte später erneut versuchen.",
+          tooManyAttempts: "Zu viele Fehlversuche. Bitte warten Sie 15 Minuten oder setzen Sie Ihr Passwort zurück.",
+          invalidCredentials: "E-Mail-Adresse oder Passwort ist falsch.",
+          accountDisabled: "Dieses Konto ist deaktiviert. Bitte wenden Sie sich an einen Super Admin.",
+          idleLogout: "Sie wurden wegen Inaktivität automatisch abgemeldet."
+        }
+      },
+      resetPw: {
+        title: "Neues Passwort festlegen",
+        prompt: "Bitte wählen Sie ein neues Passwort für Ihr Konto.",
+        newPasswordLabel: "Neues Passwort",
+        passwordPlaceholder: "Mindestens 8 Zeichen",
+        confirmPasswordLabel: "Passwort bestätigen",
+        saveButton: "Passwort speichern",
+        invalidTitle: "Link ungültig oder abgelaufen",
+        invalidDesc: "Dieser Link zum Zurücksetzen des Passworts ist nicht mehr gültig. Bitte fordern Sie über den Login-Bildschirm einen neuen Link an.",
+        backToLogin: "Zurück zum Login",
+        successTitle: "Passwort aktualisiert",
+        successDesc: "Ihr Passwort wurde erfolgreich geändert. Sie werden zum Login weitergeleitet …",
+        errors: {
+          tooShort: "Das Passwort muss mindestens 8 Zeichen lang sein.",
+          mismatch: "Die Passwörter stimmen nicht überein.",
+          saveFailed: "Passwort konnte nicht gespeichert werden. Bitte fordern Sie einen neuen Link an."
+        }
+      },
+      dashboard: {
+        welcome: "Willkommen, {name}",
+        signedInAs: "Angemeldet als {role}.",
+        recentActivity: "Letzte Aktivität",
+        noActivity: "Noch keine Aktivität.",
+        statsLoadError: "Statistiken konnten nicht geladen werden.",
+        activityLoadError: "Aktivität konnte nicht geladen werden.",
+        stat: {
+          activeAnnouncements: "Aktive Ankündigungen",
+          drafts: "Entwürfe",
+          galleryImages: "Galeriebilder",
+          beforeAfterPairs: "Vorher/Nachher-Paare",
+          recentUploads: "Uploads (7 Tage)"
+        }
+      },
+      activityFeed: {
+        loggedIn: "{actor} hat sich angemeldet",
+        action: "{actor} hat {entity} {action}"
+      },
+      entityLabel: {
+        announcements: "Ankündigung",
+        gallery_images: "Galeriebild",
+        user_profiles: "Konto"
+      },
+      action: {
+        create: "erstellt",
+        update: "aktualisiert",
+        delete: "gelöscht"
+      },
+      announcements: {
+        title: "Ankündigungen",
+        subtitle: "Banner, Top-Leiste, Promo-Bereich, Popup und saisonale Kampagnen — an einem Ort.",
+        newButton: "+ Neue Ankündigung",
+        emptyState: "Keine Ankündigungen in dieser Ansicht.",
+        loadError: "Ankündigungen konnten nicht geladen werden.",
+        noDescription: "Keine Beschreibung",
+        noDateRange: "Kein Zeitraum",
+        editorTitleNew: "Neue Ankündigung",
+        editorTitleEdit: "Ankündigung bearbeiten",
+        saveSuccessUpdate: "Ankündigung aktualisiert.",
+        saveSuccessCreate: "Ankündigung erstellt.",
+        deleteSuccess: "Ankündigung gelöscht.",
+        deleteConfirmTitle: "Ankündigung löschen?",
+        deleteConfirmMessage: "„{title}“ wird dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
+        hiddenToast: "Ausgeblendet.",
+        shownToast: "Wieder sichtbar.",
+        placement: {
+          all: "Alle",
+          top_bar: "Top-Leiste",
+          homepage_banner: "Homepage-Banner",
+          promo_section: "Promo-Bereich",
+          popup: "Popup",
+          seasonal: "Saisonale Kampagne"
+        },
+        field: {
+          title: "Titel",
+          description: "Beschreibung",
+          placement: "Position",
+          status: "Status",
+          buttonLabel: "Button-Text (optional)",
+          buttonLabelPlaceholder: "z. B. Jetzt anfragen",
+          buttonUrl: "Button-Link (optional)",
+          startDate: "Start (optional)",
+          endDate: "Ende (optional)",
+          campaignLabel: "Kampagnen-Label (optional, nur intern sichtbar)",
+          campaignLabelPlaceholder: "z. B. Winterputz 2026",
+          image: "Bild (optional)",
+          preview: "Vorschau"
+        },
+        preview: {
+          noTitle: "(Ohne Titel)",
+          noDescription: "(Keine Beschreibung)"
+        },
+        errors: {
+          titleRequired: "Bitte geben Sie einen Titel ein.",
+          buttonUrlInvalid: "Der Button-Link muss mit http:// oder https:// beginnen.",
+          buttonUrlMissing: "Bitte geben Sie einen Button-Link an oder entfernen Sie den Button-Text.",
+          buttonLabelMissing: "Bitte geben Sie einen Button-Text an oder entfernen Sie den Button-Link."
+        }
+      },
+      gallery: {
+        title: "Galerie",
+        subtitle: "Bilder ziehen, um die Reihenfolge zu ändern. Änderungen sind sofort live.",
+        newSingleButton: "+ Einzelbild",
+        newPairButton: "+ Vorher/Nachher",
+        emptyState: "Keine Bilder in dieser Ansicht.",
+        loadError: "Galerie konnte nicht geladen werden.",
+        addSingleTitle: "Einzelbild hinzufügen",
+        addPairTitle: "Vorher/Nachher hinzufügen",
+        editTitle: "Bild bearbeiten",
+        saveSuccessUpdate: "Bild aktualisiert.",
+        saveSuccessCreate: "Bild hinzugefügt.",
+        deleteSuccess: "Bild gelöscht.",
+        deleteConfirmTitle: "Bild löschen?",
+        deleteConfirmMessage: "Dieses Galeriebild wird dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
+        hiddenToggleLabel: "Ausgeblendet (nicht auf der Website sichtbar)",
+        kind: {
+          all: "Alle",
+          single: "Einzelbilder",
+          before_after: "Vorher/Nachher",
+          singleLabel: "Einzelbild",
+          beforeAfterLabel: "Vorher/Nachher"
+        },
+        field: {
+          image: "Bild",
+          before: "Vorher",
+          after: "Nachher",
+          caption: "Bildunterschrift (optional)",
+          captionPlaceholder: "z. B. Büroreinigung Solingen"
+        },
+        errors: {
+          needBothImages: "Bitte wählen Sie beide Bilder (Vorher und Nachher) aus.",
+          needImage: "Bitte wählen Sie ein Bild aus."
+        }
+      },
+      dropzone: {
+        instructions: "Klicken oder Bild hierher ziehen (JPG, PNG, WEBP, max. 5 MB)",
+        selectImage: "Bild wählen",
+        removeImage: "Bild entfernen"
+      },
+      users: {
+        title: "Team",
+        subtitle: "Partnerkonten anlegen, Rollen verwalten, Zugriff sperren.",
+        newButton: "+ Neuer Partner",
+        emptyState: "Noch keine Partnerkonten.",
+        loadError: "Team konnte nicht geladen werden.",
+        resetPasswordButton: "Passwort zurücksetzen",
+        disableButton: "Deaktivieren",
+        enableButton: "Aktivieren",
+        newPartnerModalTitle: "Neuer Partner",
+        inviteExplain: "Das neue Konto erhält eine E-Mail-Einladung und legt sein eigenes Passwort selbst fest.",
+        inviteButton: "Einladen",
+        createFailed: "Konto konnte nicht erstellt werden.",
+        inviteSent: "Einladung gesendet.",
+        edgeErrors: {
+          notSuperAdmin: "Nur Super Admins können Konten erstellen.",
+          invalidEmail: "Ungültige E-Mail-Adresse.",
+          nameRequired: "Bitte einen Namen angeben.",
+          invalidRole: "Ungültige Rolle.",
+          emailTaken: "Diese E-Mail-Adresse ist bereits registriert.",
+          profileSaveFailed: "Konto wurde angelegt, Profil konnte aber nicht gespeichert werden. Bitte SauberPlus-Entwickler kontaktieren."
+        },
+        roleChangeConfirmTitle: "Rolle ändern?",
+        roleChangeConfirmMessage: "{name} erhält die Rolle „{role}“.",
+        roleChangeFailed: "Rolle konnte nicht geändert werden.",
+        roleChangeSuccess: "Rolle aktualisiert.",
+        disableConfirmTitle: "Konto deaktivieren?",
+        enableConfirmTitle: "Konto aktivieren?",
+        disableConfirmMessage: "{name} kann sich danach nicht mehr anmelden.",
+        enableConfirmMessage: "{name} kann sich danach wieder anmelden.",
+        disableSuccess: "Konto deaktiviert.",
+        enableSuccess: "Konto aktiviert.",
+        resetPasswordConfirmTitle: "Passwort zurücksetzen?",
+        resetPasswordConfirmMessage: "Eine E-Mail zum Zurücksetzen des Passworts wird an {email} gesendet.",
+        resetPasswordEmailFailed: "E-Mail konnte nicht gesendet werden.",
+        resetPasswordEmailSent: "E-Mail zum Zurücksetzen gesendet.",
+        field: {
+          name: "Name",
+          role: "Rolle"
+        }
+      },
+      activityLog: {
+        title: "Aktivitätsprotokoll",
+        subtitle: "Jede Änderung wird automatisch protokolliert — Benutzer, Zeitpunkt, Aktion, vorher/nachher.",
+        loadMore: "Mehr laden",
+        emptyState: "Keine Einträge.",
+        loadError: "Protokoll konnte nicht geladen werden.",
+        before: "Vorher",
+        after: "Nachher",
+        entity: {
+          all: "Alle",
+          announcements: "Ankündigungen",
+          gallery: "Galerie",
+          accounts: "Konten"
+        }
+      },
+      settings: {
+        title: "Einstellungen",
+        subtitle: "Sicherung der Inhalte (Ankündigungen & Galerie). Kontodaten sind aus Sicherheitsgründen nicht enthalten.",
+        exportHeading: "Daten exportieren",
+        exportDesc: "Lädt alle Ankündigungen und Galeriebilder als JSON-Datei herunter. Diese Datei kann später zur Wiederherstellung importiert werden. Bilddateien selbst sind nicht enthalten, nur die Verweise darauf.",
+        exportButton: "Backup herunterladen",
+        exportSuccess: "Backup heruntergeladen.",
+        exportFailed: "Export fehlgeschlagen.",
+        importHeading: "Daten importieren",
+        importDesc: "Fügt die Einträge aus einer zuvor exportierten Backup-Datei als neue Einträge hinzu (bestehende Daten werden nicht überschrieben oder gelöscht).",
+        importButton: "Backup-Datei auswählen …",
+        importSuccess: "Import abgeschlossen.",
+        importFailed: "Import fehlgeschlagen.",
+        invalidJson: "Datei ist kein gültiges JSON.",
+        notABackupFile: "Diese Datei sieht nicht wie ein SauberPlus-Backup aus.",
+        importConfirmTitle: "Backup importieren?",
+        importConfirmMessage: "{count1} Ankündigung(en) und {count2} Galeriebild(er) werden als neue Einträge hinzugefügt. Bestehende Daten bleiben unverändert.",
+        importResultMessage: "{count1} Ankündigung(en) und {count2} Galeriebild(er) wurden hinzugefügt."
+      },
+      imageUpload: {
+        tooLarge: "Datei ist zu groß (maximal 5 MB).",
+        invalidType: "Nur JPG-, PNG- oder WEBP-Bilder sind erlaubt.",
+        uploadFailed: "Upload fehlgeschlagen. Bitte erneut versuchen."
+      }
+    },
+
+    ar: {
+      common: {
+        logout: "تسجيل الخروج",
+        save: "حفظ",
+        cancel: "إلغاء",
+        delete: "حذف",
+        edit: "تعديل",
+        close: "إغلاق",
+        confirm: "تأكيد",
+        pleaseConfirm: "يرجى التأكيد",
+        loading: "جارٍ التحميل…",
+        actionFailed: "فشل تنفيذ الإجراء.",
+        saveFailedRetry: "فشل الحفظ. يرجى المحاولة مرة أخرى.",
+        connectionError: "تعذّر الاتصال بالخادم. يرجى المحاولة مرة أخرى.",
+        system: "النظام",
+        you: "(أنت)",
+        emailLabel: "البريد الإلكتروني",
+        passwordLabel: "كلمة المرور",
+        allStatuses: "كل الحالات",
+        noAccess: "لا توجد صلاحية للوصول.",
+        deleteFailed: "فشل الحذف.",
+        menuOpen: "فتح القائمة",
+        languageSwitcher: "تغيير اللغة",
+        toggleVisibility: "تبديل الظهور"
+      },
+      nav: {
+        dashboard: "لوحة التحكم",
+        announcements: "الإعلانات",
+        gallery: "المعرض",
+        management: "الإدارة",
+        users: "الفريق",
+        activityLog: "سجل النشاط",
+        settings: "الإعدادات"
+      },
+      role: {
+        super_admin: "المدير العام",
+        content_manager: "مدير المحتوى"
+      },
+      status: {
+        active: "نشط",
+        activeOption: "نشط (منشور)",
+        draft: "مسودة",
+        scheduled: "مجدول",
+        expired: "منتهي",
+        hidden: "مخفي",
+        disabled: "معطل",
+        visible: "ظاهر"
+      },
+      session: {
+        expiringSoon: "ستنتهي جلستك قريبًا.",
+        staySignedIn: "البقاء مسجّلاً للدخول"
+      },
+      login: {
+        brandTag: "منطقة الإدارة",
+        brandTitle: "كل ما تحتاجه لإدارة موقعك الإلكتروني — في مكان واحد.",
+        brandDesc: "أدر الإعلانات واللافتات والمعرض بنفسك — دون الحاجة إلى أكواد برمجية أو GitHub أو Vercel.",
+        feature1: "إدارة الإعلانات واللافتات الترويجية",
+        feature2: "تحديث معرض الصور بمقارنات قبل/بعد",
+        feature3: "إدارة الفريق وصلاحيات الوصول",
+        feature4: "يتم تسجيل كل تغيير تلقائيًا",
+        welcomeBack: "مرحبًا بعودتك",
+        signInPrompt: "سجّل الدخول للمتابعة.",
+        rememberMe: "تذكرني",
+        forgotPassword: "هل نسيت كلمة المرور؟",
+        signInButton: "تسجيل الدخول",
+        footerNote: "لشركاء SauberPlus المخوّلين فقط.",
+        passwordShow: "إظهار كلمة المرور",
+        passwordHide: "إخفاء كلمة المرور",
+        resetTitle: "إعادة تعيين كلمة المرور",
+        resetPrompt: "أدخل بريدك الإلكتروني، وسنرسل لك رابطًا لإعادة التعيين.",
+        sendLink: "إرسال الرابط",
+        backToLogin: "العودة إلى تسجيل الدخول",
+        forgotSuccess: "إذا كان هناك حساب مرتبط بهذا البريد الإلكتروني، فسيتم إرسال رابط إعادة التعيين إليه.",
+        errors: {
+          serviceUnavailable: "تعذّر تسجيل الدخول حاليًا. يرجى المحاولة لاحقًا.",
+          tooManyAttempts: "عدد كبير من المحاولات الفاشلة. يرجى الانتظار 15 دقيقة أو إعادة تعيين كلمة المرور.",
+          invalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+          accountDisabled: "هذا الحساب معطّل. يرجى التواصل مع المدير العام.",
+          idleLogout: "تم تسجيل خروجك تلقائيًا بسبب عدم النشاط."
+        }
+      },
+      resetPw: {
+        title: "تعيين كلمة مرور جديدة",
+        prompt: "يرجى اختيار كلمة مرور جديدة لحسابك.",
+        newPasswordLabel: "كلمة المرور الجديدة",
+        passwordPlaceholder: "8 أحرف على الأقل",
+        confirmPasswordLabel: "تأكيد كلمة المرور",
+        saveButton: "حفظ كلمة المرور",
+        invalidTitle: "الرابط غير صالح أو منتهي الصلاحية",
+        invalidDesc: "رابط إعادة تعيين كلمة المرور هذا لم يعد صالحًا. يرجى طلب رابط جديد من شاشة تسجيل الدخول.",
+        backToLogin: "العودة إلى تسجيل الدخول",
+        successTitle: "تم تحديث كلمة المرور",
+        successDesc: "تم تغيير كلمة المرور بنجاح. سيتم تحويلك إلى صفحة تسجيل الدخول…",
+        errors: {
+          tooShort: "يجب أن تتكوّن كلمة المرور من 8 أحرف على الأقل.",
+          mismatch: "كلمتا المرور غير متطابقتين.",
+          saveFailed: "تعذّر حفظ كلمة المرور. يرجى طلب رابط جديد."
+        }
+      },
+      dashboard: {
+        welcome: "مرحبًا، {name}",
+        signedInAs: "تم تسجيل الدخول باسم {role}.",
+        recentActivity: "أحدث النشاطات",
+        noActivity: "لا يوجد نشاط بعد.",
+        statsLoadError: "تعذّر تحميل الإحصائيات.",
+        activityLoadError: "تعذّر تحميل النشاط.",
+        stat: {
+          activeAnnouncements: "الإعلانات النشطة",
+          drafts: "المسودات",
+          galleryImages: "صور المعرض",
+          beforeAfterPairs: "أزواج قبل/بعد",
+          recentUploads: "الرفوعات (٧ أيام)"
+        }
+      },
+      activityFeed: {
+        loggedIn: "سجّل {actor} الدخول",
+        action: "قام {actor} {action} {entity}"
+      },
+      entityLabel: {
+        announcements: "إعلان",
+        gallery_images: "صورة معرض",
+        user_profiles: "حساب"
+      },
+      action: {
+        create: "بإنشاء",
+        update: "بتحديث",
+        delete: "بحذف"
+      },
+      announcements: {
+        title: "الإعلانات",
+        subtitle: "اللافتات، الشريط العلوي، القسم الترويجي، النوافذ المنبثقة، والحملات الموسمية — في مكان واحد.",
+        newButton: "+ إعلان جديد",
+        emptyState: "لا توجد إعلانات في هذا العرض.",
+        loadError: "تعذّر تحميل الإعلانات.",
+        noDescription: "بدون وصف",
+        noDateRange: "بدون فترة زمنية",
+        editorTitleNew: "إعلان جديد",
+        editorTitleEdit: "تعديل الإعلان",
+        saveSuccessUpdate: "تم تحديث الإعلان.",
+        saveSuccessCreate: "تم إنشاء الإعلان.",
+        deleteSuccess: "تم حذف الإعلان.",
+        deleteConfirmTitle: "حذف الإعلان؟",
+        deleteConfirmMessage: "سيتم حذف «{title}» نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
+        hiddenToast: "تم الإخفاء.",
+        shownToast: "تم الإظهار مجددًا.",
+        placement: {
+          all: "الكل",
+          top_bar: "الشريط العلوي",
+          homepage_banner: "لافتة الصفحة الرئيسية",
+          promo_section: "القسم الترويجي",
+          popup: "نافذة منبثقة",
+          seasonal: "حملة موسمية"
+        },
+        field: {
+          title: "العنوان",
+          description: "الوصف",
+          placement: "الموضع",
+          status: "الحالة",
+          buttonLabel: "نص الزر (اختياري)",
+          buttonLabelPlaceholder: "مثال: اطلب الآن",
+          buttonUrl: "رابط الزر (اختياري)",
+          startDate: "تاريخ البدء (اختياري)",
+          endDate: "تاريخ الانتهاء (اختياري)",
+          campaignLabel: "اسم الحملة (اختياري، للاستخدام الداخلي فقط)",
+          campaignLabelPlaceholder: "مثال: تنظيف الشتاء 2026",
+          image: "الصورة (اختياري)",
+          preview: "معاينة"
+        },
+        preview: {
+          noTitle: "(بدون عنوان)",
+          noDescription: "(بدون وصف)"
+        },
+        errors: {
+          titleRequired: "يرجى إدخال عنوان.",
+          buttonUrlInvalid: "يجب أن يبدأ رابط الزر بـ http:// أو https://.",
+          buttonUrlMissing: "يرجى إدخال رابط للزر أو إزالة نص الزر.",
+          buttonLabelMissing: "يرجى إدخال نص للزر أو إزالة رابط الزر."
+        }
+      },
+      gallery: {
+        title: "المعرض",
+        subtitle: "اسحب الصور لتغيير ترتيبها. التغييرات تُنشر فورًا.",
+        newSingleButton: "+ صورة مفردة",
+        newPairButton: "+ قبل/بعد",
+        emptyState: "لا توجد صور في هذا العرض.",
+        loadError: "تعذّر تحميل المعرض.",
+        addSingleTitle: "إضافة صورة مفردة",
+        addPairTitle: "إضافة صورة قبل/بعد",
+        editTitle: "تعديل الصورة",
+        saveSuccessUpdate: "تم تحديث الصورة.",
+        saveSuccessCreate: "تمت إضافة الصورة.",
+        deleteSuccess: "تم حذف الصورة.",
+        deleteConfirmTitle: "حذف الصورة؟",
+        deleteConfirmMessage: "سيتم حذف صورة المعرض هذه نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
+        hiddenToggleLabel: "مخفي (غير ظاهر على الموقع)",
+        kind: {
+          all: "الكل",
+          single: "صور مفردة",
+          before_after: "قبل/بعد",
+          singleLabel: "صورة مفردة",
+          beforeAfterLabel: "قبل/بعد"
+        },
+        field: {
+          image: "الصورة",
+          before: "قبل",
+          after: "بعد",
+          caption: "التسمية التوضيحية (اختياري)",
+          captionPlaceholder: "مثال: تنظيف مكاتب زولينغن"
+        },
+        errors: {
+          needBothImages: "يرجى اختيار كلتا الصورتين (قبل وبعد).",
+          needImage: "يرجى اختيار صورة."
+        }
+      },
+      dropzone: {
+        instructions: "انقر أو اسحب الصورة هنا (JPG، PNG، WEBP، بحد أقصى 5 ميجابايت)",
+        selectImage: "اختر صورة",
+        removeImage: "إزالة الصورة"
+      },
+      users: {
+        title: "الفريق",
+        subtitle: "إنشاء حسابات الشركاء وإدارة الأدوار وتقييد الوصول.",
+        newButton: "+ شريك جديد",
+        emptyState: "لا توجد حسابات شركاء بعد.",
+        loadError: "تعذّر تحميل الفريق.",
+        resetPasswordButton: "إعادة تعيين كلمة المرور",
+        disableButton: "تعطيل",
+        enableButton: "تفعيل",
+        newPartnerModalTitle: "شريك جديد",
+        inviteExplain: "سيتلقى الحساب الجديد دعوة عبر البريد الإلكتروني ويقوم بتعيين كلمة المرور بنفسه.",
+        inviteButton: "دعوة",
+        createFailed: "تعذّر إنشاء الحساب.",
+        inviteSent: "تم إرسال الدعوة.",
+        edgeErrors: {
+          notSuperAdmin: "يقتصر إنشاء الحسابات على المدير العام فقط.",
+          invalidEmail: "البريد الإلكتروني غير صالح.",
+          nameRequired: "يرجى إدخال اسم.",
+          invalidRole: "دور غير صالح.",
+          emailTaken: "هذا البريد الإلكتروني مسجّل بالفعل.",
+          profileSaveFailed: "تم إنشاء الحساب، لكن تعذّر حفظ الملف الشخصي. يرجى التواصل مع مطوّر SauberPlus."
+        },
+        roleChangeConfirmTitle: "تغيير الدور؟",
+        roleChangeConfirmMessage: "سيحصل {name} على دور «{role}».",
+        roleChangeFailed: "تعذّر تغيير الدور.",
+        roleChangeSuccess: "تم تحديث الدور.",
+        disableConfirmTitle: "تعطيل الحساب؟",
+        enableConfirmTitle: "تفعيل الحساب؟",
+        disableConfirmMessage: "لن يتمكن {name} من تسجيل الدخول بعد ذلك.",
+        enableConfirmMessage: "سيتمكن {name} من تسجيل الدخول مرة أخرى.",
+        disableSuccess: "تم تعطيل الحساب.",
+        enableSuccess: "تم تفعيل الحساب.",
+        resetPasswordConfirmTitle: "إعادة تعيين كلمة المرور؟",
+        resetPasswordConfirmMessage: "سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى {email}.",
+        resetPasswordEmailFailed: "تعذّر إرسال البريد الإلكتروني.",
+        resetPasswordEmailSent: "تم إرسال بريد إعادة التعيين.",
+        field: {
+          name: "الاسم",
+          role: "الدور"
+        }
+      },
+      activityLog: {
+        title: "سجل النشاط",
+        subtitle: "يتم تسجيل كل تغيير تلقائيًا — المستخدم، التوقيت، الإجراء، قبل/بعد.",
+        loadMore: "تحميل المزيد",
+        emptyState: "لا توجد سجلات.",
+        loadError: "تعذّر تحميل السجل.",
+        before: "قبل",
+        after: "بعد",
+        entity: {
+          all: "الكل",
+          announcements: "الإعلانات",
+          gallery: "المعرض",
+          accounts: "الحسابات"
+        }
+      },
+      settings: {
+        title: "الإعدادات",
+        subtitle: "نسخ احتياطي للمحتوى (الإعلانات والمعرض). لا تشمل بيانات الحسابات لأسباب أمنية.",
+        exportHeading: "تصدير البيانات",
+        exportDesc: "يقوم بتنزيل جميع الإعلانات وصور المعرض كملف JSON. يمكن استيراد هذا الملف لاحقًا لاستعادة البيانات. لا يشمل ملفات الصور نفسها، بل الروابط إليها فقط.",
+        exportButton: "تنزيل النسخة الاحتياطية",
+        exportSuccess: "تم تنزيل النسخة الاحتياطية.",
+        exportFailed: "فشل التصدير.",
+        importHeading: "استيراد البيانات",
+        importDesc: "يضيف العناصر من ملف نسخة احتياطية تم تصديره سابقًا كعناصر جديدة (لا يتم استبدال البيانات الحالية أو حذفها).",
+        importButton: "اختيار ملف النسخة الاحتياطية…",
+        importSuccess: "اكتمل الاستيراد.",
+        importFailed: "فشل الاستيراد.",
+        invalidJson: "الملف ليس بصيغة JSON صالحة.",
+        notABackupFile: "لا يبدو أن هذا الملف نسخة احتياطية من SauberPlus.",
+        importConfirmTitle: "استيراد النسخة الاحتياطية؟",
+        importConfirmMessage: "ستتم إضافة {count1} إعلان(ات) و{count2} صورة (صور) من المعرض كعناصر جديدة. لن تتأثر البيانات الحالية.",
+        importResultMessage: "تمت إضافة {count1} إعلان(ات) و{count2} صورة (صور) من المعرض."
+      },
+      imageUpload: {
+        tooLarge: "حجم الملف كبير جدًا (الحد الأقصى 5 ميجابايت).",
+        invalidType: "يُسمح فقط بصور JPG أو PNG أو WEBP.",
+        uploadFailed: "فشل الرفع. يرجى المحاولة مرة أخرى."
+      }
+    }
+  };
+
+  // ---------------------------------------------------------------
+  // Engine
+  // ---------------------------------------------------------------
+
+  function getLang() {
+    try {
+      var stored = window.localStorage.getItem(STORAGE_KEY);
+      return stored === "ar" ? "ar" : DEFAULT_LANG;
+    } catch (error) {
+      return DEFAULT_LANG;
+    }
+  }
+
+  function lookup(dict, key) {
+    var parts = key.split(".");
+    var node = dict;
+    for (var i = 0; i < parts.length; i += 1) {
+      if (node == null || typeof node !== "object") {
+        return null;
+      }
+      node = node[parts[i]];
+    }
+    return typeof node === "string" ? node : null;
+  }
+
+  function t(key, vars) {
+    var lang = getLang();
+    var value = lookup(DICT[lang], key);
+    if (value == null && lang !== DEFAULT_LANG) {
+      value = lookup(DICT[DEFAULT_LANG], key);
+    }
+    if (value == null) {
+      return key;
+    }
+    if (vars) {
+      Object.keys(vars).forEach(function (varName) {
+        value = value.replace(new RegExp("\\{" + varName + "\\}", "g"), vars[varName]);
+      });
+    }
+    return value;
+  }
+
+  // The admin-create-user Edge Function (server-side, out of scope for this
+  // localization layer) always replies in German. Rather than making server
+  // code language-aware, this maps its known fixed responses to a
+  // translation key so the UI can still show them in the active language.
+  // Anything not in this map (an unexpected server error) is returned as-is.
+  var SERVER_ERROR_KEY_MAP = {
+    "Nur Super Admins können Konten erstellen.": "users.edgeErrors.notSuperAdmin",
+    "Ungültige E-Mail-Adresse.": "users.edgeErrors.invalidEmail",
+    "Bitte einen Namen angeben.": "users.edgeErrors.nameRequired",
+    "Ungültige Rolle.": "users.edgeErrors.invalidRole",
+    "Diese E-Mail-Adresse ist bereits registriert.": "users.edgeErrors.emailTaken",
+    "Konto konnte nicht erstellt werden.": "users.createFailed",
+    "Konto wurde angelegt, Profil konnte aber nicht gespeichert werden. Bitte SauberPlus-Entwickler kontaktieren.": "users.edgeErrors.profileSaveFailed"
+  };
+
+  function translateServerError(message) {
+    var key = SERVER_ERROR_KEY_MAP[message];
+    return key ? t(key) : message;
+  }
+
+  function applyDirection(lang) {
+    var root = document.documentElement;
+    root.lang = lang;
+    root.dir = lang === "ar" ? "rtl" : "ltr";
+  }
+
+  // Apply direction immediately (script runs in <head>, document.documentElement
+  // already exists even though <body> hasn't been parsed yet).
+  applyDirection(getLang());
+
+  function setLang(lang) {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, lang === "ar" ? "ar" : "de");
+    } catch (error) {
+      // Storage unavailable — language choice just won't persist, harmless.
+    }
+    window.location.reload();
+  }
+
+  function applyStaticTranslations() {
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      el.textContent = t(el.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+      el.setAttribute("placeholder", t(el.getAttribute("data-i18n-placeholder")));
+    });
+    document.querySelectorAll("[data-i18n-aria-label]").forEach(function (el) {
+      el.setAttribute("aria-label", t(el.getAttribute("data-i18n-aria-label")));
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // Switcher UI — built and injected automatically, reusing the public
+  // site's existing .lang-select/.lang-toggle/.lang-menu recipe (available
+  // for free since admin.css links css/sauberplus.css first).
+  // ---------------------------------------------------------------
+
+  function buildSwitcher() {
+    var current = getLang();
+    var wrap = document.createElement("div");
+    wrap.className = "lang-select admin-lang-select";
+    wrap.id = "adminLanguageSelect";
+    wrap.innerHTML =
+      '<button class="lang-toggle" type="button" aria-haspopup="true" aria-expanded="false">' +
+      '<span class="lang-globe" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3.6 9h16.8"></path><path d="M3.6 15h16.8"></path><path d="M12 3c2.4 2.5 3.6 5.5 3.6 9S14.4 18.5 12 21"></path><path d="M12 3c-2.4 2.5-3.6 5.5-3.6 9S9.6 18.5 12 21"></path></svg></span>' +
+      '<span class="lang-current">' +
+      (current === "ar" ? "AR" : "DE") +
+      '</span><span class="lang-chevron" aria-hidden="true">⌄</span>' +
+      "</button>" +
+      '<div class="lang-menu" role="menu">' +
+      '<button class="lang-option' +
+      (current === "de" ? " active" : "") +
+      '" type="button" data-lang="de" role="menuitem"><span class="lang-code">DE</span><span>Deutsch</span></button>' +
+      '<button class="lang-option' +
+      (current === "ar" ? " active" : "") +
+      '" type="button" data-lang="ar" role="menuitem"><span class="lang-code">AR</span><span>العربية</span></button>' +
+      "</div>";
+    return wrap;
+  }
+
+  function wireSwitcher(wrap) {
+    var toggle = wrap.querySelector(".lang-toggle");
+    var menu = wrap.querySelector(".lang-menu");
+
+    function close() {
+      wrap.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+
+    toggle.addEventListener("click", function () {
+      var willOpen = !wrap.classList.contains("open");
+      wrap.classList.toggle("open", willOpen);
+      toggle.setAttribute("aria-expanded", String(willOpen));
+    });
+
+    menu.querySelectorAll(".lang-option").forEach(function (option) {
+      option.addEventListener("click", function () {
+        var lang = option.getAttribute("data-lang");
+        if (lang !== getLang()) {
+          setLang(lang);
+        } else {
+          close();
+        }
+      });
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!wrap.contains(event.target)) {
+        close();
+      }
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        close();
+      }
+    });
+  }
+
+  function initSwitcher() {
+    var mountPoints = document.querySelectorAll("[data-lang-switcher-mount]");
+    mountPoints.forEach(function (mount) {
+      var switcherEl = buildSwitcher();
+      mount.appendChild(switcherEl);
+      wireSwitcher(switcherEl);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    applyStaticTranslations();
+    initSwitcher();
+  });
+
+  window.AdminI18N = {
+    t: t,
+    getLang: getLang,
+    setLang: setLang,
+    applyStaticTranslations: applyStaticTranslations,
+    translateServerError: translateServerError
+  };
+})();

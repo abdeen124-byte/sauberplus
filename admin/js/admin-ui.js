@@ -97,7 +97,7 @@
 
       var title = document.createElement("h3");
       title.className = "admin-modal-title";
-      title.textContent = settings.title || "Bitte bestätigen";
+      title.textContent = settings.title || window.AdminI18N.t("common.pleaseConfirm");
 
       var header = document.createElement("div");
       header.className = "admin-modal-header";
@@ -113,12 +113,12 @@
       var cancelBtn = document.createElement("button");
       cancelBtn.type = "button";
       cancelBtn.className = "btn-secondary";
-      cancelBtn.textContent = settings.cancelLabel || "Abbrechen";
+      cancelBtn.textContent = settings.cancelLabel || window.AdminI18N.t("common.cancel");
 
       var confirmBtn = document.createElement("button");
       confirmBtn.type = "button";
       confirmBtn.className = settings.danger ? "btn-danger" : "btn-secondary";
-      confirmBtn.textContent = settings.confirmLabel || "Bestätigen";
+      confirmBtn.textContent = settings.confirmLabel || window.AdminI18N.t("common.confirm");
       if (!settings.danger) {
         confirmBtn.style.borderColor = "var(--green)";
         confirmBtn.style.color = "var(--green)";

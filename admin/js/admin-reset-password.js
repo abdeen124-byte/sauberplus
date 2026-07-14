@@ -65,11 +65,11 @@
       var confirmPassword = getElement("confirmPassword").value;
 
       if (password.length < 8) {
-        showError(errorEl, "Das Passwort muss mindestens 8 Zeichen lang sein.");
+        showError(errorEl, window.AdminI18N.t("resetPw.errors.tooShort"));
         return;
       }
       if (password !== confirmPassword) {
-        showError(errorEl, "Die Passwörter stimmen nicht überein.");
+        showError(errorEl, window.AdminI18N.t("resetPw.errors.mismatch"));
         return;
       }
 
@@ -80,14 +80,14 @@
         .then(function (result) {
           setLoading(submitBtn, false);
           if (result.error) {
-            showError(errorEl, "Passwort konnte nicht gespeichert werden. Bitte fordern Sie einen neuen Link an.");
+            showError(errorEl, window.AdminI18N.t("resetPw.errors.saveFailed"));
             return;
           }
           showSuccessState();
         })
         .catch(function () {
           setLoading(submitBtn, false);
-          showError(errorEl, "Verbindung zum Server nicht möglich. Bitte versuchen Sie es erneut.");
+          showError(errorEl, window.AdminI18N.t("common.connectionError"));
         });
     });
   }
