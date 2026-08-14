@@ -55,12 +55,14 @@
         gallery: "Galerie",
         management: "Verwaltung",
         users: "Team",
+        timeTracking: "Mitarbeiter & Zeiterfassung",
         activityLog: "Aktivitätsprotokoll",
         settings: "Einstellungen"
       },
       role: {
         super_admin: "Super Admin",
-        content_manager: "Content Manager"
+        content_manager: "Content Manager",
+        employee: "Mitarbeiter/in"
       },
       status: {
         active: "Aktiv",
@@ -185,8 +187,16 @@
           buttonLabel: "Button-Text (optional)",
           buttonLabelPlaceholder: "z. B. Jetzt anfragen",
           buttonUrl: "Button-Link (optional)",
-          startDate: "Start (optional)",
-          endDate: "Ende (optional)",
+          schedule: "Zeitraum (optional)",
+          startDate: "Start",
+          endDate: "Ende",
+          date: "Datum",
+          time: "Uhrzeit",
+          discountPercentage: "Rabatt in % (optional)",
+          countdownEnabled: "Countdown anzeigen",
+          countdownHint: "Benötigt eine Endzeit.",
+          autoHideAfterEnd: "Nach Ablauf automatisch ausblenden",
+          autoHideHint: "Sonst bleibt der Countdown bei null sichtbar.",
           campaignLabel: "Kampagnen-Label (optional, nur intern sichtbar)",
           campaignLabelPlaceholder: "z. B. Winterputz 2026",
           image: "Bild (optional)",
@@ -200,7 +210,12 @@
           titleRequired: "Bitte geben Sie einen Titel ein.",
           buttonUrlInvalid: "Der Button-Link muss mit http:// oder https:// beginnen.",
           buttonUrlMissing: "Bitte geben Sie einen Button-Link an oder entfernen Sie den Button-Text.",
-          buttonLabelMissing: "Bitte geben Sie einen Button-Text an oder entfernen Sie den Button-Link."
+          buttonLabelMissing: "Bitte geben Sie einen Button-Text an oder entfernen Sie den Button-Link.",
+          dateTimeIncomplete: "Bitte Datum und Uhrzeit vollständig eingeben.",
+          dateTimeInvalid: "Datum oder Uhrzeit ist ungültig.",
+          endAfterStart: "Die Endzeit muss nach der Startzeit liegen.",
+          countdownEndRequired: "Für den Countdown ist eine Endzeit erforderlich.",
+          discountRange: "Der Rabatt muss größer als 0 und höchstens 100 Prozent sein."
         }
       },
       gallery: {
@@ -360,12 +375,14 @@
         gallery: "المعرض",
         management: "الإدارة",
         users: "الفريق",
+        timeTracking: "الموظفون وتسجيل الوقت",
         activityLog: "سجل النشاط",
         settings: "الإعدادات"
       },
       role: {
         super_admin: "المدير العام",
-        content_manager: "مدير المحتوى"
+        content_manager: "مدير المحتوى",
+        employee: "موظف/ة"
       },
       status: {
         active: "نشط",
@@ -490,8 +507,16 @@
           buttonLabel: "نص الزر (اختياري)",
           buttonLabelPlaceholder: "مثال: اطلب الآن",
           buttonUrl: "رابط الزر (اختياري)",
-          startDate: "تاريخ البدء (اختياري)",
-          endDate: "تاريخ الانتهاء (اختياري)",
+          schedule: "الفترة الزمنية (اختيارية)",
+          startDate: "البداية",
+          endDate: "النهاية",
+          date: "التاريخ",
+          time: "الوقت",
+          discountPercentage: "نسبة الخصم % (اختيارية)",
+          countdownEnabled: "إظهار العد التنازلي",
+          countdownHint: "يتطلب تحديد وقت انتهاء.",
+          autoHideAfterEnd: "الإخفاء تلقائيًا بعد الانتهاء",
+          autoHideHint: "وإلا يبقى العداد ظاهرًا عند الصفر.",
           campaignLabel: "اسم الحملة (اختياري، للاستخدام الداخلي فقط)",
           campaignLabelPlaceholder: "مثال: تنظيف الشتاء 2026",
           image: "الصورة (اختياري)",
@@ -505,7 +530,12 @@
           titleRequired: "يرجى إدخال عنوان.",
           buttonUrlInvalid: "يجب أن يبدأ رابط الزر بـ http:// أو https://.",
           buttonUrlMissing: "يرجى إدخال رابط للزر أو إزالة نص الزر.",
-          buttonLabelMissing: "يرجى إدخال نص للزر أو إزالة رابط الزر."
+          buttonLabelMissing: "يرجى إدخال نص للزر أو إزالة رابط الزر.",
+          dateTimeIncomplete: "يرجى إدخال التاريخ والوقت معًا.",
+          dateTimeInvalid: "التاريخ أو الوقت غير صالح.",
+          endAfterStart: "يجب أن يكون وقت الانتهاء بعد وقت البداية.",
+          countdownEndRequired: "يرجى تحديد وقت انتهاء لتفعيل العد التنازلي.",
+          discountRange: "يجب أن تكون نسبة الخصم أكبر من 0 ولا تتجاوز 100 بالمائة."
         }
       },
       gallery: {

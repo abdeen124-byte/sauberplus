@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a1628">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://kgkrgbkiqitnvntbyyct.supabase.co; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+<title>Arbeitszeit – SauberPlus</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='8' y1='8' x2='56' y2='56'%3E%3Cstop stop-color='%232e6be6'/%3E%3Cstop offset='1' stop-color='%232db34a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='%230a1628'/%3E%3Ccircle cx='32' cy='32' r='24' fill='url(%23g)'/%3E%3Cpath d='M20 38c4 5 20 5 24-2 2-4-1-8-7-8h-8c-5 0-7-4-4-8 3-4 12-5 18 0' fill='none' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/sauberplus.css">
+<link rel="stylesheet" href="css/employee.css">
+</head>
+<body class="employee-body">
+<div class="employee-background" aria-hidden="true"></div>
+
+<main class="employee-entry">
+  <section class="employee-loading" id="loadingView" aria-live="polite">
+    <div class="employee-loading-mark" aria-hidden="true"><span></span></div>
+    <p>Arbeitsbereich wird geladen …</p>
+  </section>
+
+  <section class="employee-auth" id="loginView" hidden>
+    <div class="employee-auth-brand">
+      <a class="employee-wordmark" href="../" aria-label="SauberPlus Startseite"><span>Sauber</span><b>Plus</b></a>
+      <p class="employee-auth-kicker">Mitarbeiter-Zugang</p>
+      <h1>Ihr Arbeitstag.<br><span>Einfach erfasst.</span></h1>
+      <p class="employee-auth-copy">Start, Pause und Feierabend werden sicher mit der SauberPlus-Zeiterfassung gespeichert.</p>
+    </div>
+
+    <div class="employee-auth-panel">
+      <div class="employee-auth-heading">
+        <p>Zeiterfassung</p>
+        <h2>Anmelden</h2>
+      </div>
+      <div class="employee-alert" id="loginError" role="alert" hidden></div>
+      <form id="loginForm" novalidate>
+        <label class="employee-field" for="loginEmail">
+          <span>E-Mail-Adresse</span>
+          <input type="email" id="loginEmail" name="email" autocomplete="username" inputmode="email" required>
+        </label>
+        <label class="employee-field" for="loginPassword">
+          <span>Passwort</span>
+          <span class="employee-password-wrap">
+            <input type="password" id="loginPassword" name="password" autocomplete="current-password" required>
+            <button class="employee-password-toggle" id="passwordToggle" type="button" aria-label="Passwort anzeigen" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>
+            </button>
+          </span>
+        </label>
+        <button class="employee-primary-button" id="loginButton" type="submit">
+          <span class="employee-button-spinner" aria-hidden="true"></span>
+          <span>Anmelden</span>
+        </button>
+      </form>
+      <p class="employee-auth-foot">Nur für aktive SauberPlus Mitarbeiter.</p>
+    </div>
+  </section>
+
+  <section class="employee-auth" id="inviteView" hidden>
+    <div class="employee-auth-brand">
+      <a class="employee-wordmark" href="../" aria-label="SauberPlus Startseite"><span>Sauber</span><b>Plus</b></a>
+      <p class="employee-auth-kicker">Mitarbeiter-Zugang</p>
+      <h1>Willkommen bei<br><span>SauberPlus.</span></h1>
+      <p class="employee-auth-copy">Legen Sie zuerst Ihr persönliches Passwort fest. Danach öffnet sich Ihr heutiger Arbeitstag.</p>
+    </div>
+    <div class="employee-auth-panel">
+      <div class="employee-auth-heading"><p>Einladung</p><h2>Passwort festlegen</h2></div>
+      <div class="employee-alert" id="inviteError" role="alert" hidden></div>
+      <form id="inviteForm" novalidate>
+        <label class="employee-field" for="invitePassword"><span>Neues Passwort</span><input type="password" id="invitePassword" autocomplete="new-password" minlength="8" required></label>
+        <label class="employee-field" for="invitePasswordConfirm"><span>Passwort bestätigen</span><input type="password" id="invitePasswordConfirm" autocomplete="new-password" minlength="8" required></label>
+        <button class="employee-primary-button" id="inviteButton" type="submit"><span class="employee-button-spinner" aria-hidden="true"></span><span>Passwort speichern</span></button>
+      </form>
+      <p class="employee-auth-foot">Der Einladungslink kann nur zeitlich begrenzt verwendet werden.</p>
+    </div>
+  </section>
+
+  <section class="employee-access-gate" id="staffView" hidden>
+    <a class="employee-wordmark" href="../"><span>Sauber</span><b>Plus</b></a>
+    <div class="employee-gate-symbol" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M4 9h16M9 9v10"></path></svg>
+    </div>
+    <p class="employee-eyebrow">Mitarbeiter-Zugang</p>
+    <h1>Dieses Konto gehört zur Verwaltung.</h1>
+    <p>Öffnen Sie die SauberPlus-Verwaltung, um mit diesem Konto fortzufahren.</p>
+    <a class="employee-primary-button employee-button-link" href="../admin/dashboard.html">Zur Verwaltung</a>
+    <button class="employee-text-button" id="staffLogoutButton" type="button">Anderes Konto verwenden</button>
+  </section>
+
+  <section class="employee-app" id="appView" hidden>
+    <header class="employee-topbar">
+      <a class="employee-wordmark" href="../"><span>Sauber</span><b>Plus</b></a>
+      <div class="employee-topbar-actions">
+        <span class="employee-account-name" id="accountName"></span>
+        <button class="employee-icon-button" id="logoutButton" type="button" aria-label="Abmelden" title="Abmelden">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="employee-app-content">
+      <div class="employee-day-heading">
+        <div>
+          <p class="employee-eyebrow" id="todayLabel">HEUTE</p>
+          <h1 id="greetingHeading">Guten Tag</h1>
+        </div>
+        <div class="employee-state-pill" id="statePill" data-state="idle">
+          <span aria-hidden="true"></span>
+          <b id="stateLabel">Nicht gestartet</b>
+        </div>
+      </div>
+
+      <div class="employee-global-alert" id="globalAlert" role="alert" hidden></div>
+
+      <section class="employee-clock-section" aria-labelledby="clockHeading">
+        <div class="employee-shift-context">
+          <div class="employee-context-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 21s7-5.7 7-12a7 7 0 1 0-14 0c0 6.3 7 12 7 12Z"></path><circle cx="12" cy="9" r="2.2"></circle></svg>
+          </div>
+          <div class="employee-context-copy">
+            <p>Ihr Einsatzort</p>
+            <h2 id="clockHeading">Kein Einsatzort</h2>
+            <span id="siteAddress">Für heute ist kein Objekt zugewiesen.</span>
+          </div>
+          <label class="employee-site-select-wrap" id="siteSelectWrap" hidden>
+            <span class="employee-visually-hidden">Einsatzort wählen</span>
+            <select id="siteSelect" aria-label="Einsatzort wählen"></select>
+          </label>
+        </div>
+
+        <div class="employee-shift-row">
+          <div>
+            <span>Geplanter Dienst</span>
+            <strong id="shiftTime">–</strong>
+          </div>
+          <div>
+            <span>Personalnummer</span>
+            <strong id="employeeNumber">–</strong>
+          </div>
+        </div>
+
+        <div class="employee-timer" aria-live="off">
+          <p>Heute gearbeitet</p>
+          <output id="workedTime" aria-label="Heute gearbeitete Zeit">00:00:00</output>
+          <span id="timerHint">Bereit für Ihren Arbeitsbeginn</span>
+        </div>
+
+        <div class="employee-actions" id="clockActions">
+          <button class="employee-clock-button employee-clock-start" type="button" data-action="start">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"></path></svg>
+            <span>Start</span>
+          </button>
+          <button class="employee-clock-button employee-clock-pause" type="button" data-action="pause">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12"></path></svg>
+            <span>Pause</span>
+          </button>
+          <button class="employee-clock-button employee-clock-resume" type="button" data-action="resume">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"></path></svg>
+            <span>Fortsetzen</span>
+          </button>
+          <button class="employee-clock-button employee-clock-end" type="button" data-action="end">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1"></rect></svg>
+            <span>Ende</span>
+          </button>
+        </div>
+        <p class="employee-action-feedback" id="actionFeedback" role="status" aria-live="polite"></p>
+      </section>
+
+      <div class="employee-detail-grid">
+        <section class="employee-detail-section" aria-labelledby="scheduleHeading">
+          <div class="employee-section-heading">
+            <div>
+              <p class="employee-eyebrow">DIENSTPLAN</p>
+              <h2 id="scheduleHeading">Heute</h2>
+            </div>
+            <span class="employee-date-badge" id="scheduleDate"></span>
+          </div>
+          <div class="employee-schedule-empty" id="scheduleEmpty">
+            <span aria-hidden="true">—</span>
+            <p>Für heute ist kein Dienst geplant.</p>
+          </div>
+          <div class="employee-schedule-list" id="scheduleList"></div>
+        </section>
+
+        <section class="employee-detail-section employee-note-section" aria-labelledby="noteHeading">
+          <div class="employee-section-heading">
+            <div>
+              <p class="employee-eyebrow">ARBEITSTAG</p>
+              <h2 id="noteHeading">Tagesnotiz</h2>
+            </div>
+            <span class="employee-note-status" id="noteStatus" aria-live="polite"></span>
+          </div>
+          <label class="employee-visually-hidden" for="workNote">Notiz zum heutigen Arbeitstag</label>
+          <textarea id="workNote" maxlength="1000" rows="4" placeholder="Optional: Übergabe, Besonderheiten oder Hinweise …"></textarea>
+          <div class="employee-note-footer">
+            <span id="noteCounter">0 / 1000</span>
+            <button class="employee-secondary-button" id="saveNoteButton" type="button" disabled>Notiz speichern</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="../admin/js/vendor/supabase.js"></script>
+<script src="../admin/js/admin-config.js"></script>
+<script src="js/employee-app.js"></script>
+</body>
+</html>

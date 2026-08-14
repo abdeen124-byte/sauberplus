@@ -163,9 +163,12 @@ site_url = "https://www.sauberplus.plus/admin/"
 additional_redirect_urls = [
   "https://www.sauberplus.plus/admin/reset-password.html",
   "https://www.sauberplus.plus/admin/index.html",
+  "https://www.sauberplus.plus/mitarbeiter/",
   "https://sauberplus.plus/admin/reset-password.html",
   "https://sauberplus.plus/admin/index.html",
-  "http://localhost:3000/admin/reset-password.html"
+  "https://sauberplus.plus/mitarbeiter/",
+  "http://localhost:3000/admin/reset-password.html",
+  "http://localhost:3000/mitarbeiter/"
 ]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600

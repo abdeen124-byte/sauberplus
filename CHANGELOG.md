@@ -2,6 +2,16 @@
 
 All notable SauberPlus website changes should be recorded here.
 
+## 2026-08-14
+
+- Added the database foundation for `Mitarbeiter & Zeiterfassung`: employees, work sites, dated assignments, Dienstplan shifts, Urlaub/Krank periods, actual time entries, breaks, and append-only idempotent clock events.
+- Added server-time `Start`/`Pause`/`Fortsetzen`/`Ende` RPCs, daily/weekly/monthly summary support, concurrency locks, overlap guards, transactional account provisioning, strict RLS, and employee-disabled checks. Direct client writes to actual time entries, breaks, and clock events are intentionally denied.
+- Hardened the existing successful-login and activity-log RPCs before introducing employee accounts, and extended `admin-create-user` with compensating Auth-user cleanup when transactional profile provisioning fails.
+- Added the Super Admin workforce console with employee activation, Einsatzort assignments, Dienstplan, absence management, daily/weekly/monthly reports, filters, and CSV export.
+- Added the independent mobile-first `/mitarbeiter/` portal with invitation password setup, database-backed Start/Pause/Fortsetzen/Ende actions, today's shift/site/hours, and persistent daily notes.
+- Extended the existing announcement editor with separate start/end date and time fields, optional discount, countdown and automatic expiry controls. Public placements now render an absolute, database-clock-synchronized days/hours/minutes/seconds countdown that never restarts on reload.
+- Applied and live-verified three additive migrations against `SauberPlus-CMS`, deployed `admin-create-user` version 4, and extended only the Auth redirect allow-list for the employee portal. PostgreSQL lint is clean and the complete clock transition path passed inside a rolled-back production transaction.
+
 ## 2026-07-14
 
 - Added complete German/Arabic localization + RTL support to the Admin Dashboard (public site untouched, no schema/RLS/auth changes). New `admin/js/admin-i18n.js` (dictionary + engine: `localStorage`-backed language choice, `dir`/`lang` applied before paint via a `<head>`-blocking script, switching reloads the page so all async-rendered content — cards, toasts, confirm dialogs — comes back in the new language rather than needing in-place re-translation). Language switcher (reusing the public site's existing `.lang-select` dropdown recipe) added to every admin page's topbar/corner. German stays the default unless Arabic was previously chosen.

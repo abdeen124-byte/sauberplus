@@ -25,6 +25,14 @@
     imageRemoved: false
   };
 
+  function translatedError(key, germanFallback, arabicFallback) {
+    var translated = t(key);
+    if (translated !== key) {
+      return translated;
+    }
+    return window.AdminI18N.getLang() === "ar" ? arabicFallback : germanFallback;
+  }
+
   // ---------------------------------------------------------------
   // Loading + rendering the list
   // ---------------------------------------------------------------
@@ -56,7 +64,13 @@
       return null;
     }
     var locale = window.AdminI18N.getLang() === "ar" ? "ar" : "de-DE";
-    return new Date(value).toLocaleDateString(locale, { day: "2-digit", month: "2-digit", year: "numeric" });
+    return new Date(value).toLocaleString(locale, {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
   }
 
   function dateRangeLabel(row) {
@@ -139,6 +153,13 @@
       '<div class="admin-item-card-meta"><span>' +
       dateRangeLabel(row) +
       "</span></div>" +
+      '<div class="announcement-card-flags">' +
+      (row.discount_percentage !== null && row.discount_percentage !== undefined
+        ? '<span>−' + escapeHtml(String(row.discount_percentage)) + "%</span>"
+        : "") +
+      (row.countdown_enabled ? '<span>Countdown</span>' : "") +
+      (row.auto_hide_after_end ? '<span>Auto-Hide</span>' : "") +
+      "</div>" +
       '<div class="admin-item-card-actions">' +
       '<button type="button" class="admin-icon-btn" data-action="edit" aria-label="' +
       t("common.edit") +
@@ -212,14 +233,31 @@
     state.imageRemoved = false;
   }
 
-  function toDatetimeLocalValue(isoString) {
+  function toLocalDateTimeParts(isoString) {
     if (!isoString) {
-      return "";
+      return { date: "", time: "" };
     }
     var date = new Date(isoString);
     var offset = date.getTimezoneOffset();
     var local = new Date(date.getTime() - offset * 60000);
-    return local.toISOString().slice(0, 16);
+    var value = local.toISOString();
+    return { date: value.slice(0, 10), time: value.slice(11, 16) };
+  }
+
+  function localDateTimeToIso(dateId, timeId) {
+    var dateValue = getElement(dateId).value;
+    var timeValue = getElement(timeId).value;
+    if (!dateValue && !timeValue) {
+      return null;
+    }
+    if (!dateValue || !timeValue) {
+      throw new Error(translatedError("announcements.errors.dateTimeIncomplete", "Bitte Datum und Uhrzeit vollständig eingeben.", "يرجى إدخال التاريخ والوقت معًا."));
+    }
+    var localDate = new Date(dateValue + "T" + timeValue);
+    if (Number.isNaN(localDate.getTime())) {
+      throw new Error(translatedError("announcements.errors.dateTimeInvalid", "Datum oder Uhrzeit ist ungültig.", "التاريخ أو الوقت غير صالح."));
+    }
+    return localDate.toISOString();
   }
 
   function openEditor(record) {
@@ -236,8 +274,18 @@
     getElement("fieldStatus").value = record ? record.status : "draft";
     getElement("fieldButtonLabel").value = record ? record.button_label || "" : "";
     getElement("fieldButtonUrl").value = record ? record.button_url || "" : "";
-    getElement("fieldStartDate").value = record ? toDatetimeLocalValue(record.start_date) : "";
-    getElement("fieldEndDate").value = record ? toDatetimeLocalValue(record.end_date) : "";
+    var startParts = toLocalDateTimeParts(record && record.start_date);
+    var endParts = toLocalDateTimeParts(record && record.end_date);
+    getElement("fieldStartDate").value = startParts.date;
+    getElement("fieldStartTime").value = startParts.time;
+    getElement("fieldEndDate").value = endParts.date;
+    getElement("fieldEndTime").value = endParts.time;
+    getElement("fieldCountdownEnabled").checked = Boolean(record && record.countdown_enabled);
+    getElement("fieldAutoHideAfterEnd").checked = record ? record.auto_hide_after_end !== false : true;
+    getElement("fieldDiscountPercentage").value =
+      record && record.discount_percentage !== null && record.discount_percentage !== undefined
+        ? String(record.discount_percentage)
+        : "";
     getElement("fieldCampaignLabel").value = record ? record.campaign_label || "" : "";
 
     setDropzoneImage(record && record.image_path ? window.AdminImageUpload.getPublicUrl(record.image_path) : null);
@@ -374,6 +422,7 @@
   }
 
   function buildPayloadBase() {
+    var discountValue = getElement("fieldDiscountPercentage").value.trim();
     return {
       title: getElement("fieldTitle").value.trim(),
       description: getElement("fieldDescription").value.trim(),
@@ -381,8 +430,11 @@
       status: getElement("fieldStatus").value,
       button_label: getElement("fieldButtonLabel").value.trim() || null,
       button_url: getElement("fieldButtonUrl").value.trim() || null,
-      start_date: getElement("fieldStartDate").value ? new Date(getElement("fieldStartDate").value).toISOString() : null,
-      end_date: getElement("fieldEndDate").value ? new Date(getElement("fieldEndDate").value).toISOString() : null,
+      start_date: localDateTimeToIso("fieldStartDate", "fieldStartTime"),
+      end_date: localDateTimeToIso("fieldEndDate", "fieldEndTime"),
+      countdown_enabled: getElement("fieldCountdownEnabled").checked,
+      auto_hide_after_end: getElement("fieldAutoHideAfterEnd").checked,
+      discount_percentage: discountValue === "" ? null : Number(discountValue),
       campaign_label: getElement("fieldCampaignLabel").value.trim() || null
     };
   }
@@ -397,7 +449,13 @@
     event.preventDefault();
     hideEditorError();
 
-    var payload = buildPayloadBase();
+    var payload;
+    try {
+      payload = buildPayloadBase();
+    } catch (error) {
+      showEditorError(error.message);
+      return;
+    }
 
     if (!payload.title) {
       showEditorError(t("announcements.errors.titleRequired"));
@@ -413,6 +471,21 @@
     }
     if (payload.button_url && !payload.button_label) {
       showEditorError(t("announcements.errors.buttonLabelMissing"));
+      return;
+    }
+    if (payload.start_date && payload.end_date && new Date(payload.end_date) <= new Date(payload.start_date)) {
+      showEditorError(translatedError("announcements.errors.endAfterStart", "Die Endzeit muss nach der Startzeit liegen.", "يجب أن يكون وقت الانتهاء بعد وقت البداية."));
+      return;
+    }
+    if (payload.countdown_enabled && !payload.end_date) {
+      showEditorError(translatedError("announcements.errors.countdownEndRequired", "Für den Countdown ist eine Endzeit erforderlich.", "يرجى تحديد وقت انتهاء لتفعيل العد التنازلي."));
+      return;
+    }
+    if (
+      payload.discount_percentage !== null &&
+      (!Number.isFinite(payload.discount_percentage) || payload.discount_percentage <= 0 || payload.discount_percentage > 100)
+    ) {
+      showEditorError(translatedError("announcements.errors.discountRange", "Der Rabatt muss größer als 0 und höchstens 100 sein.", "يجب أن تكون نسبة الخصم أكبر من 0 ولا تتجاوز 100."));
       return;
     }
 

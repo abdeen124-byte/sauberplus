@@ -119,6 +119,11 @@
       return null;
     }
 
+    if (profile.role === "employee") {
+      window.location.href = "../mitarbeiter/";
+      return null;
+    }
+
     client.auth.onAuthStateChange(function (event) {
       if (event === "SIGNED_OUT") {
         redirectToLogin("signed_out");
@@ -228,6 +233,7 @@
   window.AdminAuth = {
     signIn: signIn,
     signOut: signOut,
+    fetchProfile: fetchProfile,
     requireSession: requireSession,
     requireRole: requireRole
   };

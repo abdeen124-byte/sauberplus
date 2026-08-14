@@ -401,3 +401,19 @@ body.ar .legal-header-actions{direction:rtl}
 .cms-popup-media{width:100%;max-height:180px;border-radius:14px;overflow:hidden;margin-bottom:16px}
 .cms-popup-media img{width:100%;height:100%;object-fit:cover;display:block}
 @media(max-width:768px){.cms-banner{flex-direction:column;text-align:center;padding:22px 6%}.cms-banner-media{width:100%;height:160px}}
+
+/* Offer timing extends the established CMS placements without changing them. */
+.announcement-top-bar-content{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.announcement-discount{display:inline-flex;align-items:center;justify-content:center;width:max-content;margin:0 0 10px;padding:4px 9px;border:1px solid rgba(45,179,74,.55);border-radius:999px;background:rgba(45,179,74,.13);color:#bdf4c8;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:900;letter-spacing:.02em}
+.announcement-top-bar-content>.announcement-discount{margin:0;border-color:rgba(255,255,255,.5);background:rgba(5,12,24,.16);color:#fff}
+.countdown-live{display:inline-grid;grid-template-columns:repeat(4,minmax(44px,1fr));gap:5px;margin:0 0 15px;color:#fff;font-variant-numeric:tabular-nums}
+.countdown-unit{display:grid;place-items:center;min-width:44px;padding:7px 6px 6px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.045);line-height:1}
+.countdown-unit strong{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900}
+.countdown-unit small{margin-top:5px;color:rgba(255,255,255,.55);font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.announcement-top-bar-content>.countdown-live{grid-template-columns:repeat(4,minmax(34px,auto));gap:2px;margin:0}
+.announcement-top-bar-content>.countdown-live .countdown-unit{min-width:34px;padding:3px 4px;border-color:rgba(255,255,255,.22);border-radius:7px;background:rgba(5,12,24,.12)}
+.announcement-top-bar-content>.countdown-live .countdown-unit strong{font-size:11px}
+.announcement-top-bar-content>.countdown-live .countdown-unit small{margin-top:2px;color:rgba(255,255,255,.78);font-size:6.5px}
+html[dir="rtl"] .announcement-top-bar-content{direction:rtl}
+@media(max-width:768px){.announcement-top-bar-content{gap:7px}.announcement-top-bar-content>span:first-child{flex-basis:100%}.countdown-live{margin-inline:auto}.announcement-discount{margin-inline:auto}}
+@media(max-width:420px){.countdown-live{width:100%;grid-template-columns:repeat(4,minmax(0,1fr))}.countdown-unit{min-width:0;padding-inline:3px}.announcement-top-bar-content>.countdown-live{width:auto}.announcement-top-bar-content>.countdown-live .countdown-unit{min-width:31px}.announcement-top-bar-content>.countdown-live .countdown-unit small{display:none}}

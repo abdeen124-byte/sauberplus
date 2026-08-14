@@ -121,7 +121,9 @@
       window.AdminAuth.signIn(email, password, remember)
         .then(function (result) {
           if (result.ok) {
-            window.location.href = "dashboard.html";
+            window.location.href = result.profile.role === "employee"
+              ? "../mitarbeiter/"
+              : "dashboard.html";
             return;
           }
           setLoading(submitBtn, false);
@@ -172,10 +174,14 @@
   function redirectIfAlreadySignedIn() {
     window.AdminSupabase.getClient()
       .auth.getSession()
-      .then(function (result) {
-        if (result.data.session) {
-          window.location.href = "dashboard.html";
+      .then(async function (result) {
+        if (!result.data.session) {
+          return;
         }
+        var profile = await window.AdminAuth.fetchProfile(result.data.session.user.id);
+        window.location.href = profile && profile.role === "employee"
+          ? "../mitarbeiter/"
+          : "dashboard.html";
       });
   }
 

@@ -1063,6 +1063,142 @@ html[dir="rtl"] .admin-back-link::before {
   content: "\2192\0020";
 }
 
+/* ---------- Announcement timing controls ---------- */
+
+.announcement-schedule {
+  margin: 2px 0 16px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.announcement-schedule legend {
+  padding: 0 7px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.announcement-schedule-row {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 10px;
+}
+
+.announcement-schedule-row + .announcement-schedule-row {
+  margin-top: 12px;
+}
+
+.announcement-schedule-row .fg {
+  margin: 0;
+}
+
+.announcement-schedule-label {
+  align-self: center;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+.announcement-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.announcement-controls .announcement-toggle:last-child {
+  grid-column: 1 / -1;
+}
+
+.announcement-card-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 20px;
+}
+
+.announcement-card-flags:empty {
+  display: none;
+}
+
+.announcement-card-flags span {
+  padding: 3px 7px;
+  border: 1px solid rgba(45, 179, 74, 0.28);
+  border-radius: 999px;
+  background: rgba(45, 179, 74, 0.08);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.announcement-discount-field {
+  margin: 0;
+}
+
+.announcement-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 66px;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  cursor: pointer;
+}
+
+.announcement-toggle:focus-within {
+  border-color: var(--blue2);
+  box-shadow: 0 0 0 3px rgba(46, 107, 230, 0.18);
+}
+
+.announcement-toggle input {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  margin: 2px 0 0;
+  accent-color: var(--green);
+}
+
+.announcement-toggle span {
+  display: grid;
+  gap: 3px;
+}
+
+.announcement-toggle strong {
+  color: #fff;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.announcement-toggle small {
+  color: var(--gray);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+@media (max-width: 680px) {
+  .announcement-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .announcement-controls .announcement-toggle:last-child {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 460px) {
+  .announcement-schedule-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .announcement-schedule-label {
+    grid-column: 1 / -1;
+  }
+}
+
 /* ---------- Language switcher ---------- */
 /* Reuses the public site's .lang-select/.lang-toggle/.lang-menu recipe
    (already available — admin.css links css/sauberplus.css first) with only
@@ -1084,6 +1220,547 @@ html[dir="rtl"] .admin-login-lang-mount,
 html[dir="rtl"] .admin-resetpw-lang-mount {
   right: auto;
   left: 20px;
+}
+
+/* ---------- Workforce / Zeiterfassung ---------- */
+
+.workforce-main {
+  max-width: 1280px;
+}
+
+.workforce-header-actions,
+.workforce-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.workforce-primary-action,
+.workforce-modal-save,
+.workforce-report-button {
+  width: auto;
+  padding: 11px 24px;
+}
+
+.workforce-refresh:disabled,
+.workforce-modal-save:disabled,
+.workforce-report-button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.workforce-modal-save .admin-spinner {
+  display: none;
+}
+
+.workforce-modal-save[data-loading="true"] .admin-spinner {
+  display: inline-block;
+}
+
+.workforce-tabs {
+  padding-bottom: 2px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scrollbar-width: thin;
+}
+
+.workforce-tabs .admin-tab {
+  flex: none;
+}
+
+.workforce-panel[hidden] {
+  display: none;
+}
+
+.workforce-page-error {
+  padding: 13px 15px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 107, 107, 0.38);
+  border-radius: 12px;
+  color: #ffb0b0;
+  background: rgba(255, 107, 107, 0.08);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.workforce-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 30px;
+}
+
+.workforce-metric {
+  min-height: 118px;
+  padding: 21px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-inline-end: 1px solid var(--border);
+  position: relative;
+}
+
+.workforce-metric:last-child {
+  border-inline-end: 0;
+}
+
+.workforce-metric::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 20px;
+  bottom: 20px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--blue2);
+}
+
+.workforce-metric:nth-child(even)::before {
+  background: var(--green);
+}
+
+.workforce-metric-value {
+  font-family: "Montserrat", sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.workforce-metric-label {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.workforce-metric-detail {
+  color: var(--gray);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.workforce-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 15px;
+}
+
+.workforce-section-heading h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.workforce-section-heading p {
+  color: var(--gray);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.workforce-toolbar,
+.workforce-report-filter {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(135px, 1fr)) auto;
+  align-items: end;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.workforce-report-filter {
+  grid-template-columns: repeat(5, minmax(125px, 1fr)) auto;
+}
+
+.workforce-toolbar .fg,
+.workforce-report-filter .fg {
+  margin: 0;
+}
+
+.workforce-filter-wide {
+  grid-column: span 3;
+}
+
+.workforce-filter-button {
+  min-height: 40px;
+}
+
+.workforce-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.workforce-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.workforce-table th {
+  padding: 12px 14px;
+  text-align: start;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.025);
+  border-bottom: 1px solid var(--border);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.35px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.workforce-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  color: rgba(255, 255, 255, 0.78);
+  vertical-align: middle;
+}
+
+.workforce-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.workforce-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.workforce-person {
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+}
+
+.workforce-person strong {
+  color: #fff;
+  font-size: 13px;
+}
+
+.workforce-person span {
+  color: var(--gray);
+  font-size: 11.5px;
+}
+
+.workforce-status,
+.workforce-absence-type,
+.workforce-primary-tag {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  border-radius: 20px;
+  padding: 3px 9px;
+  border: 1px solid var(--border);
+  color: rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.workforce-status[data-status="active"],
+.workforce-status[data-status="working"],
+.workforce-status[data-status="approved"] {
+  color: #5ce279;
+  border-color: rgba(45, 179, 74, 0.38);
+  background: rgba(45, 179, 74, 0.12);
+}
+
+.workforce-status[data-status="paused"],
+.workforce-status[data-status="pending"],
+.workforce-absence-type[data-type="vacation"] {
+  color: #ffd36a;
+  border-color: rgba(255, 193, 7, 0.35);
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.workforce-status[data-status="scheduled"] {
+  color: #79a9ff;
+  border-color: rgba(77, 140, 255, 0.38);
+  background: rgba(77, 140, 255, 0.1);
+}
+
+.workforce-status[data-status="disabled"],
+.workforce-status[data-status="cancelled"],
+.workforce-status[data-status="rejected"],
+.workforce-absence-type[data-type="sick"] {
+  color: #ffaaaa;
+  border-color: rgba(255, 107, 107, 0.35);
+  background: rgba(255, 107, 107, 0.09);
+}
+
+.workforce-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.workforce-compact-list {
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.workforce-compact-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.workforce-compact-item:last-child {
+  border-bottom: 0;
+}
+
+.workforce-compact-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.workforce-compact-item p {
+  color: var(--gray);
+  font-size: 11.5px;
+  margin: 3px 0 0;
+}
+
+.workforce-site-code {
+  color: #8eb4ff;
+  font-family: "Montserrat", sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.3px;
+}
+
+.workforce-arrow {
+  color: var(--green);
+  padding: 0 3px;
+}
+
+.workforce-primary-tag {
+  color: #8eb4ff;
+  border-color: rgba(77, 140, 255, 0.35);
+  background: rgba(77, 140, 255, 0.08);
+  margin-inline-start: 5px;
+}
+
+.workforce-check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.workforce-check input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--green);
+}
+
+.workforce-form-note {
+  color: var(--gray);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 15px 0 0;
+}
+
+.workforce-report-summary {
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+  margin: 0 0 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--border);
+}
+
+.workforce-report-summary > div {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  background: rgba(10, 22, 40, 0.96);
+}
+
+.workforce-report-summary span {
+  color: var(--gray);
+  font-size: 10.5px;
+}
+
+.workforce-report-summary strong {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  margin-top: 3px;
+}
+
+.workforce-report-summary button {
+  align-self: center;
+  margin: 0 14px;
+  background-color: rgba(10, 22, 40, 0.96);
+}
+
+.workforce-report-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 13px;
+  border-bottom: 1px solid var(--border);
+}
+
+.workforce-report-groups {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.workforce-report-groups:last-child {
+  border-bottom: 0;
+}
+
+.workforce-report-groups h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  margin: 0 0 11px;
+}
+
+.workforce-report-groups .workforce-table-wrap {
+  border-radius: 11px;
+}
+
+.workforce-report-person {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--gray);
+  font-size: 11.5px;
+}
+
+.workforce-report-person strong {
+  color: #fff;
+}
+
+@media (max-width: 1100px) {
+  .workforce-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .workforce-metric:nth-child(2) {
+    border-inline-end: 0;
+  }
+
+  .workforce-metric:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .workforce-toolbar,
+  .workforce-report-filter {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+
+  .workforce-filter-wide {
+    grid-column: span 1;
+  }
+
+  .workforce-filter-button,
+  .workforce-report-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .workforce-header-actions {
+    width: 100%;
+  }
+
+  .workforce-header-actions > button {
+    flex: 1;
+  }
+
+  .workforce-split {
+    grid-template-columns: 1fr;
+  }
+
+  .workforce-compact-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .workforce-report-summary {
+    flex-wrap: wrap;
+  }
+
+  .workforce-report-summary > div {
+    flex: 1 1 30%;
+  }
+
+  .workforce-report-summary button {
+    width: calc(100% - 28px);
+    margin: 12px 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .workforce-main {
+    padding: 28px 16px;
+  }
+
+  .workforce-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .workforce-metric {
+    min-height: 100px;
+    padding: 16px;
+  }
+
+  .workforce-metric-value {
+    font-size: 22px;
+  }
+
+  .workforce-toolbar,
+  .workforce-report-filter {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+
+  .workforce-row-actions {
+    width: 100%;
+  }
+
+  .workforce-row-actions > button {
+    flex: 1;
+  }
+
+  .workforce-section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .workforce-section-heading button {
+    width: 100%;
+    min-height: 42px;
+  }
 }
 
 /* ---------- RTL overrides ---------- */

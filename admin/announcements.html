@@ -28,6 +28,7 @@
         <li class="admin-nav-divider" data-role-gate="super_admin" role="separator"></li>
         <li data-role-gate="super_admin"><span class="admin-nav-section-label" data-i18n="nav.management">Verwaltung</span></li>
         <li data-role-gate="super_admin"><a class="admin-nav-link" href="users.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><circle cx="17" cy="8.5" r="2.4"></circle><path d="M16 14.3c2.6.5 4.5 2.5 4.5 5.7"></path></svg></span><span data-i18n="nav.users">Team</span></a></li>
+        <li data-role-gate="super_admin"><a class="admin-nav-link" href="time-tracking.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l3 2M9 3h6"></path></svg></span><span data-i18n="nav.timeTracking">Mitarbeiter &amp; Zeiterfassung</span></a></li>
         <li data-role-gate="super_admin"><a class="admin-nav-link" href="activity-log.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span><span data-i18n="nav.activityLog">Aktivitätsprotokoll</span></a></li>
         <li data-role-gate="super_admin"><a class="admin-nav-link" href="settings.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 13a7.97 7.97 0 0 0 0-2l2-1.5-2-3.5-2.4 1a8 8 0 0 0-1.7-1L15 3h-4l-.3 2.5a8 8 0 0 0-1.7 1l-2.4-1-2 3.5L6.6 11a7.97 7.97 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a8 8 0 0 0 1.7 1L11 21h4l.3-2.5a8 8 0 0 0 1.7-1l2.4 1 2-3.5z"></path></svg></span><span data-i18n="nav.settings">Einstellungen</span></a></li>
       </ul>
@@ -130,15 +131,51 @@
         </div>
       </div>
 
-      <div class="admin-form-grid">
-        <div class="fg">
-          <label for="fieldStartDate" data-i18n="announcements.field.startDate">Start (optional)</label>
-          <input type="datetime-local" id="fieldStartDate">
+      <fieldset class="announcement-schedule">
+        <legend data-i18n="announcements.field.schedule">Zeitraum (optional)</legend>
+        <div class="announcement-schedule-row">
+          <span class="announcement-schedule-label" data-i18n="announcements.field.startDate">Start</span>
+          <div class="fg">
+            <label for="fieldStartDate" data-i18n="announcements.field.date">Datum</label>
+            <input type="date" id="fieldStartDate">
+          </div>
+          <div class="fg">
+            <label for="fieldStartTime" data-i18n="announcements.field.time">Uhrzeit</label>
+            <input type="time" id="fieldStartTime" step="60">
+          </div>
         </div>
-        <div class="fg">
-          <label for="fieldEndDate" data-i18n="announcements.field.endDate">Ende (optional)</label>
-          <input type="datetime-local" id="fieldEndDate">
+        <div class="announcement-schedule-row">
+          <span class="announcement-schedule-label" data-i18n="announcements.field.endDate">Ende</span>
+          <div class="fg">
+            <label for="fieldEndDate" data-i18n="announcements.field.date">Datum</label>
+            <input type="date" id="fieldEndDate">
+          </div>
+          <div class="fg">
+            <label for="fieldEndTime" data-i18n="announcements.field.time">Uhrzeit</label>
+            <input type="time" id="fieldEndTime" step="60">
+          </div>
         </div>
+      </fieldset>
+
+      <div class="announcement-controls">
+        <div class="fg announcement-discount-field">
+          <label for="fieldDiscountPercentage" data-i18n="announcements.field.discountPercentage">Rabatt in % (optional)</label>
+          <input type="number" id="fieldDiscountPercentage" min="0.01" max="100" step="0.01" inputmode="decimal" placeholder="z. B. 15">
+        </div>
+        <label class="announcement-toggle" for="fieldCountdownEnabled">
+          <input type="checkbox" id="fieldCountdownEnabled">
+          <span>
+            <strong data-i18n="announcements.field.countdownEnabled">Countdown anzeigen</strong>
+            <small data-i18n="announcements.field.countdownHint">Benötigt eine Endzeit.</small>
+          </span>
+        </label>
+        <label class="announcement-toggle" for="fieldAutoHideAfterEnd">
+          <input type="checkbox" id="fieldAutoHideAfterEnd" checked>
+          <span>
+            <strong data-i18n="announcements.field.autoHideAfterEnd">Nach Ablauf automatisch ausblenden</strong>
+            <small data-i18n="announcements.field.autoHideHint">Sonst bleibt der Countdown bei null sichtbar.</small>
+          </span>
+        </label>
       </div>
 
       <div class="fg">

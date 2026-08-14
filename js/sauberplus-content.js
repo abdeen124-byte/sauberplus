@@ -1,6 +1,9 @@
 (function () {
   var config = window.SAUBERPLUS_CONFIG || {};
   var POPUP_DISMISS_PREFIX = "sp_popup_dismissed_";
+  var countdownEntries = [];
+  var countdownTimer = null;
+  var serverClockOffsetMs = 0;
 
   function getElement(id) {
     return document.getElementById(id);
@@ -32,12 +35,173 @@
     });
   }
 
+  function rpcFetch(functionName) {
+    return fetch(config.supabaseUrl + "/rest/v1/rpc/" + functionName, {
+      method: "POST",
+      headers: {
+        apikey: config.supabaseAnonKey,
+        Authorization: "Bearer " + config.supabaseAnonKey,
+        "Content-Type": "application/json"
+      },
+      body: "{}",
+      cache: "no-store"
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error("SauberPlus clock fetch failed");
+      }
+      return response.json();
+    });
+  }
+
+  function readServerTimestamp(payload) {
+    var value = payload;
+    if (Array.isArray(value)) {
+      value = value[0];
+    }
+    if (value && typeof value === "object") {
+      value = value.server_now || value.get_public_server_time || value.now;
+    }
+    var parsed = new Date(value).getTime();
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function syncServerClock() {
+    var requestStartedAt = Date.now();
+    return rpcFetch("get_public_server_time").then(function (payload) {
+      var serverTime = readServerTimestamp(payload);
+      if (serverTime !== null) {
+        var requestFinishedAt = Date.now();
+        serverClockOffsetMs = serverTime - Math.round((requestStartedAt + requestFinishedAt) / 2);
+      }
+    });
+  }
+
+  function clockNow() {
+    return Date.now() + serverClockOffsetMs;
+  }
+
   function safeUrl(url) {
     return /^https?:\/\//i.test(url || "") ? url : "#";
   }
 
   function storagePublicUrl(path) {
     return config.supabaseUrl + "/storage/v1/object/public/cms-media/" + path;
+  }
+
+  function countdownLabels() {
+    var language = document.documentElement.lang || "de";
+    if (language === "ar") {
+      return { days: "أيام", hours: "ساعات", minutes: "دقائق", seconds: "ثوانٍ", remaining: "الوقت المتبقي" };
+    }
+    if (language === "en") {
+      return { days: "Days", hours: "Hours", minutes: "Minutes", seconds: "Seconds", remaining: "Time remaining" };
+    }
+    return { days: "Tage", hours: "Std.", minutes: "Min.", seconds: "Sek.", remaining: "Verbleibende Zeit" };
+  }
+
+  function buildDiscount(row) {
+    if (row.discount_percentage === null || row.discount_percentage === undefined || row.discount_percentage === "") {
+      return null;
+    }
+    var value = Number(row.discount_percentage);
+    if (!Number.isFinite(value)) {
+      return null;
+    }
+    var badge = document.createElement("span");
+    badge.className = "announcement-discount";
+    badge.textContent = "−" + new Intl.NumberFormat(document.documentElement.lang || "de", { maximumFractionDigits: 2 }).format(value) + "%";
+    return badge;
+  }
+
+  function buildCountdown() {
+    var labels = countdownLabels();
+    var countdown = document.createElement("div");
+    countdown.className = "countdown-live";
+    countdown.setAttribute("role", "timer");
+    countdown.setAttribute("aria-label", labels.remaining);
+
+    ["days", "hours", "minutes", "seconds"].forEach(function (unit) {
+      var part = document.createElement("span");
+      part.className = "countdown-unit";
+      var value = document.createElement("strong");
+      value.setAttribute("data-countdown-unit", unit);
+      value.textContent = "00";
+      var label = document.createElement("small");
+      label.setAttribute("data-countdown-label", unit);
+      label.textContent = labels[unit];
+      part.appendChild(value);
+      part.appendChild(label);
+      countdown.appendChild(part);
+    });
+    return countdown;
+  }
+
+  function registerTimedAnnouncement(row, owner, countdown) {
+    if (!row.end_date) {
+      return;
+    }
+    countdownEntries.push({ row: row, owner: owner, countdown: countdown });
+  }
+
+  function appendOfferDetails(container, row, owner) {
+    var discount = buildDiscount(row);
+    if (discount) {
+      container.appendChild(discount);
+    }
+
+    var countdown = null;
+    if (row.countdown_enabled && row.end_date) {
+      countdown = buildCountdown();
+      container.appendChild(countdown);
+    }
+    registerTimedAnnouncement(row, owner, countdown);
+  }
+
+  function updateCountdownEntry(entry, now) {
+    if (!entry.owner.isConnected) {
+      return false;
+    }
+    var parts = window.SauberPlusCountdown.getRemaining(entry.row.end_date, now);
+    if (!parts) {
+      return false;
+    }
+    if (parts.expired && entry.row.auto_hide_after_end !== false) {
+      entry.owner.remove();
+      return false;
+    }
+    if (entry.countdown) {
+      var labels = countdownLabels();
+      ["days", "hours", "minutes", "seconds"].forEach(function (unit) {
+        var target = entry.countdown.querySelector('[data-countdown-unit="' + unit + '"]');
+        var label = entry.countdown.querySelector('[data-countdown-label="' + unit + '"]');
+        if (target) {
+          target.textContent = window.SauberPlusCountdown.pad(parts[unit]);
+        }
+        if (label) {
+          label.textContent = labels[unit];
+        }
+      });
+      entry.countdown.setAttribute("aria-label", labels.remaining + ": " + window.SauberPlusCountdown.format(parts));
+    }
+    return !parts.expired;
+  }
+
+  function updateCountdowns() {
+    var now = clockNow();
+    countdownEntries = countdownEntries.filter(function (entry) {
+      return updateCountdownEntry(entry, now);
+    });
+    if (countdownEntries.length === 0 && countdownTimer !== null) {
+      window.clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+  }
+
+  function startCountdowns() {
+    updateCountdowns();
+    if (countdownEntries.length > 0 && countdownTimer === null) {
+      countdownTimer = window.setInterval(updateCountdowns, 1000);
+    }
   }
 
   function buildBanner(row) {
@@ -58,6 +222,8 @@
 
     var body = document.createElement("div");
     body.className = "cms-banner-body";
+
+    appendOfferDetails(body, row, wrap);
 
     var title = document.createElement("h3");
     title.className = "cms-banner-title";
@@ -99,9 +265,12 @@
       return;
     }
 
+    var content = document.createElement("div");
+    content.className = "announcement-top-bar-content";
+
     var text = document.createElement("span");
     text.textContent = row.description ? row.title + " — " + row.description : row.title;
-    mount.appendChild(text);
+    content.appendChild(text);
 
     var link = safeUrl(row.button_url);
     if (row.button_label && row.button_url && link !== "#") {
@@ -109,8 +278,11 @@
       anchor.href = link;
       anchor.rel = "noopener";
       anchor.textContent = row.button_label;
-      mount.appendChild(anchor);
+      content.appendChild(anchor);
     }
+
+    appendOfferDetails(content, row, content);
+    mount.appendChild(content);
   }
 
   function isPopupDismissed(id) {
@@ -167,6 +339,8 @@
       mediaDiv.appendChild(img);
       card.appendChild(mediaDiv);
     }
+
+    appendOfferDetails(card, row, scrim);
 
     var title = document.createElement("h3");
     title.className = "cms-banner-title";
@@ -252,10 +426,19 @@
   }
 
   function initAnnouncements() {
-    restFetch(
-      "announcements?select=id,placement,title,description,image_path,button_label,button_url&status=eq.active&order=sort_order.asc"
-    )
-      .then(function (rows) {
+    var fields =
+      "id,placement,title,description,image_path,button_label,button_url,start_date,end_date,countdown_enabled,auto_hide_after_end,discount_percentage";
+    var announcementsRequest = restFetch(
+      "announcements?select=" + fields + "&status=eq.active&order=sort_order.asc"
+    ).catch(function () {
+      return restFetch(
+        "announcements?select=id,placement,title,description,image_path,button_label,button_url&status=eq.active&order=sort_order.asc"
+      );
+    });
+
+    Promise.all([announcementsRequest, syncServerClock().catch(function () {})])
+      .then(function (results) {
+        var rows = results[0];
         var byPlacement = {};
         rows.forEach(function (row) {
           if (!byPlacement[row.placement]) {
@@ -268,6 +451,7 @@
         renderBannerPlacement("cms-seasonal", byPlacement.seasonal);
         renderBannerPlacement("cms-promo-section", byPlacement.promo_section);
         renderPopup(byPlacement.popup);
+        startCountdowns();
       })
       .catch(function () {
         // Fail-soft: mount points stay empty (:empty{display:none} in
