@@ -29,6 +29,9 @@
       title: "Mitarbeiter & Zeiterfassung",
       subtitle: "Arbeitszeiten, Einsatzorte, Dienstplan und Abwesenheiten zentral verwalten.",
       refresh: "Aktualisieren",
+      loading: "Wird geladen …",
+      workforceAria: "Mitarbeiterverwaltung",
+      dataLoadFailed: "Daten konnten nicht vollständig geladen werden.",
       tabOverview: "Übersicht",
       tabEmployees: "Mitarbeiter",
       tabSites: "Objekte & Zuordnung",
@@ -114,6 +117,9 @@
       title: "الموظفون وتسجيل الوقت",
       subtitle: "إدارة ساعات العمل والمواقع والجدول والإجازات من مكان واحد.",
       refresh: "تحديث",
+      loading: "جارٍ التحميل…",
+      workforceAria: "إدارة الموظفين",
+      dataLoadFailed: "تعذّر تحميل البيانات بالكامل.",
       tabOverview: "نظرة عامة",
       tabEmployees: "الموظفون",
       tabSites: "المواقع والربط",
@@ -207,6 +213,7 @@
   }
 
   function applyWorkforceCopy() {
+    document.title = workforceText("title") + " – SauberPlus Admin";
     document.querySelectorAll("[data-workforce-key]").forEach(function (element) {
       var key = element.getAttribute("data-workforce-key");
       if (workforceText(key) !== key) {
@@ -214,6 +221,11 @@
       }
     });
     byId("employeeSearch").placeholder = workforceText("searchPlaceholder");
+    byId("workforceTabs").setAttribute("aria-label", workforceText("workforceAria"));
+    var employeeLoading = byId("employeesContainer").querySelector(".admin-loading-block");
+    if (employeeLoading) {
+      employeeLoading.textContent = workforceText("loading");
+    }
     var statusOptions = byId("employeeStatusFilter").options;
     statusOptions[0].textContent = workforceText("all");
     statusOptions[1].textContent = workforceText("statusActive");
@@ -447,7 +459,7 @@
         return state.activePanel === "overview" ? null : loadActivePanel();
       })
       .catch(function (error) {
-        setPageError("Daten konnten nicht vollständig geladen werden. " + errorMessage(error));
+        setPageError(workforceText("dataLoadFailed") + " " + errorMessage(error));
       })
       .finally(function () {
         byId("refreshBtn").disabled = false;
