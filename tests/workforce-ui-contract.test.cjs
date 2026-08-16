@@ -48,15 +48,31 @@ requireMatch(adminJs, /requireRole\(profile, "super_admin"\)/, "Workforce admin 
 requireMatch(adminJs, /rpc\("update_employee_account"/, "Employee edits must use the transactional RPC");
 requireMatch(adminJs, /admin-create-user/, "Employee creation must use the existing Edge Function");
 
-["start", "pause", "resume", "end"].forEach((action) => {
-  requireMatch(employeeHtml, new RegExp(`data-action="${action}"`), `Missing ${action} employee action`);
+[
+  ["workDate", "date"],
+  ["startTime", "time"],
+  ["endTime", "time"],
+  ["breakMinutes", "number"]
+].forEach(([id, type]) => {
+  requireMatch(employeeHtml, new RegExp(`type="${type}"[^>]*id="${id}"|id="${id}"[^>]*type="${type}"`), `Missing native ${type} field #${id}`);
 });
-requireMatch(employeeJs, /rpc\("record_time_event"/, "Employee actions must use record_time_event");
+[
+  "workDate", "workSite", "startTime", "endTime", "breakMinutes", "workNote",
+  "signatureCanvas", "confirmEntry", "submitTimeButton"
+].reduce((previousIndex, id) => {
+  const currentIndex = employeeHtml.indexOf(`id="${id}"`);
+  assert.ok(currentIndex > previousIndex, `Employee form field #${id} is out of order`);
+  return currentIndex;
+}, -1);
+requireMatch(employeeHtml, /<canvas id="signatureCanvas"/, "Employee portal must include a signature canvas");
+requireMatch(employeeJs, /pointerdown[\s\S]*pointermove[\s\S]*pointerup/, "Signature pad must support pointer input");
+requireMatch(employeeJs, /rpc\("submit_manual_time_entry"/, "Employee submissions must use the manual-entry RPC");
 requireMatch(employeeJs, /rpc\("get_my_time_state"/, "Employee state must reload from the database");
-requireMatch(employeeJs, /rpc\("get_time_summary"/, "Employee daily total must come from the database");
-requireMatch(employeeJs, /rpc\("update_own_time_entry_note"/, "Employee notes must persist through the RPC");
-requireMatch(employeeJs, /crypto\.randomUUID/, "Clock requests must carry unique idempotency IDs");
+requireMatch(employeeJs, /rpc\("get_time_summary"/, "Employee monthly total must come from the database");
+requireMatch(employeeJs, /p_signature_data_url: signatureDataUrl/, "Employee signature must be submitted through the RPC");
+requireMatch(employeeJs, /crypto\.randomUUID/, "Employee submissions must carry unique idempotency IDs");
 requireMatch(employeeJs, /server_now/, "The employee timer must synchronize with server time");
+requireMatch(employeeJs, /document\.documentElement\.dir = currentLanguage === "ar" \? "rtl" : "ltr"/, "Arabic must switch the employee portal to RTL");
 requireMatch(employeeHtml, /id="inviteView"[\s\S]*id="invitePassword"[\s\S]*id="invitePasswordConfirm"/, "Employee invitations must include a password setup view");
 requireMatch(employeeJs, /auth\.updateUser\(\{ password: password \}\)/, "Employee invitation passwords must be persisted through Supabase Auth");
 

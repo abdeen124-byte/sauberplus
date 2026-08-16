@@ -21,6 +21,12 @@ const lintCompletionMigrationPath = path.join(
   "migrations",
   "20260814000300_time_tracking_lint_completion.sql"
 );
+const manualEntryMigrationPath = path.join(
+  projectRoot,
+  "supabase",
+  "migrations",
+  "20260816000100_employee_manual_time_entry.sql"
+);
 const edgeFunctionPath = path.join(
   projectRoot,
   "supabase",
@@ -34,6 +40,7 @@ const supabaseConfigPath = path.join(projectRoot, "supabase", "config.toml");
 const migration = fs.readFileSync(migrationPath, "utf8");
 const lintFixMigration = fs.readFileSync(lintFixMigrationPath, "utf8");
 const lintCompletionMigration = fs.readFileSync(lintCompletionMigrationPath, "utf8");
+const manualEntryMigration = fs.readFileSync(manualEntryMigrationPath, "utf8");
 const edgeFunction = fs.readFileSync(edgeFunctionPath, "utf8");
 const schema = fs.readFileSync(schemaPath, "utf8");
 const supabaseConfig = fs.readFileSync(supabaseConfigPath, "utf8");
@@ -243,21 +250,48 @@ const lintFixBody = lintFixMigration
   .replace(/\s*commit;\s*$/i, "")
   .split(/\r?\n/)
   .filter(Boolean);
+const schemaLintVolatileStart = schema.indexOf("-- Both functions read clock_timestamp()");
+const schemaLintCompletionHeading = schema.indexOf("-- PostgreSQL lint completion for time tracking");
+const schemaLifecycleHeading = schema.indexOf(
+  "-- ============================================================\n-- User account lifecycle",
+  schemaLintFixHeading
+);
 const schemaLintFixBody = schema
   .slice(
     schema.indexOf("-- PostgreSQL treats", schemaLintFixHeading),
-    schema.lastIndexOf(
-      "-- ---------------------------------------------------------------------------",
-      schema.indexOf("-- PostgreSQL lint completion for time tracking")
-    )
+    schemaLifecycleHeading
   )
   .split(/\r?\n/)
-  .filter(Boolean);
+  .filter(Boolean)
+  .concat(
+    schema
+      .slice(
+        schemaLintVolatileStart,
+        schema.lastIndexOf("-- ---------------------------------------------------------------------------", schemaLintCompletionHeading)
+      )
+      .split(/\r?\n/)
+      .filter(Boolean)
+  );
 assert.deepEqual(
   schemaLintFixBody,
   lintFixBody,
   "schema.sql and the lint-fix migration must stay synchronized"
 );
+
+requireMatch(manualEntryMigration, /^begin;[\s\S]*commit;\s*$/i, "Manual-entry migration must be atomic");
+requireMatch(manualEntryMigration, /create or replace function public\.submit_manual_time_entry\s*\(/i, "Manual-entry RPC is missing");
+requireMatch(manualEntryMigration, /security definer[\s\S]*set search_path = public, pg_temp/i, "Manual-entry RPC must pin search_path");
+requireMatch(manualEntryMigration, /pg_advisory_xact_lock[\s\S]*request_id = p_request_id/i, "Manual submissions must be serialized and idempotent");
+requireMatch(manualEntryMigration, /p_work_date > \(v_now at time zone v_timezone_name\)::date/i, "Future manual entries must be rejected");
+requireMatch(manualEntryMigration, /submitted shift overlaps an existing entry/i, "Overlapping manual entries must be rejected");
+requireMatch(manualEntryMigration, /signature_data_url[\s\S]*confirmed[\s\S]*true/i, "Manual submissions must persist signature evidence and confirmation");
+requireMatch(manualEntryMigration, /insert into public\.time_breaks/i, "Manual breaks must use the existing time_breaks table");
+
+const schemaManualStart = schema.indexOf("create or replace function public.submit_manual_time_entry");
+const schemaManualEnd = schema.indexOf("-- PostgreSQL lint completion for time tracking");
+assert.notEqual(schemaManualStart, -1, "Fresh-install schema is missing the manual-entry RPC");
+assert.notEqual(schemaManualEnd, -1, "Fresh-install schema is missing the manual-entry boundary");
+requireMatch(schema.slice(schemaManualStart, schemaManualEnd), /signature_data_url[\s\S]*grant execute on function public\.submit_manual_time_entry/i, "Fresh-install schema has an incomplete manual-entry RPC");
 
 requireMatch(lintCompletionMigration, /^begin;[\s\S]*commit;\s*$/i, "Lint-completion migration must be atomic");
 requireMatch(
@@ -275,7 +309,6 @@ const lintCompletionBody = lintCompletionMigration
   .replace(/\s*commit;\s*$/i, "")
   .split(/\r?\n/)
   .filter(Boolean);
-const schemaLintCompletionHeading = schema.indexOf("-- PostgreSQL lint completion for time tracking");
 assert.notEqual(schemaLintCompletionHeading, -1, "Fresh-install schema is missing lint completion");
 const schemaLintCompletionBody = schema
   .slice(schema.indexOf("-- The paused -> Ende branch", schemaLintCompletionHeading))

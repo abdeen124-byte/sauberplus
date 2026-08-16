@@ -43,6 +43,7 @@
     return state.client
       .from("user_profiles")
       .select("*")
+      .in("role", ["super_admin", "content_manager"])
       .order("created_at", { ascending: true })
       .then(function (result) {
         if (result.error) {
@@ -101,6 +102,9 @@
           (row.disabled ? "btn-secondary" : "btn-danger") +
           ' btn-sm" data-action="toggle-disabled">' +
           (row.disabled ? t("users.enableButton") : t("users.disableButton")) +
+          "</button>" +
+          '<button type="button" class="btn-danger btn-sm" data-action="delete">' +
+          t("common.delete") +
           "</button>") +
       "</div>" +
       "</div>"
@@ -141,7 +145,27 @@
           handleToggleDisabled(record);
         });
       }
+
+      var deleteBtn = row.querySelector('[data-action="delete"]');
+      if (deleteBtn) {
+        deleteBtn.addEventListener("click", function () {
+          handleDelete(record);
+        });
+      }
     });
+  }
+
+  function manageAccount(record, action, role) {
+    return state.client.rpc("manage_user_account", {
+      p_user_id: record.id,
+      p_action: action,
+      p_role: role || null
+    });
+  }
+
+  function lifecycleError(error, fallback) {
+    var message = error && error.message ? error.message : fallback;
+    return window.AdminI18N.translateServerError(message);
   }
 
   function handleRoleChange(record, newRole) {
@@ -153,13 +177,11 @@
         renderList();
         return;
       }
-      state.client
-        .from("user_profiles")
-        .update({ role: newRole })
-        .eq("id", record.id)
+      manageAccount(record, "role", newRole)
         .then(function (result) {
           if (result.error) {
-            window.AdminUI.toast(t("users.roleChangeFailed"), "error");
+            window.AdminUI.toast(lifecycleError(result.error, t("users.roleChangeFailed")), "error");
+            renderList();
             return;
           }
           window.AdminUI.toast(t("users.roleChangeSuccess"), "success");
@@ -179,18 +201,36 @@
       if (!confirmed) {
         return;
       }
-      state.client
-        .from("user_profiles")
-        .update({ disabled: nextDisabled })
-        .eq("id", record.id)
+      manageAccount(record, nextDisabled ? "disable" : "enable")
         .then(function (result) {
           if (result.error) {
-            window.AdminUI.toast(t("common.actionFailed"), "error");
+            window.AdminUI.toast(lifecycleError(result.error, t("common.actionFailed")), "error");
             return;
           }
           window.AdminUI.toast(nextDisabled ? t("users.disableSuccess") : t("users.enableSuccess"), "success");
           loadUsers();
         });
+    });
+  }
+
+  function handleDelete(record) {
+    window.AdminUI.confirmDialog({
+      title: t("users.deleteConfirmTitle"),
+      message: t("users.deleteConfirmMessage", { name: record.display_name }),
+      confirmLabel: t("common.delete"),
+      danger: true
+    }).then(function (confirmed) {
+      if (!confirmed) {
+        return;
+      }
+      manageAccount(record, "delete").then(function (result) {
+        if (result.error) {
+          window.AdminUI.toast(lifecycleError(result.error, t("common.deleteFailed")), "error");
+          return;
+        }
+        window.AdminUI.toast(t("users.deleteSuccess"), "success");
+        loadUsers();
+      });
     });
   }
 

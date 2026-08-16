@@ -238,8 +238,9 @@
       queryData(state.client.from("work_sites").select("*").order("name", { ascending: true })),
       queryData(state.client.from("employee_work_sites").select("*").order("created_at", { ascending: false }))
     ]).then(function (rows) {
-      state.employees = rows[0];
       state.profiles = rows[1];
+      var employeeProfileIds = new Set(state.profiles.map(function (profile) { return profile.id; }));
+      state.employees = rows[0].filter(function (employee) { return employeeProfileIds.has(employee.id); });
       state.sites = rows[2];
       state.assignments = rows[3];
       populateSelects();
@@ -379,7 +380,7 @@
           escapeHtml(employee.phone || "—"),
           employment,
           statusBadge(profile.disabled ? "disabled" : "active"),
-          '<div class="workforce-row-actions"><button type="button" class="btn-secondary btn-sm" data-employee-edit="' + employee.id + '">Bearbeiten</button><button type="button" class="' + (profile.disabled ? "btn-secondary" : "btn-danger") + ' btn-sm" data-employee-toggle="' + employee.id + '">' + (profile.disabled ? "Aktivieren" : "Deaktivieren") + "</button></div>"
+          '<div class="workforce-row-actions"><button type="button" class="btn-secondary btn-sm" data-employee-edit="' + employee.id + '">Bearbeiten</button><button type="button" class="' + (profile.disabled ? "btn-secondary" : "btn-danger") + ' btn-sm" data-employee-toggle="' + employee.id + '">' + (profile.disabled ? "Aktivieren" : "Deaktivieren") + '</button><button type="button" class="btn-danger btn-sm" data-employee-delete="' + employee.id + '">Löschen</button></div>'
         ];
       })
     );
@@ -388,6 +389,9 @@
     });
     byId("employeesContainer").querySelectorAll("[data-employee-toggle]").forEach(function (button) {
       button.addEventListener("click", function () { toggleEmployee(button.getAttribute("data-employee-toggle")); });
+    });
+    byId("employeesContainer").querySelectorAll("[data-employee-delete]").forEach(function (button) {
+      button.addEventListener("click", function () { deleteEmployee(button.getAttribute("data-employee-delete")); });
     });
   }
 
@@ -603,12 +607,43 @@
       if (!confirmed) {
         return;
       }
-      return queryData(state.client.from("user_profiles").update({ disabled: nextDisabled }).eq("id", id).select("id"))
+      return queryData(state.client.rpc("manage_user_account", {
+        p_user_id: id,
+        p_action: nextDisabled ? "disable" : "enable",
+        p_role: null
+      }))
         .then(function () {
           window.AdminUI.toast(nextDisabled ? "Mitarbeiter deaktiviert." : "Mitarbeiter aktiviert.", "success");
           return reloadAll();
         })
         .catch(function (error) { window.AdminUI.toast(errorMessage(error), "error"); });
+    });
+  }
+
+  function deleteEmployee(id) {
+    var profile = profileById(id);
+    if (!profile) {
+      return;
+    }
+    window.AdminUI.confirmDialog({
+      title: "Mitarbeiter löschen?",
+      message: profile.display_name + " wird dauerhaft deaktiviert. Arbeitszeiten, Unterschriften und historische Nachweise bleiben erhalten.",
+      confirmLabel: "Löschen",
+      danger: true
+    }).then(function (confirmed) {
+      if (!confirmed) {
+        return;
+      }
+      return queryData(state.client.rpc("manage_user_account", {
+        p_user_id: id,
+        p_action: "delete",
+        p_role: null
+      })).then(function () {
+        window.AdminUI.toast("Mitarbeiter gelöscht und für die Nachweispflicht archiviert.", "success");
+        return reloadAll();
+      }).catch(function (error) {
+        window.AdminUI.toast(errorMessage(error), "error");
+      });
     });
   }
 

@@ -147,7 +147,26 @@
       entityLabel: {
         announcements: "Ankündigung",
         gallery_images: "Galeriebild",
-        user_profiles: "Konto"
+        user_profiles: "Konto",
+        employees: "Mitarbeiter",
+        employee_work_sites: "Mitarbeiterzuordnung",
+        work_sites: "Objekt",
+        work_shifts: "Schicht",
+        employee_absences: "Abwesenheit",
+        time_entries: "Zeiteintrag",
+        time_breaks: "Pause",
+        time_entry_events: "Zeiterfassungsereignis"
+      },
+      fieldLabel: {
+        display_name: "Name",
+        email: "E-Mail-Adresse",
+        role: "Rolle",
+        disabled: "Zugriff",
+        employee_number: "Personalnummer",
+        employment_start_date: "Beschäftigungsbeginn",
+        employment_end_date: "Beschäftigungsende",
+        status: "Status",
+        approval_status: "Freigabestatus"
       },
       action: {
         create: "erstellt",
@@ -294,6 +313,11 @@
         enableConfirmMessage: "{name} kann sich danach wieder anmelden.",
         disableSuccess: "Konto deaktiviert.",
         enableSuccess: "Konto aktiviert.",
+        deleteConfirmTitle: "Konto löschen?",
+        deleteConfirmMessage: "{name} wird dauerhaft deaktiviert. Historische Nachweise bleiben erhalten.",
+        deleteSuccess: "Konto gelöscht und sicher archiviert.",
+        lastAdminProtected: "Der letzte aktive Super Admin kann nicht deaktiviert, gelöscht oder herabgestuft werden.",
+        ownAccountProtected: "Das eigene Administratorkonto kann hier nicht geändert werden.",
         resetPasswordConfirmTitle: "Passwort zurücksetzen?",
         resetPasswordConfirmMessage: "Eine E-Mail zum Zurücksetzen des Passworts wird an {email} gesendet.",
         resetPasswordEmailFailed: "E-Mail konnte nicht gesendet werden.",
@@ -467,7 +491,26 @@
       entityLabel: {
         announcements: "إعلان",
         gallery_images: "صورة معرض",
-        user_profiles: "حساب"
+        user_profiles: "حساب",
+        employees: "موظف",
+        employee_work_sites: "تعيين موظف",
+        work_sites: "موقع عمل",
+        work_shifts: "وردية",
+        employee_absences: "غياب",
+        time_entries: "إدخال وقت",
+        time_breaks: "استراحة",
+        time_entry_events: "حدث تسجيل وقت"
+      },
+      fieldLabel: {
+        display_name: "الاسم",
+        email: "البريد الإلكتروني",
+        role: "الدور",
+        disabled: "الوصول",
+        employee_number: "رقم الموظف",
+        employment_start_date: "بداية التوظيف",
+        employment_end_date: "نهاية التوظيف",
+        status: "الحالة",
+        approval_status: "حالة الاعتماد"
       },
       action: {
         create: "بإنشاء",
@@ -614,6 +657,11 @@
         enableConfirmMessage: "سيتمكن {name} من تسجيل الدخول مرة أخرى.",
         disableSuccess: "تم تعطيل الحساب.",
         enableSuccess: "تم تفعيل الحساب.",
+        deleteConfirmTitle: "حذف الحساب؟",
+        deleteConfirmMessage: "سيتم تعطيل حساب {name} نهائيًا، مع الاحتفاظ بالسجلات التاريخية.",
+        deleteSuccess: "تم حذف الحساب وأرشفته بأمان.",
+        lastAdminProtected: "لا يمكن تعطيل آخر مدير عام نشط أو حذفه أو تخفيض صلاحياته.",
+        ownAccountProtected: "لا يمكن تغيير حساب المدير الحالي من هنا.",
         resetPasswordConfirmTitle: "إعادة تعيين كلمة المرور؟",
         resetPasswordConfirmMessage: "سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى {email}.",
         resetPasswordEmailFailed: "تعذّر إرسال البريد الإلكتروني.",
@@ -719,6 +767,8 @@
     "Ungültige Rolle.": "users.edgeErrors.invalidRole",
     "Diese E-Mail-Adresse ist bereits registriert.": "users.edgeErrors.emailTaken",
     "Konto konnte nicht erstellt werden.": "users.createFailed",
+    "Der letzte aktive Super Admin kann nicht deaktiviert, gelöscht oder herabgestuft werden.": "users.lastAdminProtected",
+    "Das eigene Administratorkonto kann hier nicht geändert werden.": "users.ownAccountProtected",
     "Konto wurde angelegt, Profil konnte aber nicht gespeichert werden. Bitte SauberPlus-Entwickler kontaktieren.": "users.edgeErrors.profileSaveFailed"
   };
 

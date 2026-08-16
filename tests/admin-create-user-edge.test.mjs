@@ -112,6 +112,27 @@ assert.equal(existingAdminProvisionBody.p_role, "content_manager");
 assert.equal(existingAdminProvisionBody.p_employee_number, null);
 assert.equal(existingAdminProvisionBody.p_primary_work_site_id, null);
 
+const duplicateEmployee = await runScenario((url) => {
+  if (url.endsWith("/rest/v1/rpc/is_super_admin")) {
+    return jsonResponse(true);
+  }
+  if (url.includes("/auth/v1/invite")) {
+    return jsonResponse({ code: "user_already_exists", message: "User already registered" }, 422);
+  }
+  if (url.includes("/rest/v1/user_profiles?")) {
+    return jsonResponse([{ id: invitedUserId, role: "employee" }]);
+  }
+  if (url.includes("/rest/v1/employees?")) {
+    return jsonResponse([{ id: invitedUserId }]);
+  }
+  throw new Error(`Unexpected request: ${url}`);
+}, employeePayload);
+
+assert.equal(duplicateEmployee.response.status, 409);
+assert.equal(duplicateEmployee.body.error, "Diese E-Mail-Adresse ist bereits registriert.");
+assert.equal(duplicateEmployee.calls.some((call) => call.url.includes("/rest/v1/employees?")), true);
+assert.equal(duplicateEmployee.calls.some((call) => call.url.endsWith("/rest/v1/rpc/provision_user_profile")), false);
+
 const rejectedProvision = await runScenario((url) => {
   if (url.endsWith("/rest/v1/rpc/is_super_admin")) {
     return jsonResponse(true);

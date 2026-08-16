@@ -79,6 +79,40 @@ async function removeInvitedUser(
   }
 }
 
+async function inspectExistingAccount(
+  supabaseUrl: string,
+  serviceRoleKey: string,
+  email: string
+): Promise<void> {
+  try {
+    const headers = {
+      apikey: serviceRoleKey,
+      Authorization: "Bearer " + serviceRoleKey
+    };
+    const profileResponse = await fetch(
+      supabaseUrl +
+        "/rest/v1/user_profiles?select=id,role&email=eq." +
+        encodeURIComponent(email) +
+        "&limit=1",
+      { headers }
+    );
+    if (!profileResponse.ok) {
+      return;
+    }
+    const profiles = await profileResponse.json() as Array<{ id?: string; role?: string }>;
+    const profile = profiles[0];
+    if (profile?.role !== "employee" || !profile.id) {
+      return;
+    }
+    await fetch(
+      supabaseUrl + "/rest/v1/employees?select=id&id=eq." + encodeURIComponent(profile.id) + "&limit=1",
+      { headers }
+    );
+  } catch (_error) {
+    // Duplicate Auth remains the authoritative result even if this diagnostic lookup is unavailable.
+  }
+}
+
 /**
  * Reads the `sub` (user id) claim out of the JWT payload without verifying
  * its signature. This is safe here because it's only used to build a query
@@ -224,8 +258,13 @@ Deno.serve(async (request: Request) => {
 
   if (!inviteResponse.ok) {
     const errorBody = await inviteResponse.text();
-    const alreadyExists = inviteResponse.status === 422 || errorBody.indexOf("already been registered") !== -1;
-    return jsonResponse(request, inviteResponse.status, {
+    const alreadyExists =
+      inviteResponse.status === 422 ||
+      /already\s+(been\s+)?registered|already\s+exists|user_already_exists/i.test(errorBody);
+    if (alreadyExists) {
+      await inspectExistingAccount(supabaseUrl, serviceRoleKey, email);
+    }
+    return jsonResponse(request, alreadyExists ? 409 : inviteResponse.status, {
       error: alreadyExists ? "Diese E-Mail-Adresse ist bereits registriert." : "Konto konnte nicht erstellt werden."
     });
   }

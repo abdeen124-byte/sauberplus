@@ -3,210 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0a1628">
+<meta name="theme-color" content="#0b2948">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SauberPlus Mitarbeiter">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://kgkrgbkiqitnvntbyyct.supabase.co; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
 <title>Arbeitszeit – SauberPlus</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='8' y1='8' x2='56' y2='56'%3E%3Cstop stop-color='%232e6be6'/%3E%3Cstop offset='1' stop-color='%232db34a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='%230a1628'/%3E%3Ccircle cx='32' cy='32' r='24' fill='url(%23g)'/%3E%3Cpath d='M20 38c4 5 20 5 24-2 2-4-1-8-7-8h-8c-5 0-7-4-4-8 3-4 12-5 18 0' fill='none' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/sauberplus-app-icon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/sauberplus-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/sauberplus.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/employee.css">
 </head>
 <body class="employee-body">
-<div class="employee-background" aria-hidden="true"></div>
-
 <main class="employee-entry">
   <section class="employee-loading" id="loadingView" aria-live="polite">
     <div class="employee-loading-mark" aria-hidden="true"><span></span></div>
-    <p>Arbeitsbereich wird geladen …</p>
+    <p data-i18n="common.loading">Arbeitsbereich wird geladen …</p>
   </section>
 
   <section class="employee-auth" id="loginView" hidden>
     <div class="employee-auth-brand">
-      <a class="employee-wordmark" href="../" aria-label="SauberPlus Startseite"><span>Sauber</span><b>Plus</b></a>
-      <p class="employee-auth-kicker">Mitarbeiter-Zugang</p>
-      <h1>Ihr Arbeitstag.<br><span>Einfach erfasst.</span></h1>
-      <p class="employee-auth-copy">Start, Pause und Feierabend werden sicher mit der SauberPlus-Zeiterfassung gespeichert.</p>
+      <a class="employee-wordmark" href="../" aria-label="SauberPlus"><span>Sauber</span><b>Plus</b></a>
+      <p class="employee-auth-kicker" data-i18n="login.kicker">Mitarbeiter-Zugang</p>
+      <h1 data-i18n="login.title">Arbeitszeiten einfach und sicher erfassen.</h1>
+      <p class="employee-auth-copy" data-i18n="login.copy">Melden Sie sich mit Ihrem persönlichen SauberPlus Konto an.</p>
     </div>
-
     <div class="employee-auth-panel">
-      <div class="employee-auth-heading">
-        <p>Zeiterfassung</p>
-        <h2>Anmelden</h2>
+      <div class="employee-auth-language employee-language-switcher" role="group" aria-label="Sprache">
+        <button type="button" data-language="de" aria-pressed="true">DE</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+        <button type="button" data-language="ar" aria-pressed="false">AR</button>
       </div>
+      <div class="employee-auth-heading"><p data-i18n="login.portal">Zeiterfassung</p><h2 data-i18n="login.signIn">Anmelden</h2></div>
       <div class="employee-alert" id="loginError" role="alert" hidden></div>
       <form id="loginForm" novalidate>
-        <label class="employee-field" for="loginEmail">
-          <span>E-Mail-Adresse</span>
-          <input type="email" id="loginEmail" name="email" autocomplete="username" inputmode="email" required>
-        </label>
+        <label class="employee-field" for="loginEmail"><span data-i18n="login.email">E-Mail-Adresse</span><input type="email" id="loginEmail" name="email" autocomplete="username" inputmode="email" required></label>
         <label class="employee-field" for="loginPassword">
-          <span>Passwort</span>
+          <span data-i18n="login.password">Passwort</span>
           <span class="employee-password-wrap">
             <input type="password" id="loginPassword" name="password" autocomplete="current-password" required>
-            <button class="employee-password-toggle" id="passwordToggle" type="button" aria-label="Passwort anzeigen" aria-pressed="false">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>
-            </button>
+            <button class="employee-password-toggle" id="passwordToggle" type="button" aria-label="Passwort anzeigen" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg></button>
           </span>
         </label>
-        <button class="employee-primary-button" id="loginButton" type="submit">
-          <span class="employee-button-spinner" aria-hidden="true"></span>
-          <span>Anmelden</span>
-        </button>
+        <button class="employee-primary-button" id="loginButton" type="submit"><span class="employee-button-spinner" aria-hidden="true"></span><span data-i18n="login.signIn">Anmelden</span></button>
       </form>
-      <p class="employee-auth-foot">Nur für aktive SauberPlus Mitarbeiter.</p>
+      <p class="employee-auth-foot" data-i18n="login.foot">Nur für aktive SauberPlus Mitarbeiter.</p>
     </div>
   </section>
 
   <section class="employee-auth" id="inviteView" hidden>
     <div class="employee-auth-brand">
-      <a class="employee-wordmark" href="../" aria-label="SauberPlus Startseite"><span>Sauber</span><b>Plus</b></a>
-      <p class="employee-auth-kicker">Mitarbeiter-Zugang</p>
-      <h1>Willkommen bei<br><span>SauberPlus.</span></h1>
-      <p class="employee-auth-copy">Legen Sie zuerst Ihr persönliches Passwort fest. Danach öffnet sich Ihr heutiger Arbeitstag.</p>
+      <a class="employee-wordmark" href="../" aria-label="SauberPlus"><span>Sauber</span><b>Plus</b></a>
+      <p class="employee-auth-kicker" data-i18n="invite.kicker">Mitarbeiter-Zugang</p>
+      <h1 data-i18n="invite.title">Willkommen bei SauberPlus.</h1>
+      <p class="employee-auth-copy" data-i18n="invite.copy">Legen Sie zuerst Ihr persönliches Passwort fest.</p>
     </div>
     <div class="employee-auth-panel">
-      <div class="employee-auth-heading"><p>Einladung</p><h2>Passwort festlegen</h2></div>
+      <div class="employee-auth-language employee-language-switcher" role="group" aria-label="Sprache">
+        <button type="button" data-language="de" aria-pressed="true">DE</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+        <button type="button" data-language="ar" aria-pressed="false">AR</button>
+      </div>
+      <div class="employee-auth-heading"><p data-i18n="invite.invitation">Einladung</p><h2 data-i18n="invite.setPassword">Passwort festlegen</h2></div>
       <div class="employee-alert" id="inviteError" role="alert" hidden></div>
       <form id="inviteForm" novalidate>
-        <label class="employee-field" for="invitePassword"><span>Neues Passwort</span><input type="password" id="invitePassword" autocomplete="new-password" minlength="8" required></label>
-        <label class="employee-field" for="invitePasswordConfirm"><span>Passwort bestätigen</span><input type="password" id="invitePasswordConfirm" autocomplete="new-password" minlength="8" required></label>
-        <button class="employee-primary-button" id="inviteButton" type="submit"><span class="employee-button-spinner" aria-hidden="true"></span><span>Passwort speichern</span></button>
+        <label class="employee-field" for="invitePassword"><span data-i18n="invite.newPassword">Neues Passwort</span><input type="password" id="invitePassword" autocomplete="new-password" minlength="8" required></label>
+        <label class="employee-field" for="invitePasswordConfirm"><span data-i18n="invite.confirmPassword">Passwort bestätigen</span><input type="password" id="invitePasswordConfirm" autocomplete="new-password" minlength="8" required></label>
+        <button class="employee-primary-button" id="inviteButton" type="submit"><span class="employee-button-spinner" aria-hidden="true"></span><span data-i18n="invite.savePassword">Passwort speichern</span></button>
       </form>
-      <p class="employee-auth-foot">Der Einladungslink kann nur zeitlich begrenzt verwendet werden.</p>
     </div>
   </section>
 
   <section class="employee-access-gate" id="staffView" hidden>
     <a class="employee-wordmark" href="../"><span>Sauber</span><b>Plus</b></a>
-    <div class="employee-gate-symbol" aria-hidden="true">
-      <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M4 9h16M9 9v10"></path></svg>
-    </div>
-    <p class="employee-eyebrow">Mitarbeiter-Zugang</p>
-    <h1>Dieses Konto gehört zur Verwaltung.</h1>
-    <p>Öffnen Sie die SauberPlus-Verwaltung, um mit diesem Konto fortzufahren.</p>
-    <a class="employee-primary-button employee-button-link" href="../admin/dashboard.html">Zur Verwaltung</a>
-    <button class="employee-text-button" id="staffLogoutButton" type="button">Anderes Konto verwenden</button>
+    <p class="employee-eyebrow" data-i18n="gate.kicker">Mitarbeiter-Zugang</p>
+    <h1 data-i18n="gate.title">Dieses Konto gehört zur Verwaltung.</h1>
+    <p data-i18n="gate.copy">Öffnen Sie die SauberPlus-Verwaltung, um fortzufahren.</p>
+    <a class="employee-primary-button employee-button-link" href="../admin/dashboard.html" data-i18n="gate.admin">Zur Verwaltung</a>
+    <button class="employee-text-button" id="staffLogoutButton" type="button" data-i18n="gate.otherAccount">Anderes Konto verwenden</button>
   </section>
 
   <section class="employee-app" id="appView" hidden>
     <header class="employee-topbar">
-      <a class="employee-wordmark" href="../"><span>Sauber</span><b>Plus</b></a>
-      <div class="employee-topbar-actions">
-        <span class="employee-account-name" id="accountName"></span>
-        <button class="employee-icon-button" id="logoutButton" type="button" aria-label="Abmelden" title="Abmelden">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"></path></svg>
-        </button>
+      <div class="employee-topbar-inner">
+        <a class="employee-wordmark" href="../"><span>Sauber</span><b>Plus</b></a>
+        <div class="employee-topbar-actions">
+          <div class="employee-language-switcher" role="group" aria-label="Sprache">
+            <button type="button" data-language="de" aria-pressed="true">DE</button>
+            <button type="button" data-language="en" aria-pressed="false">EN</button>
+            <button type="button" data-language="ar" aria-pressed="false">AR</button>
+          </div>
+          <span class="employee-account-name" id="accountName"></span>
+          <button class="employee-icon-button" id="logoutButton" type="button" aria-label="Abmelden" title="Abmelden"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"></path></svg></button>
+        </div>
       </div>
     </header>
 
     <div class="employee-app-content">
-      <div class="employee-day-heading">
-        <div>
-          <p class="employee-eyebrow" id="todayLabel">HEUTE</p>
-          <h1 id="greetingHeading">Guten Tag</h1>
-        </div>
-        <div class="employee-state-pill" id="statePill" data-state="idle">
-          <span aria-hidden="true"></span>
-          <b id="stateLabel">Nicht gestartet</b>
-        </div>
-      </div>
-
+      <div class="employee-page-heading"><p class="employee-eyebrow" data-i18n="app.area">MITARBEITERBEREICH</p><h1 data-i18n="app.overview">Übersicht</h1></div>
       <div class="employee-global-alert" id="globalAlert" role="alert" hidden></div>
 
-      <section class="employee-clock-section" aria-labelledby="clockHeading">
-        <div class="employee-shift-context">
-          <div class="employee-context-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 21s7-5.7 7-12a7 7 0 1 0-14 0c0 6.3 7 12 7 12Z"></path><circle cx="12" cy="9" r="2.2"></circle></svg>
-          </div>
-          <div class="employee-context-copy">
-            <p>Ihr Einsatzort</p>
-            <h2 id="clockHeading">Kein Einsatzort</h2>
-            <span id="siteAddress">Für heute ist kein Objekt zugewiesen.</span>
-          </div>
-          <label class="employee-site-select-wrap" id="siteSelectWrap" hidden>
-            <span class="employee-visually-hidden">Einsatzort wählen</span>
-            <select id="siteSelect" aria-label="Einsatzort wählen"></select>
-          </label>
+      <section class="employee-summary" aria-labelledby="summaryHeading">
+        <p data-i18n="summary.kicker">MEINE ZEITERFASSUNG</p>
+        <div class="employee-summary-row">
+          <div><h2 id="summaryHeading" data-i18n="summary.title">Arbeitszeiten klar erfassen.</h2><p data-i18n="summary.copy">Wählen Sie Ihren Einsatzort, tragen Sie Ihre Schicht ein und reichen Sie sie direkt ein.</p></div>
+          <button class="employee-summary-action" id="focusRecordButton" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span data-i18n="summary.action">Stunden eintragen</span></button>
         </div>
-
-        <div class="employee-shift-row">
-          <div>
-            <span>Geplanter Dienst</span>
-            <strong id="shiftTime">–</strong>
-          </div>
-          <div>
-            <span>Personalnummer</span>
-            <strong id="employeeNumber">–</strong>
-          </div>
-        </div>
-
-        <div class="employee-timer" aria-live="off">
-          <p>Heute gearbeitet</p>
-          <output id="workedTime" aria-label="Heute gearbeitete Zeit">00:00:00</output>
-          <span id="timerHint">Bereit für Ihren Arbeitsbeginn</span>
-        </div>
-
-        <div class="employee-actions" id="clockActions">
-          <button class="employee-clock-button employee-clock-start" type="button" data-action="start">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"></path></svg>
-            <span>Start</span>
-          </button>
-          <button class="employee-clock-button employee-clock-pause" type="button" data-action="pause">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12"></path></svg>
-            <span>Pause</span>
-          </button>
-          <button class="employee-clock-button employee-clock-resume" type="button" data-action="resume">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"></path></svg>
-            <span>Fortsetzen</span>
-          </button>
-          <button class="employee-clock-button employee-clock-end" type="button" data-action="end">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1"></rect></svg>
-            <span>Ende</span>
-          </button>
-        </div>
-        <p class="employee-action-feedback" id="actionFeedback" role="status" aria-live="polite"></p>
       </section>
 
-      <div class="employee-detail-grid">
-        <section class="employee-detail-section" aria-labelledby="scheduleHeading">
-          <div class="employee-section-heading">
-            <div>
-              <p class="employee-eyebrow">DIENSTPLAN</p>
-              <h2 id="scheduleHeading">Heute</h2>
-            </div>
-            <span class="employee-date-badge" id="scheduleDate"></span>
+      <section class="employee-record-card" id="recordCard" aria-labelledby="recordHeading">
+        <div class="employee-card-heading"><span class="employee-heading-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3v3M16 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"></path></svg></span><div><h2 id="recordHeading" data-i18n="form.title">Neue Arbeitszeit erfassen</h2><p data-i18n="form.copy">Tragen Sie Ihre Zeiten am Ende jeder Schicht vollständig ein.</p></div></div>
+        <form class="employee-record-form" id="timeEntryForm" novalidate>
+          <label class="employee-field" for="workDate"><span data-i18n="form.date">Datum</span><input type="date" id="workDate" name="workDate" required></label>
+          <label class="employee-field" for="workSite"><span data-i18n="form.site">Einsatzort</span><select id="workSite" name="workSite" required><option value="" data-i18n="form.sitePlaceholder">Objekt auswählen</option></select></label>
+          <div class="employee-time-grid">
+            <label class="employee-field" for="startTime"><span data-i18n="form.start">Beginn</span><input type="time" id="startTime" name="startTime" required></label>
+            <label class="employee-field" for="endTime"><span data-i18n="form.end">Ende</span><input type="time" id="endTime" name="endTime" required></label>
+            <label class="employee-field" for="breakMinutes"><span data-i18n="form.break">Pause in Minuten</span><input type="number" id="breakMinutes" name="breakMinutes" min="0" max="240" step="1" value="0" inputmode="numeric" required></label>
           </div>
-          <div class="employee-schedule-empty" id="scheduleEmpty">
-            <span aria-hidden="true">—</span>
-            <p>Für heute ist kein Dienst geplant.</p>
-          </div>
-          <div class="employee-schedule-list" id="scheduleList"></div>
-        </section>
+          <div class="employee-duration-preview" aria-live="polite"><span data-i18n="form.estimated">Voraussichtliche Arbeitszeit:</span><strong id="durationPreview" data-i18n="form.completeTimes">Zeitangaben ergänzen</strong><small data-i18n="form.overnight">Nachtschichten werden unterstützt.</small></div>
+          <label class="employee-field" for="workNote"><span><span data-i18n="form.note">Bemerkung</span> <small data-i18n="form.optional">(optional)</small></span><textarea id="workNote" name="workNote" maxlength="1000" rows="4" data-i18n-placeholder="form.notePlaceholder" placeholder="z. B. Vertretung, Sonderreinigung oder Zugangshinweis"></textarea></label>
+          <fieldset class="employee-signature-field">
+            <div class="employee-signature-heading"><div><legend data-i18n="form.signature">Unterschrift des Mitarbeiters</legend><p data-i18n="form.signatureHint">Unterschreiben Sie mit dem Finger oder der Maus im Feld.</p></div><button class="employee-clear-signature" id="clearSignatureButton" type="button" disabled data-i18n="form.clear">Löschen</button></div>
+            <div class="employee-signature-canvas-wrap"><canvas id="signatureCanvas" aria-label="Unterschriftsfeld"></canvas><span id="signaturePlaceholder" data-i18n="form.signHere">Hier unterschreiben</span></div>
+          </fieldset>
+          <label class="employee-confirmation" for="confirmEntry"><input type="checkbox" id="confirmEntry" name="confirmEntry"><span data-i18n="form.confirm">Ich bestätige, dass die Angaben vollständig und richtig sind und dass die Unterschrift von mir stammt.</span></label>
+          <div class="employee-form-feedback" id="formFeedback" role="status" aria-live="polite"></div>
+          <button class="employee-submit-button" id="submitTimeButton" type="submit" disabled><span class="employee-button-spinner" aria-hidden="true"></span><span data-i18n="form.submit">Unterschreiben & einreichen</span></button>
+        </form>
+      </section>
 
-        <section class="employee-detail-section employee-note-section" aria-labelledby="noteHeading">
-          <div class="employee-section-heading">
-            <div>
-              <p class="employee-eyebrow">ARBEITSTAG</p>
-              <h2 id="noteHeading">Tagesnotiz</h2>
-            </div>
-            <span class="employee-note-status" id="noteStatus" aria-live="polite"></span>
-          </div>
-          <label class="employee-visually-hidden" for="workNote">Notiz zum heutigen Arbeitstag</label>
-          <textarea id="workNote" maxlength="1000" rows="4" placeholder="Optional: Übergabe, Besonderheiten oder Hinweise …"></textarea>
-          <div class="employee-note-footer">
-            <span id="noteCounter">0 / 1000</span>
-            <button class="employee-secondary-button" id="saveNoteButton" type="button" disabled>Notiz speichern</button>
-          </div>
-        </section>
-      </div>
+      <section class="employee-stats-grid" aria-label="Übersicht der Arbeitszeiten">
+        <article class="employee-stat-card employee-stat-primary"><div><p data-i18n="stats.month">DIESER MONAT</p><strong id="monthHours">00:00</strong><span data-i18n="stats.monthHelp">erfasste Arbeitszeit</span></div><span class="employee-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span></article>
+        <article class="employee-stat-card"><div><p data-i18n="stats.active">IN BEARBEITUNG</p><strong id="activeEntries">0</strong><span data-i18n="stats.activeHelp">laufende oder pausierte Einträge</span></div><span class="employee-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v5l-4 4 4 4v5H6v-5l4-4-4-4Z"></path></svg></span></article>
+        <article class="employee-stat-card"><div><p data-i18n="stats.completed">ABGESCHLOSSEN</p><strong id="completedEntries">0</strong><span data-i18n="stats.completedHelp">Einträge in diesem Monat</span></div><span class="employee-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg></span></article>
+      </section>
+
+      <section class="employee-lower-grid">
+        <article class="employee-recent-card" aria-labelledby="recentHeading"><div class="employee-card-heading compact"><div><h2 id="recentHeading" data-i18n="recent.title">Letzte Einträge</h2><p data-i18n="recent.copy">Ihre zuletzt erfassten Arbeitszeiten.</p></div></div><div class="employee-recent-list" id="recentEntries"></div></article>
+        <aside class="employee-contact-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v4M12 16h.01"></path><circle cx="12" cy="12" r="9"></circle></svg><h2 data-i18n="contact.title">Wichtig für Ihre Schicht</h2><p data-i18n="contact.copy">Erfassen Sie Beginn, Ende und Pause vollständig. Prüfen Sie Ihre Angaben vor dem Einreichen.</p><div><span data-i18n="contact.questions">Bei Fragen:</span> <a href="tel:+4915210316162">SauberPlus · +49 1521 031 6162</a></div></aside>
+      </section>
     </div>
   </section>
 </main>
-
 <script src="../admin/js/vendor/supabase.js"></script>
 <script src="../admin/js/admin-config.js"></script>
 <script src="js/employee-app.js"></script>

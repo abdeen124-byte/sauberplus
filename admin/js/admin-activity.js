@@ -42,10 +42,15 @@
       var before = JSON.stringify(row.previous_value[key]);
       var after = JSON.stringify(row.new_value[key]);
       if (before !== after) {
-        changedFields.push(key);
+        changedFields.push(translatedOrFallback("fieldLabel." + key, key));
       }
     });
     return changedFields;
+  }
+
+  function translatedOrFallback(key, fallback) {
+    var translated = t(key);
+    return translated === key ? fallback : translated;
   }
 
   function buildSentence(row) {
@@ -56,8 +61,8 @@
     var changedFields = summarizeChange(row);
     var sentence = t("activityFeed.action", {
       actor: actor,
-      entity: t("entityLabel." + row.entity_type) || row.entity_type,
-      action: t("action." + row.action) || row.action
+      entity: translatedOrFallback("entityLabel." + row.entity_type, row.entity_type),
+      action: translatedOrFallback("action." + row.action, row.action)
     });
     if (changedFields && changedFields.length) {
       var separator = window.AdminI18N.getLang() === "ar" ? "، " : ", ";

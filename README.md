@@ -65,3 +65,28 @@ Do not copy files from other projects into this repository. Keep SauberPlus isol
 - Do not add generated screenshots, temporary browser profiles, verification downloads, or debug scripts.
 - Do not add private keys, tokens, passwords, or customer data.
 - Do not invent legal company data. Add official legal details only when they are provided.
+
+## Environment Requirements
+
+- `.env.local` (not committed) — local dev only.
+- The `/admin` CMS talks to Supabase project `kgkrgbkiqitnvntbyyct` — its
+  public URL + anon key live in `admin/js/admin-config.js` (committed,
+  safe by design, gated by RLS). No service-role key is used client-side.
+- The public site itself (outside `/admin`) needs no environment variables.
+
+## Recovery Instructions
+
+- Git history + remote: https://github.com/abdeen124-byte/sauberplus
+  (branch `main`) — this is a real off-machine backup, unlike most other
+  projects in this workspace which are local-only.
+- Database (admin CMS): schema/RLS/functions/triggers are committed in
+  `supabase/schema.sql` — re-runnable against a fresh Supabase project if
+  ever needed.
+- **Live-hosting uncertainty**: as of 2026-07-15, it's unresolved whether
+  production traffic actually comes from GitHub Pages (as this README's
+  Deployment section above states) or from Vercel (Vercel's own records show
+  a recent production deploy aliased to `api.sauberplus.plus`, a hostname
+  that does not currently resolve). Confirm which is actually live before
+  relying on either recovery path exclusively — see
+  [HEALTH_REPORT.md](../../HEALTH_REPORT.md) in the workspace root.
+- Relink Vercel if ever needed: `npx vercel link --yes --project sauberplus`.
