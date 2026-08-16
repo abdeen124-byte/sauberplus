@@ -42,7 +42,73 @@
       sites: "Objekte / Einsatzorte",
       sitesHint: "Arbeitsorte mit eindeutiger Objekt-Nummer.",
       assignments: "Mitarbeiter-Zuordnungen",
-      assignmentsHint: "Gültige Zuordnungen und Hauptobjekte."
+      assignmentsHint: "Gültige Zuordnungen und Hauptobjekte.",
+      activeEmployees: "Aktive Mitarbeiter",
+      onDuty: "Im Dienst",
+      inBreak: "{count} in Pause",
+      shiftsToday: "Schichten heute",
+      activeSites: "Aktive Objekte",
+      nobodyClocked: "Aktuell ist niemand eingestempelt.",
+      employee: "Mitarbeiter",
+      site: "Objekt",
+      start: "Beginn",
+      workTime: "Arbeitszeit",
+      employeeNumber: "Personalnr.",
+      phone: "Telefon",
+      employment: "Beschäftigung",
+      actions: "Aktionen",
+      edit: "Bearbeiten",
+      activate: "Aktivieren",
+      deactivate: "Deaktivieren",
+      delete: "Löschen",
+      emptyEmployees: "Keine Mitarbeiter in dieser Ansicht.",
+      addEmployee: "+ Mitarbeiter",
+      employeeModalAdd: "Mitarbeiter hinzufügen",
+      employeeModalEdit: "Mitarbeiter bearbeiten",
+      employeeCreated: "Mitarbeiter angelegt und Einladung versendet.",
+      employeeUpdated: "Mitarbeiter aktualisiert.",
+      disableTitle: "Mitarbeiter deaktivieren?",
+      enableTitle: "Mitarbeiter aktivieren?",
+      disableMessage: "Der Mitarbeiter kann sich danach nicht mehr anmelden oder Zeiten erfassen.",
+      enableMessage: "Der Zugriff auf die Mitarbeiter-Oberfläche wird wieder freigegeben.",
+      employeeDisabled: "Mitarbeiter deaktiviert.",
+      employeeEnabled: "Mitarbeiter aktiviert.",
+      deleteTitle: "Mitarbeiter löschen?",
+      deleteMessage: "{name} wird endgültig aus den aktiven Listen entfernt. Arbeitszeiten, Unterschriften und historische Nachweise bleiben erhalten.",
+      employeeDeleted: "Mitarbeiter gelöscht. Historische Nachweise bleiben archiviert.",
+      searchPlaceholder: "Name, E-Mail oder Personalnummer",
+      employeeNameLabel: "Name *",
+      employeeEmailLabel: "E-Mail *",
+      employeeNumberLabel: "Personalnummer *",
+      employeePhoneLabel: "Telefon",
+      employmentStartLabel: "Beschäftigt ab",
+      employmentEndLabel: "Beschäftigt bis",
+      primarySiteLabel: "Hauptobjekt (optional)",
+      noPrimarySite: "Kein Hauptobjekt",
+      employeeInviteNote: "Das Konto erhält eine Einladung zur Mitarbeiter-Oberfläche.",
+      cancel: "Abbrechen",
+      save: "Speichern",
+      close: "Schließen",
+      all: "Alle",
+      statusActive: "Aktiv",
+      statusDisabled: "Deaktiviert",
+      statusWorking: "Arbeitet",
+      statusPaused: "Pause",
+      statusCompleted: "Beendet",
+      statusScheduled: "Geplant",
+      statusCancelled: "Abgesagt",
+      statusApproved: "Genehmigt",
+      statusPending: "Offen",
+      statusRejected: "Abgelehnt",
+      nameRequired: "Bitte einen Namen angeben.",
+      emailRequired: "Bitte eine gültige E-Mail-Adresse angeben.",
+      employeeNumberRequired: "Bitte eine Personalnummer angeben.",
+      sessionLoading: "Die Sitzung wird noch geladen. Bitte in einem Moment erneut versuchen.",
+      actionFailed: "Die Aktion konnte nicht ausgeführt werden.",
+      duplicateValue: "Dieser Wert ist bereits vorhanden. Bitte Personal- oder Objekt-Nummer prüfen.",
+      overlap: "Der Zeitraum überschneidet sich mit einem bestehenden Eintrag.",
+      invalidData: "Die eingegebenen Daten oder Zeiträume sind ungültig.",
+      invalidDateRange: "Das Enddatum darf nicht vor dem Startdatum liegen."
     },
     ar: {
       title: "الموظفون وتسجيل الوقت",
@@ -61,18 +127,126 @@
       sites: "المواقع / أماكن العمل",
       sitesHint: "أماكن العمل مع رقم موقع فريد.",
       assignments: "ربط الموظفين",
-      assignmentsHint: "الروابط السارية والموقع الأساسي."
+      assignmentsHint: "الروابط السارية والموقع الأساسي.",
+      activeEmployees: "الموظفون النشطون",
+      onDuty: "في العمل",
+      inBreak: "{count} في الاستراحة",
+      shiftsToday: "ورديات اليوم",
+      activeSites: "المواقع النشطة",
+      nobodyClocked: "لا يوجد موظف مسجّل في العمل حاليًا.",
+      employee: "الموظف",
+      site: "الموقع",
+      start: "البداية",
+      workTime: "وقت العمل",
+      employeeNumber: "رقم الموظف",
+      phone: "الهاتف",
+      employment: "فترة العمل",
+      actions: "الإجراءات",
+      edit: "تعديل",
+      activate: "تفعيل",
+      deactivate: "تعطيل",
+      delete: "حذف",
+      emptyEmployees: "لا يوجد موظفون في هذه القائمة.",
+      addEmployee: "+ موظف",
+      employeeModalAdd: "إضافة موظف",
+      employeeModalEdit: "تعديل الموظف",
+      employeeCreated: "تم إنشاء الموظف وإرسال الدعوة.",
+      employeeUpdated: "تم تحديث الموظف.",
+      disableTitle: "تعطيل الموظف؟",
+      enableTitle: "تفعيل الموظف؟",
+      disableMessage: "لن يتمكن الموظف بعد ذلك من تسجيل الدخول أو تسجيل الساعات.",
+      enableMessage: "سيتم السماح مجددًا بالدخول إلى بوابة الموظف.",
+      employeeDisabled: "تم تعطيل الموظف.",
+      employeeEnabled: "تم تفعيل الموظف.",
+      deleteTitle: "حذف الموظف؟",
+      deleteMessage: "سيُحذف {name} نهائيًا من القوائم النشطة، مع الاحتفاظ بساعات العمل والتوقيعات والسجلات التاريخية.",
+      employeeDeleted: "تم حذف الموظف مع الاحتفاظ بالسجلات التاريخية في الأرشيف.",
+      searchPlaceholder: "الاسم أو البريد الإلكتروني أو رقم الموظف",
+      employeeNameLabel: "الاسم *",
+      employeeEmailLabel: "البريد الإلكتروني *",
+      employeeNumberLabel: "رقم الموظف *",
+      employeePhoneLabel: "الهاتف",
+      employmentStartLabel: "بداية العمل",
+      employmentEndLabel: "نهاية العمل",
+      primarySiteLabel: "الموقع الأساسي (اختياري)",
+      noPrimarySite: "بدون موقع أساسي",
+      employeeInviteNote: "سيتلقى الحساب دعوة للدخول إلى بوابة الموظف.",
+      cancel: "إلغاء",
+      save: "حفظ",
+      close: "إغلاق",
+      all: "الكل",
+      statusActive: "نشط",
+      statusDisabled: "معطّل",
+      statusWorking: "يعمل",
+      statusPaused: "استراحة",
+      statusCompleted: "مكتمل",
+      statusScheduled: "مجدول",
+      statusCancelled: "ملغى",
+      statusApproved: "معتمد",
+      statusPending: "قيد الانتظار",
+      statusRejected: "مرفوض",
+      nameRequired: "يرجى إدخال اسم الموظف.",
+      emailRequired: "يرجى إدخال بريد إلكتروني صالح.",
+      employeeNumberRequired: "يرجى إدخال رقم الموظف.",
+      sessionLoading: "ما زال تحميل الجلسة جاريًا. يرجى المحاولة بعد لحظة.",
+      actionFailed: "تعذّر تنفيذ الإجراء.",
+      duplicateValue: "هذه القيمة مستخدمة بالفعل. يرجى التحقق من رقم الموظف أو الموقع.",
+      overlap: "تتداخل الفترة مع سجل موجود.",
+      invalidData: "البيانات أو الفترات الزمنية المدخلة غير صالحة.",
+      invalidDateRange: "لا يجوز أن يسبق تاريخ النهاية تاريخ البداية."
     }
   };
 
-  function applyWorkforceCopy() {
+  function workforceText(key, vars) {
     var lang = window.AdminI18N.getLang() === "ar" ? "ar" : "de";
+    var value = COPY[lang][key] || COPY.de[key] || key;
+    Object.keys(vars || {}).forEach(function (name) {
+      value = value.replace(new RegExp("\\{" + name + "\\}", "g"), vars[name]);
+    });
+    return value;
+  }
+
+  function applyWorkforceCopy() {
     document.querySelectorAll("[data-workforce-key]").forEach(function (element) {
       var key = element.getAttribute("data-workforce-key");
-      if (COPY[lang][key]) {
-        element.textContent = COPY[lang][key];
+      if (workforceText(key) !== key) {
+        element.textContent = workforceText(key);
       }
     });
+    byId("employeeSearch").placeholder = workforceText("searchPlaceholder");
+    var statusOptions = byId("employeeStatusFilter").options;
+    statusOptions[0].textContent = workforceText("all");
+    statusOptions[1].textContent = workforceText("statusActive");
+    statusOptions[2].textContent = workforceText("statusDisabled");
+    byId("contextActionBtn").textContent = workforceText("addEmployee");
+    var employeeLabels = {
+      employeeName: "employeeNameLabel",
+      employeeEmail: "employeeEmailLabel",
+      employeeNumber: "employeeNumberLabel",
+      employeePhone: "employeePhoneLabel",
+      employmentStart: "employmentStartLabel",
+      employmentEnd: "employmentEndLabel",
+      employeePrimarySite: "primarySiteLabel"
+    };
+    Object.keys(employeeLabels).forEach(function (inputId) {
+      var label = document.querySelector('label[for="' + inputId + '"]');
+      if (label) {
+        label.textContent = workforceText(employeeLabels[inputId]);
+      }
+    });
+    byId("employeeInviteNote").textContent = workforceText("employeeInviteNote");
+    var employeeClose = byId("employeeScrim").querySelector(".admin-modal-close");
+    if (employeeClose) {
+      employeeClose.setAttribute("aria-label", workforceText("close"));
+    }
+    var employeeCancel = byId("employeeScrim").querySelector(".admin-modal-footer [data-modal-close]");
+    if (employeeCancel) {
+      employeeCancel.textContent = workforceText("cancel");
+    }
+    var employeeSave = byId("employeeSaveBtn").querySelector("span:last-child");
+    if (employeeSave) {
+      employeeSave.textContent = workforceText("save");
+    }
   }
 
   function escapeHtml(value) {
@@ -196,18 +370,18 @@
 
   function errorMessage(error) {
     if (!error) {
-      return "Die Aktion konnte nicht ausgeführt werden.";
+      return workforceText("actionFailed");
     }
     if (error.code === "23505") {
-      return "Dieser Wert ist bereits vorhanden. Bitte Personal- oder Objekt-Nummer prüfen.";
+      return workforceText("duplicateValue");
     }
     if (error.code === "23P01") {
-      return "Der Zeitraum überschneidet sich mit einem bestehenden Eintrag.";
+      return workforceText("overlap");
     }
     if (error.code === "23514" || error.code === "22023") {
-      return "Die eingegebenen Daten oder Zeiträume sind ungültig.";
+      return workforceText("invalidData");
     }
-    return error.message || "Die Aktion konnte nicht ausgeführt werden.";
+    return error.message || workforceText("actionFailed");
   }
 
   function requireValue(value, message) {
@@ -218,7 +392,7 @@
 
   function validateDateRange(from, until) {
     if (from && until && until < from) {
-      throw new Error("Das Enddatum darf nicht vor dem Startdatum liegen.");
+      throw new Error(workforceText("invalidDateRange"));
     }
   }
 
@@ -234,12 +408,14 @@
   function loadBaseData() {
     return Promise.all([
       queryData(state.client.from("employees").select("*").order("employee_number", { ascending: true })),
-      queryData(state.client.from("user_profiles").select("id,email,display_name,role,disabled").eq("role", "employee").order("display_name", { ascending: true })),
+      queryData(state.client.from("user_profiles").select("id,email,display_name,role,disabled,archived_at").eq("role", "employee").order("display_name", { ascending: true })),
       queryData(state.client.from("work_sites").select("*").order("name", { ascending: true })),
       queryData(state.client.from("employee_work_sites").select("*").order("created_at", { ascending: false }))
     ]).then(function (rows) {
       state.profiles = rows[1];
-      var employeeProfileIds = new Set(state.profiles.map(function (profile) { return profile.id; }));
+      var employeeProfileIds = new Set(state.profiles.filter(function (profile) {
+        return !profile.archived_at;
+      }).map(function (profile) { return profile.id; }));
       state.employees = rows[0].filter(function (employee) { return employeeProfileIds.has(employee.id); });
       state.sites = rows[2];
       state.assignments = rows[3];
@@ -293,7 +469,7 @@
 
   function renderOverview(todayShiftCount) {
     var activeEmployees = state.profiles.filter(function (profile) {
-      return !profile.disabled;
+      return !profile.disabled && !profile.archived_at;
     }).length;
     var activeSites = state.sites.filter(function (site) {
       return site.active;
@@ -302,17 +478,17 @@
       return entry.status === "paused";
     }).length;
     byId("overviewMetrics").innerHTML =
-      '<div class="workforce-metric"><span class="workforce-metric-value">' + activeEmployees + '</span><span class="workforce-metric-label">Aktive Mitarbeiter</span></div>' +
-      '<div class="workforce-metric"><span class="workforce-metric-value">' + state.liveEntries.length + '</span><span class="workforce-metric-label">Im Dienst</span><span class="workforce-metric-detail">' + pausedCount + ' in Pause</span></div>' +
-      '<div class="workforce-metric"><span class="workforce-metric-value">' + todayShiftCount + '</span><span class="workforce-metric-label">Schichten heute</span></div>' +
-      '<div class="workforce-metric"><span class="workforce-metric-value">' + activeSites + '</span><span class="workforce-metric-label">Aktive Objekte</span></div>';
+      '<div class="workforce-metric"><span class="workforce-metric-value">' + activeEmployees + '</span><span class="workforce-metric-label">' + workforceText("activeEmployees") + '</span></div>' +
+      '<div class="workforce-metric"><span class="workforce-metric-value">' + state.liveEntries.length + '</span><span class="workforce-metric-label">' + workforceText("onDuty") + '</span><span class="workforce-metric-detail">' + workforceText("inBreak", { count: pausedCount }) + '</span></div>' +
+      '<div class="workforce-metric"><span class="workforce-metric-value">' + todayShiftCount + '</span><span class="workforce-metric-label">' + workforceText("shiftsToday") + '</span></div>' +
+      '<div class="workforce-metric"><span class="workforce-metric-value">' + activeSites + '</span><span class="workforce-metric-label">' + workforceText("activeSites") + '</span></div>';
 
     if (!state.liveEntries.length) {
-      byId("liveEntriesContainer").innerHTML = '<div class="admin-empty-state">Aktuell ist niemand eingestempelt.</div>';
+      byId("liveEntriesContainer").innerHTML = '<div class="admin-empty-state">' + workforceText("nobodyClocked") + '</div>';
       return;
     }
     byId("liveEntriesContainer").innerHTML = tableMarkup(
-      ["Mitarbeiter", "Objekt", "Beginn", "Status", "Arbeitszeit"],
+      [workforceText("employee"), workforceText("site"), workforceText("start"), workforceText("status"), workforceText("workTime")],
       state.liveEntries.map(function (entry) {
         return [
           escapeHtml(employeeName(entry.employee_id)),
@@ -338,19 +514,19 @@
   }
 
   function statusBadge(status) {
-    var labels = {
-      working: "Arbeitet",
-      paused: "Pause",
-      completed: "Beendet",
-      scheduled: "Geplant",
-      cancelled: "Abgesagt",
-      approved: "Genehmigt",
-      pending: "Offen",
-      rejected: "Abgelehnt",
-      active: "Aktiv",
-      disabled: "Deaktiviert"
+    var keys = {
+      working: "statusWorking",
+      paused: "statusPaused",
+      completed: "statusCompleted",
+      scheduled: "statusScheduled",
+      cancelled: "statusCancelled",
+      approved: "statusApproved",
+      pending: "statusPending",
+      rejected: "statusRejected",
+      active: "statusActive",
+      disabled: "statusDisabled"
     };
-    return '<span class="workforce-status" data-status="' + escapeHtml(status) + '">' + escapeHtml(labels[status] || status) + "</span>";
+    return '<span class="workforce-status" data-status="' + escapeHtml(status) + '">' + escapeHtml(keys[status] ? workforceText(keys[status]) : status) + "</span>";
   }
 
   function renderEmployees() {
@@ -366,11 +542,11 @@
       return matchesSearch && matchesStatus;
     });
     if (!rows.length) {
-      byId("employeesContainer").innerHTML = '<div class="admin-empty-state">Keine Mitarbeiter in dieser Ansicht.</div>';
+      byId("employeesContainer").innerHTML = '<div class="admin-empty-state">' + workforceText("emptyEmployees") + '</div>';
       return;
     }
     byId("employeesContainer").innerHTML = tableMarkup(
-      ["Mitarbeiter", "Personalnr.", "Telefon", "Beschäftigung", "Status", "Aktionen"],
+      [workforceText("employee"), workforceText("employeeNumber"), workforceText("phone"), workforceText("employment"), workforceText("status"), workforceText("actions")],
       rows.map(function (employee) {
         var profile = profileById(employee.id);
         var employment = formatDate(employee.employment_start_date) + (employee.employment_end_date ? " – " + formatDate(employee.employment_end_date) : "");
@@ -380,7 +556,7 @@
           escapeHtml(employee.phone || "—"),
           employment,
           statusBadge(profile.disabled ? "disabled" : "active"),
-          '<div class="workforce-row-actions"><button type="button" class="btn-secondary btn-sm" data-employee-edit="' + employee.id + '">Bearbeiten</button><button type="button" class="' + (profile.disabled ? "btn-secondary" : "btn-danger") + ' btn-sm" data-employee-toggle="' + employee.id + '">' + (profile.disabled ? "Aktivieren" : "Deaktivieren") + '</button><button type="button" class="btn-danger btn-sm" data-employee-delete="' + employee.id + '">Löschen</button></div>'
+          '<div class="workforce-row-actions"><button type="button" class="btn-secondary btn-sm" data-employee-edit="' + employee.id + '">' + workforceText("edit") + '</button><button type="button" class="' + (profile.disabled ? "btn-secondary" : "btn-danger") + ' btn-sm" data-employee-toggle="' + employee.id + '">' + workforceText(profile.disabled ? "activate" : "deactivate") + '</button><button type="button" class="btn-danger btn-sm" data-employee-delete="' + employee.id + '">' + workforceText("delete") + "</button></div>"
         ];
       })
     );
@@ -460,7 +636,7 @@
       var hasNone = id === "employeePrimarySite";
       populateSelect(id, activeSites, function (row) { return row.code + " · " + row.name; }, hasNone);
       if (hasNone && byId(id).options.length) {
-        byId(id).options[0].textContent = "Kein Hauptobjekt";
+        byId(id).options[0].textContent = workforceText("noPrimarySite");
       }
     });
   }
@@ -484,8 +660,8 @@
   function updateContextAction() {
     var button = byId("contextActionBtn");
     var config = {
-      overview: ["+ Mitarbeiter", function () { openEmployee(null); }],
-      employees: ["+ Mitarbeiter", function () { openEmployee(null); }],
+      overview: [workforceText("addEmployee"), function () { openEmployee(null); }],
+      employees: [workforceText("addEmployee"), function () { openEmployee(null); }],
       sites: ["+ Objekt", function () { openSite(null); }],
       schedule: ["+ Schicht", function () { openShift(null); }],
       absences: ["+ Abwesenheit", function () { openAbsence(null); }],
@@ -509,7 +685,7 @@
     byId("employmentEnd").value = employee ? employee.employment_end_date || "" : "";
     byId("employeePrimarySiteField").hidden = Boolean(employee);
     byId("employeeInviteNote").hidden = Boolean(employee);
-    byId("employeeModalTitle").textContent = employee ? "Mitarbeiter bearbeiten" : "Mitarbeiter hinzufügen";
+    byId("employeeModalTitle").textContent = workforceText(employee ? "employeeModalEdit" : "employeeModalAdd");
     window.AdminUI.openModal(byId("employeeScrim"));
   }
 
@@ -523,12 +699,12 @@
     var start = byId("employmentStart").value || null;
     var end = byId("employmentEnd").value || null;
     try {
-      requireValue(name, "Bitte einen Namen angeben.");
-      requireValue(email, "Bitte eine gültige E-Mail-Adresse angeben.");
+      requireValue(name, workforceText("nameRequired"));
+      requireValue(email, workforceText("emailRequired"));
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        throw new Error("Bitte eine gültige E-Mail-Adresse angeben.");
+        throw new Error(workforceText("emailRequired"));
       }
-      requireValue(number, "Bitte eine Personalnummer angeben.");
+      requireValue(number, workforceText("employeeNumberRequired"));
       validateDateRange(start, end);
     } catch (error) {
       setFormError("employeeError", error.message);
@@ -537,7 +713,7 @@
     setSaving("employeeSaveBtn", true);
     if (!id) {
       if (!state.accessToken) {
-        setFormError("employeeError", "Die Sitzung wird noch geladen. Bitte in einem Moment erneut versuchen.");
+        setFormError("employeeError", workforceText("sessionLoading"));
         setSaving("employeeSaveBtn", false);
         return;
       }
@@ -562,7 +738,7 @@
           throw new Error(window.AdminI18N.translateServerError(result.data.error || "Konto konnte nicht erstellt werden."));
         }
         window.AdminUI.closeModal(byId("employeeScrim"));
-        window.AdminUI.toast("Mitarbeiter angelegt und Einladung versendet.", "success");
+        window.AdminUI.toast(workforceText("employeeCreated"), "success");
         return reloadAll();
       }).catch(function (error) {
         setFormError("employeeError", errorMessage(error));
@@ -583,7 +759,7 @@
       p_disabled: Boolean(currentProfile && currentProfile.disabled)
     })).then(function () {
       window.AdminUI.closeModal(byId("employeeScrim"));
-      window.AdminUI.toast("Mitarbeiter aktualisiert.", "success");
+      window.AdminUI.toast(workforceText("employeeUpdated"), "success");
       return reloadAll();
     }).catch(function (error) {
       setFormError("employeeError", errorMessage(error));
@@ -599,9 +775,9 @@
     }
     var nextDisabled = !profile.disabled;
     window.AdminUI.confirmDialog({
-      title: nextDisabled ? "Mitarbeiter deaktivieren?" : "Mitarbeiter aktivieren?",
-      message: nextDisabled ? "Der Mitarbeiter kann sich danach nicht mehr anmelden oder Zeiten erfassen." : "Der Zugriff auf die Mitarbeiter-Oberfläche wird wieder freigegeben.",
-      confirmLabel: nextDisabled ? "Deaktivieren" : "Aktivieren",
+      title: workforceText(nextDisabled ? "disableTitle" : "enableTitle"),
+      message: workforceText(nextDisabled ? "disableMessage" : "enableMessage"),
+      confirmLabel: workforceText(nextDisabled ? "deactivate" : "activate"),
       danger: nextDisabled
     }).then(function (confirmed) {
       if (!confirmed) {
@@ -613,7 +789,7 @@
         p_role: null
       }))
         .then(function () {
-          window.AdminUI.toast(nextDisabled ? "Mitarbeiter deaktiviert." : "Mitarbeiter aktiviert.", "success");
+          window.AdminUI.toast(workforceText(nextDisabled ? "employeeDisabled" : "employeeEnabled"), "success");
           return reloadAll();
         })
         .catch(function (error) { window.AdminUI.toast(errorMessage(error), "error"); });
@@ -626,9 +802,9 @@
       return;
     }
     window.AdminUI.confirmDialog({
-      title: "Mitarbeiter löschen?",
-      message: profile.display_name + " wird dauerhaft deaktiviert. Arbeitszeiten, Unterschriften und historische Nachweise bleiben erhalten.",
-      confirmLabel: "Löschen",
+      title: workforceText("deleteTitle"),
+      message: workforceText("deleteMessage", { name: profile.display_name }),
+      confirmLabel: workforceText("delete"),
       danger: true
     }).then(function (confirmed) {
       if (!confirmed) {
@@ -639,7 +815,7 @@
         p_action: "delete",
         p_role: null
       })).then(function () {
-        window.AdminUI.toast("Mitarbeiter gelöscht und für die Nachweispflicht archiviert.", "success");
+        window.AdminUI.toast(workforceText("employeeDeleted"), "success");
         return reloadAll();
       }).catch(function (error) {
         window.AdminUI.toast(errorMessage(error), "error");

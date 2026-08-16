@@ -44,6 +44,7 @@
       .from("user_profiles")
       .select("*")
       .in("role", ["super_admin", "content_manager"])
+      .is("archived_at", null)
       .order("created_at", { ascending: true })
       .then(function (result) {
         if (result.error) {

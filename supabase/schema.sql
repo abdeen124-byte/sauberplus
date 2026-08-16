@@ -30,6 +30,7 @@ create table public.user_profiles (
   display_name text not null default '',
   role text not null default 'content_manager' check (role in ('super_admin', 'content_manager')),
   disabled boolean not null default false,
+  archived_at timestamptz,
   failed_login_count integer not null default 0,
   locked_until timestamptz,
   created_by uuid references public.user_profiles (id),
@@ -2164,6 +2165,10 @@ begin
     raise exception using errcode = 'P0001', message = 'Das eigene Administratorkonto kann hier nicht geändert werden.';
   end if;
 
+  if v_target.archived_at is not null and p_action <> 'delete' then
+    raise exception using errcode = 'P0001', message = 'Ein gelöschtes Konto kann nicht erneut aktiviert oder geändert werden.';
+  end if;
+
   if p_action = 'role' then
     if v_target.role = 'employee' or p_role is null or p_role not in ('super_admin', 'content_manager') then
       raise exception using errcode = '22023', message = 'Ungültige Administratorrolle.';
@@ -2183,7 +2188,11 @@ begin
   end if;
 
   update public.user_profiles
-  set disabled = true
+  set disabled = true,
+      archived_at = case
+        when p_action = 'delete' then coalesce(archived_at, clock_timestamp())
+        else archived_at
+      end
   where id = p_user_id;
 
   if p_action = 'delete' then
