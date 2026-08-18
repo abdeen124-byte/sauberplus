@@ -281,6 +281,9 @@ html[dir="rtl"] .employee-auth-heading h2 { font-family: "Cairo", sans-serif; le
 .employee-page-heading .employee-eyebrow { margin: 0 0 5px; }
 .employee-page-heading h1 { margin: 0; font-family: "Montserrat", sans-serif; font-size: clamp(25px, 4vw, 32px); letter-spacing: -0.035em; }
 html[dir="rtl"] .employee-page-heading h1 { font-family: "Cairo", sans-serif; letter-spacing: 0; }
+.employee-install-button { min-height: 38px; margin-block-start: 14px; padding: 8px 13px; border: 1px solid var(--employee-green); border-radius: 8px; background: transparent; color: var(--employee-green-hover); font-size: 13px; font-weight: 800; }
+.employee-install-button:hover { background: var(--employee-green-pale); }
+.employee-install-button:focus-visible { outline: 3px solid rgba(22, 167, 101, 0.28); outline-offset: 2px; }
 
 .employee-summary {
   margin-block-end: 22px;

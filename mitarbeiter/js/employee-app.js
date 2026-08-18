@@ -32,6 +32,7 @@
       "gate.otherAccount": "Anderes Konto verwenden",
       "app.area": "MITARBEITERBEREICH",
       "app.overview": "Übersicht",
+      "app.install": "App installieren",
       "summary.kicker": "MEINE ZEITERFASSUNG",
       "summary.title": "Arbeitszeiten klar erfassen.",
       "summary.copy": "Wählen Sie Ihren Einsatzort, tragen Sie Ihre Schicht ein und reichen Sie sie direkt ein.",
@@ -102,6 +103,7 @@
       "invite.kicker": "EMPLOYEE ACCESS", "invite.title": "Welcome to SauberPlus.", "invite.copy": "First set your personal password.", "invite.invitation": "Invitation", "invite.setPassword": "Set password", "invite.newPassword": "New password", "invite.confirmPassword": "Confirm password", "invite.savePassword": "Save password",
       "gate.kicker": "EMPLOYEE ACCESS", "gate.title": "This account belongs to administration.", "gate.copy": "Open SauberPlus administration to continue.", "gate.admin": "Open administration", "gate.otherAccount": "Use another account",
       "app.area": "EMPLOYEE PORTAL", "app.overview": "Overview",
+      "app.install": "Install app",
       "summary.kicker": "MY TIME TRACKING", "summary.title": "Record working hours clearly.", "summary.copy": "Choose your work site, enter your shift and submit it directly.", "summary.action": "Enter hours",
       "form.title": "Record new working time", "form.copy": "Complete your times at the end of each shift.", "form.date": "Date", "form.site": "Work site", "form.sitePlaceholder": "Choose a site", "form.start": "Start", "form.end": "End", "form.break": "Break in minutes", "form.estimated": "Estimated working time:", "form.completeTimes": "Complete the time fields", "form.overnight": "Overnight shifts are supported.", "form.note": "Note", "form.optional": "(optional)", "form.notePlaceholder": "e.g. cover shift, special cleaning or access note", "form.signature": "Employee signature", "form.signatureHint": "Sign in the field with your finger or mouse.", "form.clear": "Clear", "form.signHere": "Sign here", "form.confirm": "I confirm that the information is complete and correct and that this is my signature.", "form.submit": "Sign & submit",
       "stats.month": "THIS MONTH", "stats.monthHelp": "recorded working time", "stats.active": "IN PROGRESS", "stats.activeHelp": "running or paused entries", "stats.completed": "COMPLETED", "stats.completedHelp": "entries this month",
@@ -117,6 +119,7 @@
       "invite.kicker": "دخول الموظفين", "invite.title": "مرحبًا بك في SauberPlus.", "invite.copy": "عيّن كلمة مرورك الشخصية أولًا.", "invite.invitation": "الدعوة", "invite.setPassword": "تعيين كلمة المرور", "invite.newPassword": "كلمة المرور الجديدة", "invite.confirmPassword": "تأكيد كلمة المرور", "invite.savePassword": "حفظ كلمة المرور",
       "gate.kicker": "دخول الموظفين", "gate.title": "هذا الحساب تابع للإدارة.", "gate.copy": "افتح لوحة إدارة SauberPlus للمتابعة.", "gate.admin": "فتح لوحة الإدارة", "gate.otherAccount": "استخدام حساب آخر",
       "app.area": "منطقة الموظفين", "app.overview": "ملخص",
+      "app.install": "تثبيت التطبيق",
       "summary.kicker": "تسجيل ساعاتي", "summary.title": "سجّل ساعات العمل بوضوح.", "summary.copy": "اختر موقع العمل، أدخل فترة عملك ثم أرسلها مباشرة.", "summary.action": "تسجيل الساعات",
       "form.title": "تسجيل ساعات عمل جديدة", "form.copy": "أدخل الأوقات كاملة بعد نهاية كل فترة عمل.", "form.date": "التاريخ", "form.site": "موقع العمل", "form.sitePlaceholder": "اختر الموقع", "form.start": "البداية", "form.end": "النهاية", "form.break": "الاستراحة بالدقائق", "form.estimated": "ساعات العمل المتوقعة:", "form.completeTimes": "أكمل حقول الوقت", "form.overnight": "فترات العمل الليلية مدعومة.", "form.note": "الملاحظة", "form.optional": "(اختياري)", "form.notePlaceholder": "مثال: مناوبة بديلة أو تنظيف خاص أو ملاحظة دخول", "form.signature": "توقيع الموظف", "form.signatureHint": "وقّع داخل الحقل بالإصبع أو الماوس.", "form.clear": "مسح", "form.signHere": "وقّع هنا", "form.confirm": "أؤكد أن البيانات المدخلة كاملة وصحيحة وأن هذا التوقيع يعود إليّ.", "form.submit": "التوقيع والإرسال",
       "stats.month": "هذا الشهر", "stats.monthHelp": "ساعات العمل المسجلة", "stats.active": "قيد التنفيذ", "stats.activeHelp": "إدخالات جارية أو متوقفة", "stats.completed": "مكتملة", "stats.completedHelp": "إدخالات هذا الشهر",
@@ -148,6 +151,7 @@
   var submissionPending = false;
   var pendingSubmissionId = null;
   var inviteFlow = readAuthFlowType() === "invite";
+  var deferredInstallPrompt = null;
 
   document.addEventListener("DOMContentLoaded", initialize);
   registerServiceWorker();
@@ -163,6 +167,7 @@
     [
       "loadingView", "loginView", "inviteView", "staffView", "appView", "loginForm", "loginEmail",
       "loginPassword", "loginButton", "loginError", "passwordToggle", "staffLogoutButton", "logoutButton",
+      "installAppButton",
       "accountName", "globalAlert", "focusRecordButton", "recordCard", "timeEntryForm", "workDate", "workSite",
       "startTime", "endTime", "breakMinutes", "durationPreview", "workNote", "signatureCanvas",
       "signaturePlaceholder", "clearSignatureButton", "confirmEntry", "formFeedback", "submitTimeButton",
@@ -177,6 +182,7 @@
     elements.passwordToggle.addEventListener("click", togglePasswordVisibility);
     elements.staffLogoutButton.addEventListener("click", handleLogout);
     elements.logoutButton.addEventListener("click", handleLogout);
+    elements.installAppButton.addEventListener("click", installApp);
     elements.focusRecordButton.addEventListener("click", function () {
       elements.recordCard.scrollIntoView({ behavior: "smooth", block: "start" });
       window.setTimeout(function () { elements.workDate.focus(); }, 350);
@@ -200,6 +206,7 @@
     cacheElements();
     applyLanguage();
     bindEvents();
+    initializeInstallPrompt();
     try {
       client = createClient();
       client.auth.onAuthStateChange(function (event) {
@@ -221,6 +228,43 @@
       showView("login");
       showLoginError(t("error.loginUnavailable"));
     }
+  }
+
+  function initializeInstallPrompt() {
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      updateInstallButton();
+    });
+    window.addEventListener("appinstalled", function () {
+      deferredInstallPrompt = null;
+      updateInstallButton();
+    });
+    var standaloneQuery = window.matchMedia("(display-mode: standalone)");
+    if (typeof standaloneQuery.addEventListener === "function") {
+      standaloneQuery.addEventListener("change", updateInstallButton);
+    }
+    updateInstallButton();
+  }
+
+  async function installApp() {
+    if (!deferredInstallPrompt || isStandalone()) return;
+    deferredInstallPrompt.prompt();
+    try {
+      await deferredInstallPrompt.userChoice;
+    } finally {
+      deferredInstallPrompt = null;
+      updateInstallButton();
+    }
+  }
+
+  function updateInstallButton() {
+    if (!elements.installAppButton) return;
+    elements.installAppButton.hidden = !deferredInstallPrompt || isStandalone();
+  }
+
+  function isStandalone() {
+    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
   }
 
   function createClient() {
