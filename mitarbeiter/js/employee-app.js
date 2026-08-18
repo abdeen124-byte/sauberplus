@@ -32,7 +32,15 @@
       "gate.otherAccount": "Anderes Konto verwenden",
       "app.area": "MITARBEITERBEREICH",
       "app.overview": "Übersicht",
+      "app.greeting": "Guten Tag",
       "app.install": "App installieren",
+      "today.kicker": "HEUTE",
+      "today.loading": "Schicht wird geladen",
+      "today.hours": "heute erfasst",
+      "today.noShift": "Keine Schicht geplant",
+      "today.noShiftDetail": "Für heute ist kein Einsatzort hinterlegt.",
+      "today.activeDetail": "Aktive Zeiterfassung an diesem Einsatzort.",
+      "today.shiftDetail": "Geplante Arbeitszeit",
       "summary.kicker": "MEINE ZEITERFASSUNG",
       "summary.title": "Arbeitszeiten klar erfassen.",
       "summary.copy": "Wählen Sie Ihren Einsatzort, tragen Sie Ihre Schicht ein und reichen Sie sie direkt ein.",
@@ -72,6 +80,8 @@
       "status.completed": "Abgeschlossen",
       "status.working": "Läuft",
       "status.paused": "Pausiert",
+      "status.scheduled": "Geplant",
+      "status.none": "Keine aktive Zeit",
       "error.loginFields": "Bitte geben Sie eine gültige E-Mail-Adresse und Ihr Passwort ein.",
       "error.locked": "Zu viele Anmeldeversuche. Bitte warten Sie kurz und versuchen Sie es erneut.",
       "error.credentials": "E-Mail-Adresse oder Passwort ist nicht korrekt.",
@@ -103,13 +113,16 @@
       "invite.kicker": "EMPLOYEE ACCESS", "invite.title": "Welcome to SauberPlus.", "invite.copy": "First set your personal password.", "invite.invitation": "Invitation", "invite.setPassword": "Set password", "invite.newPassword": "New password", "invite.confirmPassword": "Confirm password", "invite.savePassword": "Save password",
       "gate.kicker": "EMPLOYEE ACCESS", "gate.title": "This account belongs to administration.", "gate.copy": "Open SauberPlus administration to continue.", "gate.admin": "Open administration", "gate.otherAccount": "Use another account",
       "app.area": "EMPLOYEE PORTAL", "app.overview": "Overview",
+      "app.greeting": "Good day",
       "app.install": "Install app",
+      "today.kicker": "TODAY", "today.loading": "Loading shift", "today.hours": "recorded today", "today.noShift": "No shift planned", "today.noShiftDetail": "No work site is scheduled for today.", "today.activeDetail": "Active time tracking at this work site.", "today.shiftDetail": "Scheduled working time",
       "summary.kicker": "MY TIME TRACKING", "summary.title": "Record working hours clearly.", "summary.copy": "Choose your work site, enter your shift and submit it directly.", "summary.action": "Enter hours",
       "form.title": "Record new working time", "form.copy": "Complete your times at the end of each shift.", "form.date": "Date", "form.site": "Work site", "form.sitePlaceholder": "Choose a site", "form.start": "Start", "form.end": "End", "form.break": "Break in minutes", "form.estimated": "Estimated working time:", "form.completeTimes": "Complete the time fields", "form.overnight": "Overnight shifts are supported.", "form.note": "Note", "form.optional": "(optional)", "form.notePlaceholder": "e.g. cover shift, special cleaning or access note", "form.signature": "Employee signature", "form.signatureHint": "Sign in the field with your finger or mouse.", "form.clear": "Clear", "form.signHere": "Sign here", "form.confirm": "I confirm that the information is complete and correct and that this is my signature.", "form.submit": "Sign & submit",
       "stats.month": "THIS MONTH", "stats.monthHelp": "recorded working time", "stats.active": "IN PROGRESS", "stats.activeHelp": "running or paused entries", "stats.completed": "COMPLETED", "stats.completedHelp": "entries this month",
       "recent.title": "Latest entries", "recent.copy": "Your most recently recorded working hours.", "recent.empty": "No entry yet. Start with your first shift.",
       "contact.title": "Important for your shift", "contact.copy": "Record the start, end and break in full. Check your details before submitting.", "contact.questions": "Questions:",
       "status.completed": "Completed", "status.working": "Running", "status.paused": "Paused",
+      "status.scheduled": "Scheduled", "status.none": "No active time",
       "error.loginFields": "Enter a valid email address and password.", "error.locked": "Too many sign-in attempts. Please wait and try again.", "error.credentials": "The email address or password is incorrect.", "error.loginUnavailable": "Sign-in is currently unavailable. Check your connection and try again.", "error.inactive": "This account is not active. Contact administration.", "error.notEmployee": "This account is not enabled for time tracking.", "error.load": "Working-time data could not be loaded. Check your connection and reload the page.", "error.required": "Complete all required fields.", "error.site": "No approved work site is selected for this date.", "error.duration": "Start, end or break do not result in a valid shift of no more than 16 hours.", "error.signature": "Please sign the timesheet.", "error.confirm": "Please confirm that your details are correct.", "error.submit": "The entry could not be saved. Please try again.", "error.overlap": "This shift overlaps an existing entry.", "error.assignment": "The selected work site is not approved for this date.", "error.future": "Working time cannot be submitted for a future date.", "error.activeSession": "A running or paused entry already exists. Contact administration before submitting another entry.",
       "success.saved": "Working time saved. Hours, status and latest entries have been updated.", "invite.short": "The password must contain at least 8 characters.", "invite.mismatch": "The passwords do not match.", "invite.failed": "The password could not be saved. Open a new invitation link or contact administration.", "password.show": "Show password", "password.hide": "Hide password", "logout": "Sign out"
     },
@@ -119,13 +132,16 @@
       "invite.kicker": "دخول الموظفين", "invite.title": "مرحبًا بك في SauberPlus.", "invite.copy": "عيّن كلمة مرورك الشخصية أولًا.", "invite.invitation": "الدعوة", "invite.setPassword": "تعيين كلمة المرور", "invite.newPassword": "كلمة المرور الجديدة", "invite.confirmPassword": "تأكيد كلمة المرور", "invite.savePassword": "حفظ كلمة المرور",
       "gate.kicker": "دخول الموظفين", "gate.title": "هذا الحساب تابع للإدارة.", "gate.copy": "افتح لوحة إدارة SauberPlus للمتابعة.", "gate.admin": "فتح لوحة الإدارة", "gate.otherAccount": "استخدام حساب آخر",
       "app.area": "منطقة الموظفين", "app.overview": "ملخص",
+      "app.greeting": "مرحبًا",
       "app.install": "تثبيت التطبيق",
+      "today.kicker": "اليوم", "today.loading": "جارٍ تحميل الوردية", "today.hours": "مسجّل اليوم", "today.noShift": "لا توجد وردية مجدولة", "today.noShiftDetail": "لا يوجد موقع عمل مجدول لليوم.", "today.activeDetail": "تسجيل الوقت نشط في موقع العمل هذا.", "today.shiftDetail": "وقت العمل المجدول",
       "summary.kicker": "تسجيل ساعاتي", "summary.title": "سجّل ساعات العمل بوضوح.", "summary.copy": "اختر موقع العمل، أدخل فترة عملك ثم أرسلها مباشرة.", "summary.action": "تسجيل الساعات",
       "form.title": "تسجيل ساعات عمل جديدة", "form.copy": "أدخل الأوقات كاملة بعد نهاية كل فترة عمل.", "form.date": "التاريخ", "form.site": "موقع العمل", "form.sitePlaceholder": "اختر الموقع", "form.start": "البداية", "form.end": "النهاية", "form.break": "الاستراحة بالدقائق", "form.estimated": "ساعات العمل المتوقعة:", "form.completeTimes": "أكمل حقول الوقت", "form.overnight": "فترات العمل الليلية مدعومة.", "form.note": "الملاحظة", "form.optional": "(اختياري)", "form.notePlaceholder": "مثال: مناوبة بديلة أو تنظيف خاص أو ملاحظة دخول", "form.signature": "توقيع الموظف", "form.signatureHint": "وقّع داخل الحقل بالإصبع أو الماوس.", "form.clear": "مسح", "form.signHere": "وقّع هنا", "form.confirm": "أؤكد أن البيانات المدخلة كاملة وصحيحة وأن هذا التوقيع يعود إليّ.", "form.submit": "التوقيع والإرسال",
       "stats.month": "هذا الشهر", "stats.monthHelp": "ساعات العمل المسجلة", "stats.active": "قيد التنفيذ", "stats.activeHelp": "إدخالات جارية أو متوقفة", "stats.completed": "مكتملة", "stats.completedHelp": "إدخالات هذا الشهر",
       "recent.title": "أحدث المشاركات", "recent.copy": "أحدث ساعات العمل التي سجلتها.", "recent.empty": "لا توجد مشاركات بعد. ابدأ بأول فترة عمل.",
       "contact.title": "مهم لفترة عملك", "contact.copy": "سجّل البداية والنهاية والاستراحة بالكامل، وراجع بياناتك قبل الإرسال.", "contact.questions": "للاستفسار:",
       "status.completed": "مكتمل", "status.working": "جارٍ", "status.paused": "متوقف",
+      "status.scheduled": "مجدولة", "status.none": "لا يوجد وقت نشط",
       "error.loginFields": "أدخل بريدًا إلكترونيًا صالحًا وكلمة المرور.", "error.locked": "محاولات دخول كثيرة. انتظر قليلًا ثم حاول مجددًا.", "error.credentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.", "error.loginUnavailable": "تسجيل الدخول غير متاح حاليًا. تحقق من الاتصال وحاول مجددًا.", "error.inactive": "هذا الحساب غير نشط. تواصل مع الإدارة.", "error.notEmployee": "هذا الحساب غير مخصص لتسجيل الساعات.", "error.load": "تعذر تحميل بيانات العمل. تحقق من الاتصال وأعد تحميل الصفحة.", "error.required": "أكمل جميع الحقول المطلوبة.", "error.site": "لم يتم اختيار موقع عمل معتمد لهذا التاريخ.", "error.duration": "البداية أو النهاية أو الاستراحة لا تنتج فترة عمل صحيحة لا تتجاوز 16 ساعة.", "error.signature": "يرجى توقيع سجل الساعات.", "error.confirm": "يرجى تأكيد صحة البيانات.", "error.submit": "تعذر حفظ المشاركة. حاول مجددًا.", "error.overlap": "تتداخل فترة العمل هذه مع مشاركة موجودة.", "error.assignment": "موقع العمل المحدد غير معتمد لهذا التاريخ.", "error.future": "لا يمكن إرسال ساعات عمل بتاريخ مستقبلي.", "error.activeSession": "توجد مشاركة جارية أو متوقفة. تواصل مع الإدارة قبل إرسال مشاركة جديدة.",
       "success.saved": "تم حفظ ساعات العمل وتحديث ساعات الشهر والحالة وأحدث المشاركات.", "invite.short": "يجب ألا تقل كلمة المرور عن 8 أحرف.", "invite.mismatch": "كلمتا المرور غير متطابقتين.", "invite.failed": "تعذر حفظ كلمة المرور. افتح رابط دعوة جديدًا أو تواصل مع الإدارة.", "password.show": "إظهار كلمة المرور", "password.hide": "إخفاء كلمة المرور", "logout": "تسجيل الخروج"
     }
@@ -168,7 +184,7 @@
       "loadingView", "loginView", "inviteView", "staffView", "appView", "loginForm", "loginEmail",
       "loginPassword", "loginButton", "loginError", "passwordToggle", "staffLogoutButton", "logoutButton",
       "installAppButton",
-      "accountName", "globalAlert", "focusRecordButton", "recordCard", "timeEntryForm", "workDate", "workSite",
+      "accountName", "employeeGreeting", "todayShiftHeading", "todayShiftDetail", "todayShiftStatus", "todayHours", "globalAlert", "focusRecordButton", "recordCard", "timeEntryForm", "workDate", "workSite",
       "startTime", "endTime", "breakMinutes", "durationPreview", "workNote", "signatureCanvas",
       "signaturePlaceholder", "clearSignatureButton", "confirmEntry", "formFeedback", "submitTimeButton",
       "monthHours", "activeEntries", "completedEntries", "recentEntries", "inviteForm", "invitePassword",
@@ -429,6 +445,7 @@
       elements.activeEntries.textContent = String(monthStatuses.filter(function (entry) { return entry.status === "working" || entry.status === "paused"; }).length);
       elements.completedEntries.textContent = String(monthStatuses.filter(function (entry) { return entry.status === "completed"; }).length);
       renderAvailableSites();
+      renderTodayOverview();
       renderRecentEntries();
       renderDuration();
       if (activeTimeState) showGlobalAlert(t("error.activeSession"), "");
@@ -475,6 +492,34 @@
       }
     }
     elements.workSite.disabled = sites.length === 0 || submissionPending || Boolean(activeTimeState);
+  }
+
+  function renderTodayOverview() {
+    var name = activeProfile.display_name || activeProfile.email || "";
+    var activeSite = activeTimeState && workSites.find(function (site) { return site.id === activeTimeState.work_site_id; });
+    var scheduledShift = scheduledShifts.find(function (shift) { return getBerlinDateKey(Date.parse(shift.scheduled_start)) === currentBerlinDate; });
+    var scheduledSite = scheduledShift && workSites.find(function (site) { return site.id === scheduledShift.work_site_id; });
+    var todaySeconds = recentEntries.filter(function (entry) { return entry.work_date === currentBerlinDate; }).reduce(function (total, entry) { return total + toSafeSeconds(entry.worked_seconds); }, 0);
+    var status = "none";
+
+    elements.employeeGreeting.textContent = name ? t("app.greeting") + ", " + name : t("app.greeting");
+    elements.todayHours.textContent = formatDuration(todaySeconds);
+
+    if (activeTimeState) {
+      status = activeTimeState.status === "paused" ? "paused" : "working";
+      elements.todayShiftHeading.textContent = activeSite ? activeSite.name : t("form.site");
+      elements.todayShiftDetail.textContent = t("today.activeDetail");
+    } else if (scheduledShift) {
+      status = "scheduled";
+      elements.todayShiftHeading.textContent = scheduledSite ? scheduledSite.name : t("form.site");
+      elements.todayShiftDetail.textContent = formatTime(scheduledShift.scheduled_start) + " – " + formatTime(scheduledShift.scheduled_end) + " · " + t("today.shiftDetail");
+    } else {
+      elements.todayShiftHeading.textContent = t("today.noShift");
+      elements.todayShiftDetail.textContent = t("today.noShiftDetail");
+    }
+
+    elements.todayShiftStatus.setAttribute("data-status", status);
+    elements.todayShiftStatus.textContent = t("status." + status);
   }
 
   function renderRecentEntries() {
@@ -698,6 +743,7 @@
     applyLanguage();
     if (workSites.length) {
       renderAvailableSites();
+      renderTodayOverview();
       renderRecentEntries();
       renderDuration();
     }

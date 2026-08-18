@@ -29,7 +29,7 @@
 
   <section class="employee-auth" id="loginView" hidden>
     <div class="employee-auth-brand">
-      <a class="employee-wordmark" href="../" aria-label="SauberPlus"><span>Sauber</span><b>Plus</b></a>
+      <a class="employee-wordmark" href="../" aria-label="SauberPlus"><img class="employee-brand-icon" src="icons/sauberplus-app-icon.svg" alt=""><span>Sauber</span><b>Plus</b></a>
       <p class="employee-auth-kicker" data-i18n="login.kicker">Mitarbeiter-Zugang</p>
       <h1 data-i18n="login.title">Arbeitszeiten einfach und sicher erfassen.</h1>
       <p class="employee-auth-copy" data-i18n="login.copy">Melden Sie sich mit Ihrem persönlichen SauberPlus Konto an.</p>
@@ -59,7 +59,7 @@
 
   <section class="employee-auth" id="inviteView" hidden>
     <div class="employee-auth-brand">
-      <a class="employee-wordmark" href="../" aria-label="SauberPlus"><span>Sauber</span><b>Plus</b></a>
+      <a class="employee-wordmark" href="../" aria-label="SauberPlus"><img class="employee-brand-icon" src="icons/sauberplus-app-icon.svg" alt=""><span>Sauber</span><b>Plus</b></a>
       <p class="employee-auth-kicker" data-i18n="invite.kicker">Mitarbeiter-Zugang</p>
       <h1 data-i18n="invite.title">Willkommen bei SauberPlus.</h1>
       <p class="employee-auth-copy" data-i18n="invite.copy">Legen Sie zuerst Ihr persönliches Passwort fest.</p>
@@ -81,7 +81,7 @@
   </section>
 
   <section class="employee-access-gate" id="staffView" hidden>
-    <a class="employee-wordmark" href="../"><span>Sauber</span><b>Plus</b></a>
+    <a class="employee-wordmark" href="../"><img class="employee-brand-icon" src="icons/sauberplus-app-icon.svg" alt=""><span>Sauber</span><b>Plus</b></a>
     <p class="employee-eyebrow" data-i18n="gate.kicker">Mitarbeiter-Zugang</p>
     <h1 data-i18n="gate.title">Dieses Konto gehört zur Verwaltung.</h1>
     <p data-i18n="gate.copy">Öffnen Sie die SauberPlus-Verwaltung, um fortzufahren.</p>
@@ -92,7 +92,7 @@
   <section class="employee-app" id="appView" hidden>
     <header class="employee-topbar">
       <div class="employee-topbar-inner">
-        <a class="employee-wordmark" href="../"><span>Sauber</span><b>Plus</b></a>
+        <a class="employee-wordmark" href="../"><img class="employee-brand-icon" src="icons/sauberplus-app-icon.svg" alt=""><span>Sauber</span><b>Plus</b></a>
         <div class="employee-topbar-actions">
           <div class="employee-language-switcher" role="group" aria-label="Sprache">
             <button type="button" data-language="de" aria-pressed="true">DE</button>
@@ -106,8 +106,13 @@
     </header>
 
     <div class="employee-app-content">
-      <div class="employee-page-heading"><p class="employee-eyebrow" data-i18n="app.area">MITARBEITERBEREICH</p><h1 data-i18n="app.overview">Übersicht</h1><button class="employee-install-button" id="installAppButton" type="button" data-i18n="app.install" hidden>App installieren</button></div>
+      <div class="employee-page-heading"><div><p class="employee-eyebrow" data-i18n="app.area">MITARBEITERBEREICH</p><h1 id="employeeGreeting" data-i18n="app.greeting">Guten Tag</h1></div><button class="employee-install-button" id="installAppButton" type="button" data-i18n="app.install" hidden>App installieren</button></div>
       <div class="employee-global-alert" id="globalAlert" role="alert" hidden></div>
+
+      <section class="employee-today-card" aria-labelledby="todayShiftHeading">
+        <div><p data-i18n="today.kicker">HEUTE</p><h2 id="todayShiftHeading" data-i18n="today.loading">Schicht wird geladen</h2><p id="todayShiftDetail" class="employee-today-detail"></p></div>
+        <div class="employee-today-meta"><span class="employee-status-badge" id="todayShiftStatus" data-i18n="status.none">Keine aktive Zeit</span><strong id="todayHours">00:00</strong><span data-i18n="today.hours">heute erfasst</span></div>
+      </section>
 
       <section class="employee-summary" aria-labelledby="summaryHeading">
         <p data-i18n="summary.kicker">MEINE ZEITERFASSUNG</p>
