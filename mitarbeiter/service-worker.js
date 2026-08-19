@@ -1,7 +1,7 @@
 "use strict";
 
 const CACHE_PREFIX = "sauberplus-employee-shell-";
-const CACHE_NAME = CACHE_PREFIX + "v1";
+const CACHE_NAME = CACHE_PREFIX + "v2";
 const APP_PATH = "/mitarbeiter/";
 const APP_SHELL = [
   APP_PATH,
@@ -9,7 +9,7 @@ const APP_SHELL = [
   APP_PATH + "css/employee.css",
   APP_PATH + "js/employee-app.js",
   APP_PATH + "manifest.webmanifest",
-  APP_PATH + "icons/sauberplus-app-icon.svg",
+  APP_PATH + "icons/sauberplus-logo.png",
   APP_PATH + "icons/sauberplus-192.png",
   APP_PATH + "icons/sauberplus-512.png",
   APP_PATH + "icons/sauberplus-180.png",
