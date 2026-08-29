@@ -256,10 +256,17 @@ const schemaLifecycleHeading = schema.indexOf(
   "-- ============================================================\n-- User account lifecycle",
   schemaLintFixHeading
 );
+const schemaInvoiceHeading = schema.indexOf("-- Invoice management", schemaLintFixHeading);
+const schemaInvoiceSectionStart = schemaInvoiceHeading < 0
+  ? -1
+  : schema.lastIndexOf("-- ============================================================", schemaInvoiceHeading);
+const schemaLintPrimaryEnd = schemaInvoiceSectionStart > schemaLintFixHeading && schemaInvoiceSectionStart < schemaLifecycleHeading
+  ? schemaInvoiceSectionStart
+  : schemaLifecycleHeading;
 const schemaLintFixBody = schema
   .slice(
     schema.indexOf("-- PostgreSQL treats", schemaLintFixHeading),
-    schemaLifecycleHeading
+    schemaLintPrimaryEnd
   )
   .split(/\r?\n/)
   .filter(Boolean)

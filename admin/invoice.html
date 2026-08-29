@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://kgkrgbkiqitnvntbyyct.supabase.co; connect-src 'self' https://kgkrgbkiqitnvntbyyct.supabase.co; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex, nofollow">
+<title>Neue Rechnung - SauberPlus Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&amp;family=Montserrat:wght@400;700;900&amp;family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/sauberplus.css">
+<link rel="stylesheet" href="css/admin.css">
+<script src="js/admin-i18n.js"></script>
+</head>
+<body>
+<div class="admin-shell" id="adminShell" hidden>
+  <div class="admin-shell-layout">
+    <aside class="admin-sidebar" id="adminSidebar" data-open="false">
+      <div class="admin-sidebar-logo"><span class="bl">Sauber</span><span class="gr">Plus</span> <span class="admin-sidebar-suffix">Admin</span></div>
+      <ul class="admin-nav-list">
+        <li><a class="admin-nav-link" href="dashboard.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="8" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect><rect x="13" y="13" width="8" height="8" rx="2"></rect></svg></span><span data-i18n="nav.dashboard">Übersicht</span></a></li>
+        <li><a class="admin-nav-link" href="announcements.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 10v4a2 2 0 0 0 2 2h1l9 5V3l-9 5H6a2 2 0 0 0-2 2z"></path></svg></span><span data-i18n="nav.announcements">Ankündigungen</span></a></li>
+        <li><a class="admin-nav-link" href="gallery.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h4l2-3h4l2 3h4v11H4z"></path><circle cx="12" cy="13.5" r="3.2"></circle></svg></span><span data-i18n="nav.gallery">Galerie</span></a></li>
+        <li class="admin-nav-divider" data-role-gate="super_admin" role="separator"></li>
+        <li data-role-gate="super_admin"><span class="admin-nav-section-label" data-i18n="nav.management">Verwaltung</span></li>
+        <li data-role-gate="super_admin"><a class="admin-nav-link" href="users.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path></svg></span><span data-i18n="nav.users">Team</span></a></li>
+        <li data-role-gate="super_admin"><a class="admin-nav-link" href="time-tracking.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l3 2M9 3h6"></path></svg></span><span data-i18n="nav.timeTracking">Mitarbeiter &amp; Zeiterfassung</span></a></li>
+        <li data-role-gate="super_admin"><a class="admin-nav-link" href="activity-log.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span><span data-i18n="nav.activityLog">Aktivitätsprotokoll</span></a></li>
+        <li data-role-gate="super_admin"><a class="admin-nav-link" href="settings.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 13a7.97 7.97 0 0 0 0-2l2-1.5-2-3.5-2.4 1a8 8 0 0 0-1.7-1L15 3h-4l-.3 2.5a8 8 0 0 0-1.7 1l-2.4-1-2 3.5L6.6 11a7.97 7.97 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a8 8 0 0 0 1.7 1L11 21h4l.3-2.5z"></path></svg></span><span data-i18n="nav.settings">Einstellungen</span></a></li>
+      </ul>
+    </aside>
+    <div class="admin-sidebar-scrim" id="adminSidebarScrim" data-open="false"></div>
+    <div class="admin-content-area">
+      <header class="admin-topbar">
+        <button type="button" class="admin-sidebar-toggle" id="sidebarToggle" data-i18n-aria-label="common.menuOpen" aria-label="Menü öffnen"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button>
+        <div class="admin-topbar-right"><span data-lang-switcher-mount></span><span id="topbarUser"></span><button type="button" class="admin-logout-btn" id="logoutBtn" data-i18n="common.logout">Abmelden</button></div>
+      </header>
+      <main class="admin-main invoice-editor-page">
+        <div class="admin-page-header invoice-editor-header">
+          <div><a class="invoice-back-link" href="invoices.html" data-i18n="invoiceEditor.back">← Rechnungen</a><h1 class="admin-page-title" id="invoicePageTitle" data-i18n="invoiceEditor.title">Neue Rechnung</h1><p class="admin-page-sub" data-i18n="invoiceEditor.subtitle">In wenigen Schritten zur fertigen Rechnung.</p></div>
+          <span class="admin-badge" id="invoiceStatusBadge" hidden></span>
+        </div>
+        <div class="invoice-editor-layout">
+          <form class="invoice-quick-form" id="invoiceForm" novalidate>
+            <div class="invoice-step-marker"><span>01</span><strong data-i18n="invoiceEditor.customerSection">Kunde</strong></div>
+            <div class="fg">
+              <label for="customerName" data-i18n="invoiceEditor.customer">Kunde</label>
+              <input id="customerName" name="customerName" list="customerOptions" autocomplete="off" maxlength="160" required data-i18n-placeholder="invoiceEditor.customerPlaceholder" placeholder="Kunde auswählen oder Namen eingeben">
+              <datalist id="customerOptions"></datalist>
+            </div>
+            <div class="fg">
+              <label for="customerAddress" data-i18n="invoiceEditor.address">Adresse</label>
+              <textarea id="customerAddress" name="customerAddress" maxlength="440" required rows="3" data-i18n-placeholder="invoiceEditor.addressPlaceholder" placeholder="Straße und Hausnummer&#10;PLZ Ort"></textarea>
+            </div>
+
+            <div class="invoice-step-marker"><span>02</span><strong data-i18n="invoiceEditor.serviceSection">Leistung</strong></div>
+            <div class="invoice-form-row">
+              <div class="fg"><label for="servicePreset" data-i18n="invoiceEditor.serviceType">Leistungsart</label><select id="servicePreset" required></select></div>
+              <div class="fg"><label for="serviceDate" data-i18n="invoiceEditor.serviceDate">Leistungsdatum</label><input id="serviceDate" type="date" required></div>
+            </div>
+            <div class="fg" id="customServiceWrap" hidden><label for="customService" data-i18n="invoiceEditor.customService">Eigene Leistungsbeschreibung</label><input id="customService" maxlength="300"></div>
+            <div class="invoice-form-row">
+              <div class="fg invoice-amount-field"><label for="grossAmount" data-i18n="invoiceEditor.amountGross">Betrag (Brutto)</label><div class="invoice-money-input"><input id="grossAmount" inputmode="decimal" autocomplete="off" required placeholder="0,00"><span>€</span></div></div>
+              <div class="fg"><label for="paymentMethod" data-i18n="invoiceEditor.paymentMethod">Zahlungsart</label><select id="paymentMethod"><option value="bank_transfer" data-i18n="invoiceEditor.bankTransfer">Überweisung</option><option value="cash" data-i18n="invoiceEditor.cash">Barzahlung</option></select></div>
+            </div>
+            <div class="invoice-auto-totals" aria-live="polite"><div><span data-i18n="invoiceEditor.net">Netto</span><strong id="netAmount">0,00 €</strong></div><div><span id="vatLabel">MwSt. 19 %</span><strong id="vatAmount">0,00 €</strong></div><div class="invoice-auto-total"><span data-i18n="invoiceEditor.total">Gesamt</span><strong id="totalAmount">0,00 €</strong></div></div>
+            <div class="fg"><label for="invoiceNote" data-i18n="invoiceEditor.note">Optionale Notiz</label><textarea id="invoiceNote" maxlength="2000" rows="2" data-i18n-placeholder="invoiceEditor.notePlaceholder" placeholder="z. B. ergänzende Vereinbarung"></textarea></div>
+
+            <details class="invoice-advanced" id="advancedOptions">
+              <summary data-i18n="invoiceEditor.moreOptions">Mehr Optionen</summary>
+              <div class="invoice-advanced-content">
+                <div class="invoice-form-row"><div class="fg"><label for="salutation" data-i18n="invoiceEditor.salutation">Anrede</label><input id="salutation" maxlength="50"></div><div class="fg"><label for="companyName" data-i18n="invoiceEditor.company">Firma</label><input id="companyName" maxlength="160"></div></div>
+                <div class="invoice-form-row"><div class="fg"><label for="firstName" data-i18n="invoiceEditor.firstName">Vorname</label><input id="firstName" maxlength="120"></div><div class="fg"><label for="lastName" data-i18n="invoiceEditor.lastName">Nachname</label><input id="lastName" maxlength="120"></div></div>
+                <div class="fg"><label for="streetAddress" data-i18n="invoiceEditor.street">Straße + Hausnummer</label><input id="streetAddress" maxlength="300"></div>
+                <div class="invoice-form-row"><div class="fg"><label for="postalCode" data-i18n="invoiceEditor.postalCode">PLZ</label><input id="postalCode" maxlength="20"></div><div class="fg"><label for="city" data-i18n="invoiceEditor.city">Ort</label><input id="city" maxlength="120"></div></div>
+                <div class="invoice-form-row"><div class="fg"><label for="customerEmail" data-i18n="invoiceEditor.email">E-Mail</label><input id="customerEmail" type="email" maxlength="254"></div><div class="fg"><label for="customerPhone" data-i18n="invoiceEditor.phone">Telefon</label><input id="customerPhone" type="tel" maxlength="50"></div></div>
+                <div class="invoice-form-row"><div class="fg"><label for="invoiceDate" data-i18n="invoiceEditor.invoiceDate">Rechnungsdatum</label><input id="invoiceDate" type="date"></div><div class="fg"><label for="paymentTerms" data-i18n="invoiceEditor.paymentTerms">Zahlungsziel</label><input id="paymentTerms" maxlength="160"></div></div>
+                <div class="fg invoice-vat-field"><label for="vatRate" data-i18n="invoiceEditor.vatRate">Umsatzsteuer</label><div class="invoice-money-input"><input id="vatRate" inputmode="decimal" value="19,00"><span>%</span></div></div>
+                <label class="announcement-toggle invoice-multiple-toggle" for="multipleItems"><input id="multipleItems" type="checkbox"><span><strong data-i18n="invoiceEditor.multipleItems">Mehrere Positionen</strong><small data-i18n="invoiceEditor.multipleItemsHint">Menge, Einheit und Nettopreis detailliert erfassen.</small></span></label>
+                <div id="advancedItemsWrap" hidden><div id="advancedItems"></div><button type="button" class="btn-secondary btn-sm" id="addItemBtn" data-i18n="invoiceEditor.addItem">+ Position hinzufügen</button></div>
+              </div>
+            </details>
+            <div class="admin-login-error invoice-form-error" id="invoiceError" role="alert" data-visible="false"></div>
+            <div class="invoice-form-actions">
+              <button type="button" class="btn-secondary" id="previewBtn" data-i18n="invoiceEditor.preview">Vorschau</button>
+              <button type="button" class="btn-secondary" id="saveDraftBtn" data-i18n="invoiceEditor.saveDraft">Als Entwurf speichern</button>
+              <button type="submit" class="btn-send invoice-create-btn" id="issueBtn"><span class="admin-spinner" aria-hidden="true"></span><span id="issueBtnLabel" data-i18n="invoiceEditor.create">Rechnung erstellen</span></button>
+            </div>
+          </form>
+
+          <aside class="invoice-preview-panel" id="previewPanel" aria-label="Rechnungsvorschau">
+            <div class="invoice-preview-toolbar"><strong data-i18n="invoiceEditor.preview">Vorschau</strong><span data-i18n="invoiceEditor.a4Hint">A4 PDF</span></div>
+            <div class="invoice-paper" id="invoicePreview">
+              <div class="invoice-paper-header"><div><strong>SAUBERPLUS</strong><small>Reinigungsservice GbR · Solingen</small></div><div class="invoice-paper-claim">Saubere Räume.<b>Klare Absprachen.</b></div></div>
+              <h2>RECHNUNG</h2><p id="previewService">Unterhaltsreinigung</p><div class="invoice-paper-line"></div>
+              <div class="invoice-preview-meta"><span>Rechnungsnummer<b id="previewNumber">wird automatisch vergeben</b></span><span>Rechnungsdatum<b id="previewDate">-</b></span><span>Leistungsdatum<b id="previewServiceDate">-</b></span><span>Zahlungsziel<b id="previewTerms">zahlbar nach Erhalt</b></span></div>
+              <div class="invoice-preview-parties"><div><small>Rechnungsempfänger/in</small><strong id="previewCustomer">Kunde</strong><p id="previewAddress">Adresse</p></div><div><small>Rechnungsaussteller</small><strong>SauberPlus Reinigungsservice GbR</strong><p data-i18n="invoiceEditor.settingsFromAdmin">aus Rechnungseinstellungen</p></div></div>
+              <h3>Abgerechnete Leistung</h3><div class="invoice-preview-table"><div class="invoice-preview-table-head"><span>Beschreibung</span><span>Menge / Zeit</span><span>Betrag</span></div><div id="previewItems"></div><div class="invoice-preview-tax"><span>Umsatzsteuer</span><span id="previewVatRate">19 %</span><strong id="previewVat">0,00 €</strong></div><div class="invoice-preview-total"><span>Gesamtbetrag (inkl. USt.)</span><strong id="previewTotal">0,00 €</strong></div></div>
+              <p class="invoice-preview-note" id="previewNote"></p><h3>Zahlungsinformationen</h3><div class="invoice-preview-payment"><span>Zahlungsart</span><strong id="previewPayment">Überweisung</strong></div><div class="invoice-preview-footer">Steuer- und Bankdaten aus den geschützten Rechnungseinstellungen</div>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+<template id="advancedItemTemplate"><div class="invoice-item-editor"><div class="invoice-item-editor-head"><strong data-item-number>Position</strong><button type="button" class="invoice-item-remove" data-remove-item aria-label="Position entfernen">×</button></div><div class="fg"><label data-i18n="invoiceEditor.description">Beschreibung</label><input data-item-description maxlength="300" required></div><div class="fg"><label data-i18n="invoiceEditor.details">Zusatzbeschreibung</label><input data-item-details maxlength="1000"></div><div class="invoice-item-grid"><div class="fg"><label data-i18n="invoiceEditor.quantity">Menge / Zeit</label><input data-item-quantity inputmode="decimal" value="1" required></div><div class="fg"><label data-i18n="invoiceEditor.unit">Einheit</label><select data-item-unit><option value="flat_rate">Pauschal</option><option value="hour">Stunde</option><option value="piece">Stück</option><option value="sqm">m²</option><option value="custom">Benutzerdefiniert</option></select></div><div class="fg"><label data-i18n="invoiceEditor.netUnitPrice">Einzelpreis netto</label><input data-item-price inputmode="decimal" required></div></div><div class="fg" data-custom-unit-wrap hidden><label data-i18n="invoiceEditor.customUnit">Eigene Einheit</label><input data-item-custom-unit maxlength="40"></div></div></template>
+<script src="js/vendor/supabase.js"></script>
+<script src="js/admin-config.js"></script>
+<script src="js/admin-supabase-client.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin-ui.js"></script>
+<script src="js/admin-invoice-core.js"></script>
+<script src="js/vendor/pdf-lib.min.js"></script>
+<script src="js/vendor/fontkit.umd.min.js"></script>
+<script src="js/vendor/bidi-shaper.js"></script>
+<script src="js/admin-invoice-pdf.js"></script>
+<script src="js/admin-invoice.js"></script>
+</body>
+</html>

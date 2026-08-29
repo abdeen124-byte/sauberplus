@@ -55,6 +55,26 @@
           </div>
         </div>
 
+        <section class="invoice-settings-card" id="invoiceSettingsCard" aria-labelledby="invoiceSettingsHeading" hidden>
+          <div class="invoice-settings-heading">
+            <div><span class="sec-tag" data-i18n="settings.invoiceEyebrow">Nur für Rechnungen</span><h2 id="invoiceSettingsHeading" data-i18n="settings.invoiceHeading">Rechnungseinstellungen</h2><p data-i18n="settings.invoiceDesc">Diese geschützten Daten werden beim Ausstellen in der Rechnung eingefroren und nicht öffentlich gespeichert.</p></div>
+            <span class="invoice-settings-lock" aria-hidden="true">●</span>
+          </div>
+          <div class="admin-login-error" id="invoiceSettingsError" role="alert" data-visible="false"></div>
+          <div class="admin-login-error invoice-settings-success" id="invoiceSettingsSuccess" role="status" data-visible="false"></div>
+          <form id="invoiceSettingsForm" novalidate>
+            <div class="invoice-form-row"><div class="fg"><label for="settingsLegalName" data-i18n="settings.legalName">Rechtlicher Firmenname</label><input id="settingsLegalName" maxlength="180" required></div><div class="fg"><label for="settingsTaxNumber" data-i18n="settings.taxNumber">Steuernummer</label><input id="settingsTaxNumber" maxlength="80" required autocomplete="off"></div></div>
+            <div class="fg"><label for="settingsStreet" data-i18n="settings.street">Straße + Hausnummer</label><input id="settingsStreet" maxlength="300" required></div>
+            <div class="invoice-form-row"><div class="fg"><label for="settingsPostalCode" data-i18n="settings.postalCode">PLZ</label><input id="settingsPostalCode" maxlength="20" required></div><div class="fg"><label for="settingsCity" data-i18n="settings.city">Ort</label><input id="settingsCity" maxlength="120" required></div></div>
+            <div class="invoice-form-row"><div class="fg"><label for="settingsPhone" data-i18n="settings.phone">Telefon</label><input id="settingsPhone" maxlength="50" type="tel"></div><div class="fg"><label for="settingsEmail" data-i18n="settings.email">E-Mail</label><input id="settingsEmail" maxlength="254" type="email"></div></div>
+            <div class="fg"><label for="settingsWebsite" data-i18n="settings.website">Website</label><input id="settingsWebsite" maxlength="200" type="url"></div>
+            <div class="invoice-settings-bank"><h3 data-i18n="settings.bankHeading">Bankverbindung</h3><div class="invoice-form-row"><div class="fg"><label for="settingsAccountHolder" data-i18n="settings.accountHolder">Kontoinhaber</label><input id="settingsAccountHolder" maxlength="180" required autocomplete="off"></div><div class="fg"><label for="settingsIban">IBAN</label><input id="settingsIban" maxlength="42" required autocomplete="off" spellcheck="false"></div></div></div>
+            <div class="invoice-form-row"><div class="fg"><label for="settingsVat" data-i18n="settings.defaultVat">Standard-Umsatzsteuer</label><div class="invoice-money-input"><input id="settingsVat" value="19,00" inputmode="decimal" required><span>%</span></div></div><div class="fg"><label for="settingsPaymentTerms" data-i18n="settings.defaultPaymentTerms">Standard-Zahlungsziel</label><input id="settingsPaymentTerms" maxlength="160" value="zahlbar nach Erhalt" required></div></div>
+            <div class="invoice-form-row"><div class="fg"><label for="settingsPrefix" data-i18n="settings.invoicePrefix">Rechnungspräfix</label><input id="settingsPrefix" value="SP" readonly></div></div>
+            <div class="invoice-settings-actions"><button type="submit" class="btn-send" id="saveInvoiceSettingsBtn"><span class="admin-spinner" aria-hidden="true"></span><span data-i18n="settings.saveInvoiceSettings">Rechnungseinstellungen speichern</span></button></div>
+          </form>
+        </section>
+
         <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:20px">
           <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:16px;margin:0 0 8px" data-i18n="settings.exportHeading">Daten exportieren</h2>
           <p style="font-size:13px;color:var(--gray);margin:0 0 18px;line-height:1.6" data-i18n="settings.exportDesc">Lädt alle Ankündigungen und Galeriebilder als JSON-Datei herunter. Diese Datei kann später zur Wiederherstellung importiert werden. Bilddateien selbst sind nicht enthalten, nur die Verweise darauf.</p>

@@ -19,6 +19,21 @@
     profile: null
   };
 
+  var invoiceSettingsFields = {
+    legal_name: "settingsLegalName",
+    street_address: "settingsStreet",
+    postal_code: "settingsPostalCode",
+    city: "settingsCity",
+    phone: "settingsPhone",
+    email: "settingsEmail",
+    website: "settingsWebsite",
+    tax_number: "settingsTaxNumber",
+    account_holder: "settingsAccountHolder",
+    iban: "settingsIban",
+    default_payment_terms: "settingsPaymentTerms",
+    invoice_prefix: "settingsPrefix"
+  };
+
   function showMessage(elementId, message) {
     var el = getElement(elementId);
     el.textContent = message;
@@ -31,6 +46,75 @@
       el.setAttribute("data-visible", "false");
       el.textContent = "";
     });
+  }
+
+  function setInvoiceSettingsMessage(kind, message) {
+    var error = getElement("invoiceSettingsError");
+    var success = getElement("invoiceSettingsSuccess");
+    error.setAttribute("data-visible", "false");
+    success.setAttribute("data-visible", "false");
+    var target = kind === "success" ? success : error;
+    target.textContent = message;
+    target.setAttribute("data-visible", "true");
+  }
+
+  function populateInvoiceSettings(settings) {
+    Object.keys(invoiceSettingsFields).forEach(function (key) {
+      getElement(invoiceSettingsFields[key]).value = settings && settings[key] || (key === "invoice_prefix" ? "SP" : "");
+    });
+    getElement("settingsVat").value = ((settings && settings.default_vat_bps || 1900) / 100).toFixed(2).replace(".", ",");
+    if (!getElement("settingsPaymentTerms").value) {
+      getElement("settingsPaymentTerms").value = "zahlbar nach Erhalt";
+    }
+  }
+
+  function parseVatBasisPoints(value) {
+    var text = String(value || "").trim();
+    if (!/^\d+(?:[,.]\d{1,2})?$/.test(text)) {
+      throw new Error(t("settings.invoiceSettingsInvalid"));
+    }
+    var parts = text.replace(",", ".").split(".");
+    var bps = Number(parts[0]) * 100 + Number((parts[1] || "").padEnd(2, "0"));
+    if (!Number.isInteger(bps) || bps < 0 || bps > 10000) {
+      throw new Error(t("settings.invoiceSettingsInvalid"));
+    }
+    return bps;
+  }
+
+  async function loadInvoiceSettings() {
+    var result = await state.client.from("invoice_settings").select("*").eq("singleton", true).maybeSingle();
+    if (result.error) {
+      return false;
+    }
+    populateInvoiceSettings(result.data);
+    getElement("invoiceSettingsCard").hidden = false;
+    return true;
+  }
+
+  async function saveInvoiceSettings(event) {
+    event.preventDefault();
+    var button = getElement("saveInvoiceSettingsBtn");
+    button.disabled = true;
+    button.classList.add("loading");
+    try {
+      var payload = {};
+      Object.keys(invoiceSettingsFields).forEach(function (key) {
+        payload[key] = getElement(invoiceSettingsFields[key]).value.trim();
+      });
+      payload.default_vat_bps = parseVatBasisPoints(getElement("settingsVat").value);
+      var result = await state.client.rpc("save_invoice_settings", { p_settings: payload });
+      if (result.error) {
+        throw result.error;
+      }
+      populateInvoiceSettings(result.data);
+      setInvoiceSettingsMessage("success", t("settings.invoiceSettingsSaved"));
+      window.AdminUI.toast(t("settings.invoiceSettingsSaved"), "success");
+    } catch (error) {
+      setInvoiceSettingsMessage("error", error && error.message ? error.message : t("settings.invoiceSettingsSaveFailed"));
+    } finally {
+      button.disabled = false;
+      button.classList.remove("loading");
+    }
   }
 
   // ---------------------------------------------------------------
@@ -196,6 +280,12 @@
 
     state.profile = profile;
     state.client = window.AdminSupabase.getClient();
+
+    loadInvoiceSettings().then(function (available) {
+      if (available) {
+        getElement("invoiceSettingsForm").addEventListener("submit", saveInvoiceSettings);
+      }
+    });
 
     getElement("exportBtn").addEventListener("click", handleExport);
 

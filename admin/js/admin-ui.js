@@ -162,6 +162,33 @@
   // Sidebar (mobile toggle, active link, role-gated visibility)
   // ---------------------------------------------------------------
 
+  function ensureInvoiceNavLink() {
+    var list = document.querySelector(".admin-nav-list");
+    if (!list || list.querySelector('a[href="invoices.html"]')) {
+      return;
+    }
+    var managementLabel = list.querySelector(".admin-nav-section-label");
+    var managementItem = managementLabel ? managementLabel.closest("li") : null;
+    if (!managementItem) {
+      return;
+    }
+    var item = document.createElement("li");
+    item.setAttribute("data-role-gate", "super_admin");
+    item.innerHTML = '<a class="admin-nav-link" href="invoices.html">' +
+      '<span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24">' +
+      '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"></path><path d="M9 8h6M9 12h6"></path>' +
+      '</svg></span><span data-i18n="nav.invoices">Rechnungen</span></a>';
+    managementItem.insertAdjacentElement("afterend", item);
+  }
+
+  function enableInvoiceNavLink() {
+    ensureInvoiceNavLink();
+    if (window.AdminI18N && typeof window.AdminI18N.applyStaticTranslations === "function") {
+      window.AdminI18N.applyStaticTranslations();
+    }
+    markActiveNavLink();
+  }
+
   function initSidebarToggle() {
     var toggle = document.querySelector(".admin-sidebar-toggle");
     var sidebar = document.querySelector(".admin-sidebar");
@@ -199,6 +226,24 @@
     document.querySelectorAll('[data-role-gate="super_admin"]').forEach(function (el) {
       if (role !== "super_admin") {
         el.style.display = "none";
+      }
+    });
+    if (role !== "super_admin") {
+      return;
+    }
+
+    var current = window.location.pathname.split("/").pop() || "dashboard.html";
+    if (current === "invoices.html" || current === "invoice.html") {
+      enableInvoiceNavLink();
+      return;
+    }
+
+    if (!window.AdminSupabase || !window.AdminSupabase.isConfigured()) {
+      return;
+    }
+    window.AdminSupabase.getClient().from("invoices").select("id").limit(1).then(function (result) {
+      if (!result.error) {
+        enableInvoiceNavLink();
       }
     });
   }
