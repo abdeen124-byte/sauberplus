@@ -2208,7 +2208,7 @@ create table public.invoice_items (
   position integer not null check (position between 1 and 100),
   created_at timestamptz not null default now(),
   unique (invoice_id, position),
-  constraint invoice_items_custom_unit_check check (
+  constraint invoice_items_unit_consistency_check check (
     (unit = 'custom' and custom_unit is not null)
     or (unit <> 'custom' and custom_unit is null)
   )
