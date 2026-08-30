@@ -2,21 +2,21 @@
   "use strict";
   var core = window.AdminExpenseCore;
   var t = window.AdminI18N.t;
-  var state = { client: null, summary: [], profiles: [], advances: [], transactions: [] };
+  var state = { client: null, summary: [], profiles: [], profileById: Object.create(null), advances: [], transactions: [] };
   var byId = function (id) { return document.getElementById(id); };
   function lang() { return window.AdminI18N.getLang ? window.AdminI18N.getLang() : "de"; }
   function esc(value) { return String(value == null ? "" : value).replace(/[&<>"']/g, function (char) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]; }); }
   function date(value) { return value ? new Intl.DateTimeFormat(lang() === "ar" ? "ar-DE" : "de-DE").format(new Date(value + "T12:00:00Z")) : t("partners.unknownDate"); }
   function stateText(value) { var labels = { de: { no_target: "Kein Ziel", complete: "Vollständig", over: "Über Ziel", unpaid: "Offen", partial: "Teilweise" }, ar: { no_target: "دون هدف", complete: "مكتمل", over: "فوق الهدف", unpaid: "مفتوح", partial: "جزئي" } }; return labels[lang()][value]; }
   function partnerName(item) {
-    var profile = state.profiles.find(function (candidate) { return String(candidate.id) === String(item.partner_id); });
+    var profile = state.profileById[String(item.partner_id)];
     return profile && profile.display_name || item.display_name || "Gesellschafter";
   }
   function renderSummary() {
     byId("partnerSummary").innerHTML = state.summary.map(function (item) {
       var financialState = core.contributionState(item.target_cents == null ? null : Number(item.target_cents), Number(item.contribution_cents));
       var percentage = item.target_cents > 0 ? Math.min(100, Math.round(Number(item.contribution_cents) * 100 / Number(item.target_cents))) : 0;
-      return '<article class="partner-account" data-state="' + financialState + '"><header><div><span>' + esc(t("partners.partner")) + '</span><h2>' + esc(partnerName(item)) + '</h2></div><b>' + esc(stateText(financialState)) + '</b></header><div class="partner-money"><strong>' + esc(core.formatMoney(Number(item.contribution_cents), lang())) + '</strong><span>' + esc(t("partners.ofTarget")) + ' ' + esc(item.target_cents == null ? "—" : core.formatMoney(Number(item.target_cents), lang())) + '</span></div><div class="partner-progress"><i style="width:' + percentage + '%"></i></div><dl><div><dt>' + esc(t("partners.privateAdvances")) + '</dt><dd>' + esc(core.formatMoney(Number(item.advance_cents), lang())) + '</dd></div><div><dt>' + esc(t("partners.openReimbursement")) + '</dt><dd>' + esc(core.formatMoney(Number(item.open_reimbursement_cents), lang())) + '</dd></div></dl><form class="partner-target" data-target-form="' + item.partner_id + '"><label>' + esc(t("partners.target")) + '<input inputmode="decimal" value="' + (item.target_cents == null ? "" : (Number(item.target_cents) / 100).toFixed(2).replace(".", ",")) + '" placeholder="—"></label><button class="btn-secondary" type="submit">' + esc(t("common.save")) + "</button></form></article>";
+      return '<article class="partner-account" data-state="' + financialState + '" data-partner-name="' + esc(partnerName(item)) + '"><header><div><span>' + esc(t("partners.partner")) + '</span><h2>' + esc(partnerName(item)) + '</h2></div><b>' + esc(stateText(financialState)) + '</b></header><div class="partner-money"><strong>' + esc(core.formatMoney(Number(item.contribution_cents), lang())) + '</strong><span>' + esc(t("partners.ofTarget")) + ' ' + esc(item.target_cents == null ? "—" : core.formatMoney(Number(item.target_cents), lang())) + '</span></div><div class="partner-progress"><i style="width:' + percentage + '%"></i></div><dl><div><dt>' + esc(t("partners.privateAdvances")) + '</dt><dd>' + esc(core.formatMoney(Number(item.advance_cents), lang())) + '</dd></div><div><dt>' + esc(t("partners.openReimbursement")) + '</dt><dd>' + esc(core.formatMoney(Number(item.open_reimbursement_cents), lang())) + '</dd></div></dl><form class="partner-target" data-target-form="' + item.partner_id + '"><label>' + esc(t("partners.target")) + '<input inputmode="decimal" value="' + (item.target_cents == null ? "" : (Number(item.target_cents) / 100).toFixed(2).replace(".", ",")) + '" placeholder="—"></label><button class="btn-secondary" type="submit">' + esc(t("common.save")) + "</button></form></article>";
     }).join("");
   }
   function openAmounts() {
@@ -33,7 +33,7 @@
   function renderHistory() {
     var labels = { opening_contribution: t("partners.opening"), contribution: t("partners.contribution"), expense_advance: t("partners.advance"), reimbursement: t("partners.reimbursement"), reversal: t("partners.reversal"), adjustment: t("partners.adjustment") };
     var reversed = new Set(state.transactions.map(function (tx) { return tx.reverses_transaction_id; }).filter(Boolean));
-    byId("partnerHistory").innerHTML = '<div class="partner-history">' + state.transactions.map(function (tx) { var profile = state.profiles.find(function (item) { return item.id === tx.partner_id; }); var canReverse = ["opening_contribution", "contribution", "adjustment", "reimbursement"].indexOf(tx.transaction_type) >= 0 && !reversed.has(tx.id); return '<article><span class="transaction-mark" data-type="' + tx.transaction_type + '"></span><div><strong>' + esc(labels[tx.transaction_type] || tx.transaction_type) + '</strong><small>' + esc((profile && profile.display_name || "") + " · " + date(tx.transaction_date)) + '</small></div><b>' + esc(core.formatMoney(Number(tx.amount_cents), lang())) + '</b>' + (canReverse ? '<button class="invoice-action-link invoice-action-danger" data-reverse="' + tx.id + '">' + esc(t("partners.correct")) + "</button>" : "") + "</article>"; }).join("") + "</div>";
+    byId("partnerHistory").innerHTML = '<div class="partner-history">' + state.transactions.map(function (tx) { var canReverse = ["opening_contribution", "contribution", "adjustment", "reimbursement"].indexOf(tx.transaction_type) >= 0 && !reversed.has(tx.id); return '<article><span class="transaction-mark" data-type="' + tx.transaction_type + '"></span><div><strong>' + esc(labels[tx.transaction_type] || tx.transaction_type) + '</strong><small>' + esc(partnerName(tx) + " · " + date(tx.transaction_date)) + '</small></div><b>' + esc(core.formatMoney(Number(tx.amount_cents), lang())) + '</b>' + (canReverse ? '<button class="invoice-action-link invoice-action-danger" data-reverse="' + tx.id + '">' + esc(t("partners.correct")) + "</button>" : "") + "</article>"; }).join("") + "</div>";
   }
   async function load() {
     var results = await Promise.all([
@@ -42,7 +42,7 @@
       state.client.from("partner_transactions").select("id,partner_id,transaction_type,amount_cents,transaction_date,date_precision,payment_method,related_expense_id,reverses_transaction_id,note,created_at").order("created_at", { ascending: false }).limit(250)
     ]);
     var failed = results.find(function (result) { return result.error; }); if (failed) throw failed.error;
-    state.summary = results[0].data || []; state.profiles = results[1].data || []; state.advances = results[2].data || []; state.transactions = results[3].data || [];
+    state.summary = results[0].data || []; state.profiles = results[1].data || []; state.profileById = Object.create(null); state.profiles.forEach(function (profile) { state.profileById[String(profile.id)] = profile; }); state.advances = results[2].data || []; state.transactions = results[3].data || [];
     var options = state.profiles.map(function (item) { return '<option value="' + item.id + '">' + esc(item.display_name) + "</option>"; }).join(""); byId("contributionPartner").innerHTML = options;
     renderSummary(); renderAdvances(); renderHistory();
   }
