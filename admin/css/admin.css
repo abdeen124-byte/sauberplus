@@ -30,6 +30,21 @@ html[dir=rtl] .finance-page,html[dir=rtl] .receipt-form{text-align:right}html[di
 @media(max-width:980px){.finance-summary{grid-template-columns:repeat(2,1fr)}.finance-summary article:nth-child(2){border-inline-end:0}.finance-summary article:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.1)}.receipt-workspace{grid-template-columns:1fr}.receipt-capture{position:static}.partner-summary{grid-template-columns:1fr 1fr}}
 @media(max-width:680px){.finance-page{padding-inline:16px}.finance-masthead{align-items:stretch;flex-direction:column}.finance-primary{justify-content:center;width:100%}.finance-summary{grid-template-columns:1fr 1fr}.finance-summary article{padding:16px 13px}.finance-summary strong{font-size:20px}.finance-ledger-head{flex-direction:column}.finance-filters{width:100%}.finance-filters>*{flex:1 1 46%;min-width:0}.expense-table{min-width:0}.expense-table thead{display:none}.expense-table,.expense-table tbody,.expense-table tr,.expense-table td{display:block}.expense-table tr{padding:14px;border-bottom:1px solid rgba(255,255,255,.12)}.expense-table td{padding:5px 0;border:0;display:flex;justify-content:space-between;gap:14px}.expense-table td:before{content:attr(data-label);color:rgba(255,255,255,.4);font-size:10px;text-transform:uppercase}.expense-table td>*{text-align:end}.receipt-steps li span{display:none}.receipt-steps li{justify-content:center}.receipt-drop{min-height:220px}.receipt-form{padding:18px 14px}.finance-form-grid{grid-template-columns:1fr}.finance-span-2{grid-column:auto}.mixed-tax{grid-template-columns:1fr}.receipt-totals span{padding:11px 5px}.receipt-totals b{font-size:14px}.partner-summary{grid-template-columns:1fr}.partner-advance-list article{align-items:flex-start}.partner-advance-list article>div:last-child{min-width:110px}.finance-subnav{gap:20px}.receipt-page{padding-bottom:30px}}
 
+.partner-account{--partner-ring-color:#7694ab}
+.partner-account[data-state=complete],.partner-account[data-state=over]{--partner-ring-color:var(--green)}
+.partner-account[data-state=partial]{--partner-ring-color:#e0ad4d;border-color:#e0ad4d}
+.partner-account[data-state=unpaid]{--partner-ring-color:#d66e6e}
+.partner-account[data-state=no_target]{--partner-ring-color:#7694ab}
+.partner-account[data-state=partial] header>b{color:#f3d9a8}
+.partner-account[data-state=unpaid] header>b{color:#efaaa2}
+.partner-account[data-state=no_target] header>b{color:#a7bdcc}
+.partner-balance-layout{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:22px 0 12px}
+.partner-balance-layout .partner-money{margin:0;min-width:0}
+.partner-status-ring{position:relative;display:grid;place-items:center;flex:0 0 78px;width:78px;height:78px;border-radius:50%;background:conic-gradient(var(--partner-ring-color) calc(var(--partner-progress) * 1%),rgba(255,255,255,.1) 0);color:#fff;font:800 14px/1 Montserrat,Cairo,sans-serif}
+.partner-status-ring::after{content:"";position:absolute;inset:8px;border-radius:50%;background:#0c263f;border:1px solid rgba(255,255,255,.08)}
+.partner-status-ring span{position:relative;z-index:1}
+@media(max-width:680px){.partner-balance-layout{gap:14px}.partner-status-ring{flex-basis:70px;width:70px;height:70px}.partner-account h2{font-size:20px}.partner-money strong{font-size:30px}}
+
 /* ---------- Login screen ---------- */
 
 .admin-login-shell {
