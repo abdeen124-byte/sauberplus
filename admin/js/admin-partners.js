@@ -7,17 +7,25 @@
   function lang() { return window.AdminI18N.getLang ? window.AdminI18N.getLang() : "de"; }
   function esc(value) { return String(value == null ? "" : value).replace(/[&<>"']/g, function (char) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]; }); }
   function date(value) { return value ? new Intl.DateTimeFormat(lang() === "ar" ? "ar-DE" : "de-DE").format(new Date(value + "T12:00:00Z")) : t("partners.unknownDate"); }
-  function stateText(value) { var labels = { de: { no_target: "Kein Ziel", complete: "Vollständig", over: "Über Ziel", unpaid: "Offen", partial: "Teilweise" }, ar: { no_target: "دون هدف", complete: "مكتمل", over: "فوق الهدف", unpaid: "مفتوح", partial: "جزئي" } }; return labels[lang()][value]; }
+  function stateText(value) { return t("partners.states." + value); }
   function partnerName(item) {
     var profile = state.profileById[String(item.partner_id)];
     return profile && profile.display_name || item.display_name || "Gesellschafter";
   }
   function renderSummary() {
     byId("partnerSummary").innerHTML = state.summary.map(function (item) {
-      var financialState = core.contributionState(item.target_cents == null ? null : Number(item.target_cents), Number(item.contribution_cents));
-      var percentage = item.target_cents > 0 ? Math.min(100, Math.round(Number(item.contribution_cents) * 100 / Number(item.target_cents))) : 0;
-      var ringLabel = financialState === "no_target" ? "—" : percentage + "%";
-      return '<article class="partner-account" data-state="' + financialState + '" data-partner-name="' + esc(partnerName(item)) + '"><header><div><span>' + esc(t("partners.partner")) + '</span><h2>' + esc(partnerName(item)) + '</h2></div><b>' + esc(stateText(financialState)) + '</b></header><div class="partner-balance-layout"><div class="partner-money"><strong>' + esc(core.formatMoney(Number(item.contribution_cents), lang())) + '</strong><span>' + esc(t("partners.ofTarget")) + ' ' + esc(item.target_cents == null ? "—" : core.formatMoney(Number(item.target_cents), lang())) + '</span></div><div class="partner-status-ring" style="--partner-progress:' + percentage + '" role="img" aria-label="' + esc(stateText(financialState) + (financialState === "no_target" ? "" : " " + percentage + "%")) + '"><span>' + esc(ringLabel) + '</span></div></div><div class="partner-progress"><i style="width:' + percentage + '%"></i></div><dl><div><dt>' + esc(t("partners.privateAdvances")) + '</dt><dd>' + esc(core.formatMoney(Number(item.advance_cents), lang())) + '</dd></div><div><dt>' + esc(t("partners.openReimbursement")) + '</dt><dd>' + esc(core.formatMoney(Number(item.open_reimbursement_cents), lang())) + '</dd></div></dl><form class="partner-target" data-target-form="' + item.partner_id + '"><label>' + esc(t("partners.target")) + '<input inputmode="decimal" value="' + (item.target_cents == null ? "" : (Number(item.target_cents) / 100).toFixed(2).replace(".", ",")) + '" placeholder="—"></label><button class="btn-secondary" type="submit">' + esc(t("common.save")) + "</button></form></article>";
+      var paidCents = Number(item.contribution_cents);
+      var targetCents = Number(item.target_cents);
+      var hasTarget = Number.isFinite(targetCents) && targetCents > 0;
+      var financialState = hasTarget ? core.contributionState(targetCents, paidCents) : "no_target";
+      var percentage = !hasTarget ? null : paidCents <= 0 ? 0 : paidCents < targetCents ? Math.max(1, Math.floor(paidCents * 100 / targetCents)) : Math.round(paidCents * 100 / targetCents);
+      var ringProgress = percentage === null ? 0 : Math.min(100, percentage);
+      var remainingCents = hasTarget ? Math.max(0, targetCents - paidCents) : null;
+      var percentageText = percentage === null ? t("partners.states.no_target") : percentage + "%";
+      var targetText = hasTarget ? core.formatMoney(targetCents, lang()) : "—";
+      var remainingText = remainingCents === null ? "—" : core.formatMoney(remainingCents, lang());
+      var actionText = hasTarget ? t("common.save") : t("partners.setTarget");
+      return '<article class="partner-account" data-state="' + financialState + '" data-partner-name="' + esc(partnerName(item)) + '"><header><div><span>' + esc(t("partners.partner")) + '</span><h2>' + esc(partnerName(item)) + '</h2></div></header><div class="partner-balance-layout"><div class="partner-money"><span>' + esc(t("partners.paid")) + '</span><strong>' + esc(core.formatMoney(paidCents, lang())) + '</strong></div><div class="partner-ring-stack"><div class="partner-status-ring" style="--partner-progress:' + ringProgress + '" role="img" aria-label="' + esc(t("partners.percentage") + ': ' + percentageText + '. ' + stateText(financialState)) + '"><span>' + esc(percentageText) + '</span></div><b class="partner-status-badge">' + esc(stateText(financialState)) + '</b></div></div><dl class="partner-facts"><div><dt>' + esc(t("partners.target")) + '</dt><dd>' + esc(targetText) + '</dd></div><div><dt>' + esc(t("partners.remaining")) + '</dt><dd>' + esc(remainingText) + '</dd></div><div><dt>' + esc(t("partners.percentage")) + '</dt><dd>' + esc(percentageText) + '</dd></div></dl><form class="partner-target" data-target-form="' + item.partner_id + '"><label>' + esc(t("partners.target")) + '<input inputmode="decimal" value="' + (hasTarget ? (targetCents / 100).toFixed(2).replace(".", ",") : "") + '" placeholder="—"></label><button class="btn-secondary" type="submit">' + esc(actionText) + "</button></form></article>";
     }).join("");
   }
   function openAmounts() {

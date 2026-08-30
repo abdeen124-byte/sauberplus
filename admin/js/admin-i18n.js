@@ -85,10 +85,11 @@
         kicker: "GESELLSCHAFTERKONTO", title: "Einzahlungen & Auslagen", subtitle: "Beiträge und private Auslagen getrennt und nachvollziehbar führen.",
         addContribution: "+ Einzahlung", openAdvances: "Offene Partner-Auslagen", openAdvancesHint: "Erstattungen ändern niemals die Einzahlungen.",
         history: "Transaktionsverlauf", partner: "Gesellschafter", ofTarget: "von Ziel", privateAdvances: "Private Auslagen", openReimbursement: "Offen zur Erstattung",
-        target: "Einzahlungsziel", amount: "Betrag", noOpenAdvances: "Keine offenen Partner-Auslagen.", reimburse: "Erstatten", reimburseConfirm: "Vollständig per Überweisung erstatten:",
+        paid: "Eingezahlt", target: "Ziel", remaining: "Offen", percentage: "Prozent", setTarget: "Ziel festlegen", amount: "Betrag", noOpenAdvances: "Keine offenen Partner-Auslagen.", reimburse: "Erstatten", reimburseConfirm: "Vollständig per Überweisung erstatten:",
         reimbursed: "Erstattung gespeichert.", contributionSaved: "Einzahlung gespeichert.", targetSaved: "Ziel gespeichert.", unknownDate: "Datum unbekannt",
         opening: "Eröffnungsbestand", contribution: "Einzahlung", advance: "Private Auslage", reimbursement: "Erstattung", reversal: "Storno / Korrektur", adjustment: "Korrektur",
-        correct: "Korrigieren", correctConfirm: "Die Originalbuchung bleibt erhalten und wird durch eine Gegenbuchung korrigiert.", correctionNote: "Kontrollierte Korrektur", corrected: "Korrektur gespeichert."
+        correct: "Korrigieren", correctConfirm: "Die Originalbuchung bleibt erhalten und wird durch eine Gegenbuchung korrigiert.", correctionNote: "Kontrollierte Korrektur", corrected: "Korrektur gespeichert.",
+        states: { no_target: "Kein Ziel", complete: "Vollständig", over: "Über Ziel", unpaid: "Offen", partial: "Teilweise" }
       },
       role: {
         super_admin: "Super Admin",
@@ -592,10 +593,11 @@
         kicker: "حساب الشركاء", title: "المساهمات والمصاريف", subtitle: "فصل مساهمات الشركاء عن مصاريفهم الخاصة بوضوح.",
         addContribution: "+ مساهمة", openAdvances: "مصاريف الشركاء المعلّقة", openAdvancesHint: "التعويضات لا تغيّر المساهمات.",
         history: "سجل المعاملات", partner: "الشريك", ofTarget: "من الهدف", privateAdvances: "مصاريف خاصة", openReimbursement: "متبقي للتعويض",
-        target: "هدف المساهمة", amount: "المبلغ", noOpenAdvances: "لا توجد مصاريف شركاء معلّقة.", reimburse: "تعويض", reimburseConfirm: "تعويض كامل عبر التحويل:",
+        paid: "المدفوع", target: "الهدف", remaining: "المتبقي", percentage: "النسبة", setTarget: "تحديد الهدف", amount: "المبلغ", noOpenAdvances: "لا توجد مصاريف شركاء معلّقة.", reimburse: "تعويض", reimburseConfirm: "تعويض كامل عبر التحويل:",
         reimbursed: "تم حفظ التعويض.", contributionSaved: "تم حفظ المساهمة.", targetSaved: "تم حفظ الهدف.", unknownDate: "التاريخ غير معروف",
         opening: "رصيد افتتاحي", contribution: "مساهمة", advance: "مصروف خاص", reimbursement: "تعويض", reversal: "إلغاء / تصحيح", adjustment: "تصحيح",
-        correct: "تصحيح", correctConfirm: "سيبقى القيد الأصلي محفوظًا ويُصحح بقيد عكسي.", correctionNote: "تصحيح مراقب", corrected: "تم حفظ التصحيح."
+        correct: "تصحيح", correctConfirm: "سيبقى القيد الأصلي محفوظًا ويُصحح بقيد عكسي.", correctionNote: "تصحيح مراقب", corrected: "تم حفظ التصحيح.",
+        states: { no_target: "لا يوجد هدف", complete: "مكتمل", over: "فوق الهدف", unpaid: "مفتوح", partial: "جزئي" }
       },
       role: {
         super_admin: "المدير العام",
