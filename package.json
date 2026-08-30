@@ -1,0 +1,13 @@
+{
+  "name": "sauberplus",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "tesseract.js": "7.0.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}

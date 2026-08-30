@@ -1,4 +1,10 @@
 {
+  "functions": {
+    "api/expense-extract.js": {
+      "maxDuration": 60,
+      "includeFiles": "*.traineddata"
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",

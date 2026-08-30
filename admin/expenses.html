@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://kgkrgbkiqitnvntbyyct.supabase.co; connect-src 'self' https://kgkrgbkiqitnvntbyyct.supabase.co https://api.sauberplus.plus https://sauberplus.vercel.app; form-action 'self'; upgrade-insecure-requests">
+<meta name="robots" content="noindex,nofollow"><title>Ausgaben – SauberPlus Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&amp;family=Montserrat:wght@400;700;900&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/sauberplus.css"><link rel="stylesheet" href="css/admin.css"><script src="js/admin-i18n.js"></script>
+</head>
+<body><div class="admin-shell" id="adminShell" hidden><div class="admin-shell-layout">
+<aside class="admin-sidebar" id="adminSidebar" data-open="false"><div class="admin-sidebar-logo"><span class="bl">Sauber</span><span class="gr">Plus</span> <span class="admin-sidebar-suffix">Admin</span></div><ul class="admin-nav-list">
+<li><a class="admin-nav-link" href="dashboard.html"><span class="admin-nav-ico">⌂</span><span data-i18n="nav.dashboard">Übersicht</span></a></li>
+<li class="admin-nav-divider" data-role-gate="super_admin"></li><li data-role-gate="super_admin"><span class="admin-nav-section-label" data-i18n="nav.management">Verwaltung</span></li>
+<li data-role-gate="super_admin"><a class="admin-nav-link" href="users.html"><span class="admin-nav-ico">♙</span><span data-i18n="nav.users">Team</span></a></li>
+<li data-role-gate="super_admin"><a class="admin-nav-link" href="settings.html"><span class="admin-nav-ico">⚙</span><span data-i18n="nav.settings">Einstellungen</span></a></li>
+</ul></aside><div class="admin-sidebar-scrim" id="adminSidebarScrim" data-open="false"></div>
+<div class="admin-content-area"><header class="admin-topbar"><button type="button" class="admin-sidebar-toggle" id="sidebarToggle" aria-label="Menü öffnen"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button><div class="admin-topbar-right"><span data-lang-switcher-mount></span><span id="topbarUser"></span><button type="button" class="admin-logout-btn" id="logoutBtn" data-i18n="common.logout">Abmelden</button></div></header>
+<main class="admin-main finance-page"><div class="finance-masthead"><div><span class="finance-kicker" data-i18n="expenses.kicker">FINANZEN</span><h1 data-i18n="expenses.title">Ausgaben</h1><p data-i18n="expenses.subtitle">Digitales Kassenbuch, Belege und Partner-Auslagen.</p></div><a class="btn-send finance-primary" href="expense.html" data-i18n="expenses.add">+ Beleg erfassen</a></div>
+<nav class="finance-subnav" aria-label="Finanzbereich"><a class="active" href="expenses.html" data-i18n="expenses.overview">Übersicht</a><a href="partners.html" data-i18n="expenses.partners">Gesellschafter</a></nav>
+<section class="finance-summary" id="financeSummary" aria-live="polite"><div class="admin-loading-block" data-i18n="common.loading">Wird geladen …</div></section>
+<section class="finance-ledger"><div class="finance-ledger-head"><div><h2 data-i18n="expenses.ledger">Ausgabenjournal</h2><p id="expenseCount"></p></div><div class="finance-filters"><input id="expenseSearch" type="search" placeholder="Lieferant oder Nummer" data-i18n-placeholder="expenses.search"><input id="dateFrom" type="date"><input id="dateTo" type="date"><select id="statusFilter"><option value="" data-i18n="common.allStatuses">Alle Status</option><option value="draft" data-i18n="expenseEditor.draft">Entwurf</option><option value="reviewed" data-i18n="expenseEditor.reviewed">Geprüft</option><option value="paid" data-i18n="expenseEditor.paid">Bezahlt</option><option value="cancelled" data-i18n="expenses.cancel">Storniert</option></select></div></div><div id="expenseList" aria-live="polite"></div></section>
+</main></div></div></div>
+<script src="js/vendor/supabase.js"></script><script src="js/admin-config.js"></script><script src="js/admin-supabase-client.js"></script><script src="js/admin-auth.js"></script><script src="js/admin-ui.js"></script><script src="js/admin-expense-core.js"></script><script src="js/admin-expenses.js"></script>
+</body></html>

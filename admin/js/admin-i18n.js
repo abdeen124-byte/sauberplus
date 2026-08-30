@@ -58,7 +58,36 @@
         timeTracking: "Mitarbeiter & Zeiterfassung",
         activityLog: "Aktivitätsprotokoll",
         invoices: "Rechnungen",
+        expenses: "Ausgaben",
         settings: "Einstellungen"
+      },
+      expenses: {
+        kicker: "FINANZEN", title: "Ausgaben", subtitle: "Digitales Kassenbuch, Belege und Partner-Auslagen.", add: "+ Beleg erfassen",
+        overview: "Übersicht", partners: "Gesellschafter", ledger: "Ausgabenjournal", search: "Lieferant oder Nummer", income: "Einnahmen",
+        outgoing: "Ausgaben", result: "Ergebnis", openAdvances: "Offene Partner-Auslagen", entries: "Einträge", empty: "Keine Ausgaben gefunden.",
+        number: "Interne Nummer", status: "Status", receipt: "Beleg", finalize: "Als bezahlt buchen", finalized: "Entwurf wurde gebucht.", cancel: "Stornieren", cancelTitle: "Ausgabe stornieren", cancelMessage: "Die Ausgabe bleibt revisionssicher gespeichert.", cancelled: "Ausgabe storniert.", contributions: "Einzahlungen", reimbursements: "Erstattungen"
+      },
+      expenseEditor: {
+        back: "← Ausgaben", kicker: "SCHNELLERFASSUNG", title: "Beleg erfassen", subtitle: "Foto hochladen, Angaben prüfen, speichern.",
+        stepScan: "Beleg", stepExtract: "Auslesen", stepReview: "Prüfen", stepSave: "Speichern", capture: "Beleg fotografieren oder auswählen",
+        fileHint: "JPG, PNG, WebP oder PDF · max. 10 MB", privacy: "Der Beleg wird privat archiviert. Bilder werden lokal auf dem SauberPlus-Server gelesen und nicht an externe KI-Dienste gesendet.",
+        manual: "Angaben bitte manuell prüfen und ergänzen.", extracted: "Automatisch ausgelesen. Sicherheit:", supplier: "Lieferant", date: "Belegdatum",
+        category: "Kategorie", customCategory: "Eigene Kategorie", description: "Beschreibung", total: "Brutto", vat: "MwSt.", mixed: "Gemischt",
+        mixedHint: "Bruttobeträge je Steuersatz eingeben.", payment: "Zahlungsart", payer: "Bezahlt von", partner: "Gesellschafter",
+        more: "Mehr Details", documentNumber: "Belegnummer", notes: "Notiz", save: "Ausgabe speichern", invalidFile: "Ungültige Datei oder Datei größer als 10 MB.",
+        invalidMoney: "Bitte einen gültigen Betrag eingeben.", required: "Bitte alle Pflichtfelder ausfüllen.", duplicate: "Möglicherweise bereits erfasst:",
+        duplicateTitle: "Doppelten Beleg prüfen", saveAnyway: "Trotzdem speichern", saved: "Gespeichert:", openPdf: "PDF zur Prüfung öffnen",
+        net: "Netto", gross: "Brutto", companyAccount: "Firmenkonto", companyCash: "Firmenkasse", partnerPrivate: "Gesellschafter privat", other: "Sonstige",
+        card: "Karte", bankTransfer: "Überweisung", cash: "Bar", directDebit: "Lastschrift", unknown: "Unbekannt", paid: "Bezahlt", reviewed: "Geprüft", draft: "Entwurf"
+      },
+      partners: {
+        kicker: "GESELLSCHAFTERKONTO", title: "Einzahlungen & Auslagen", subtitle: "Beiträge und private Auslagen getrennt und nachvollziehbar führen.",
+        addContribution: "+ Einzahlung", openAdvances: "Offene Partner-Auslagen", openAdvancesHint: "Erstattungen ändern niemals die Einzahlungen.",
+        history: "Transaktionsverlauf", partner: "Gesellschafter", ofTarget: "von Ziel", privateAdvances: "Private Auslagen", openReimbursement: "Offen zur Erstattung",
+        target: "Einzahlungsziel", amount: "Betrag", noOpenAdvances: "Keine offenen Partner-Auslagen.", reimburse: "Erstatten", reimburseConfirm: "Vollständig per Überweisung erstatten:",
+        reimbursed: "Erstattung gespeichert.", contributionSaved: "Einzahlung gespeichert.", targetSaved: "Ziel gespeichert.", unknownDate: "Datum unbekannt",
+        opening: "Eröffnungsbestand", contribution: "Einzahlung", advance: "Private Auslage", reimbursement: "Erstattung", reversal: "Storno / Korrektur", adjustment: "Korrektur",
+        correct: "Korrigieren", correctConfirm: "Die Originalbuchung bleibt erhalten und wird durch eine Gegenbuchung korrigiert.", correctionNote: "Kontrollierte Korrektur", corrected: "Korrektur gespeichert."
       },
       role: {
         super_admin: "Super Admin",
@@ -535,7 +564,36 @@
         timeTracking: "الموظفون وتسجيل الوقت",
         activityLog: "سجل النشاط",
         invoices: "الفواتير",
+        expenses: "المصروفات",
         settings: "الإعدادات"
+      },
+      expenses: {
+        kicker: "المالية", title: "المصروفات", subtitle: "دفتر مصروفات رقمي، إيصالات ومصاريف الشركاء.", add: "+ تسجيل إيصال",
+        overview: "نظرة عامة", partners: "الشركاء", ledger: "سجل المصروفات", search: "المورّد أو الرقم", income: "الإيرادات",
+        outgoing: "المصروفات", result: "النتيجة", openAdvances: "مصاريف شركاء معلّقة", entries: "قيود", empty: "لا توجد مصروفات.",
+        number: "الرقم الداخلي", status: "الحالة", receipt: "الإيصال", finalize: "تسجيله كمدفوع", finalized: "تم تسجيل المسودة.", cancel: "إلغاء", cancelTitle: "إلغاء المصروف", cancelMessage: "يبقى المصروف محفوظًا للمراجعة.", cancelled: "تم إلغاء المصروف.", contributions: "المساهمات", reimbursements: "التعويضات"
+      },
+      expenseEditor: {
+        back: "← المصروفات", kicker: "إدخال سريع", title: "تسجيل إيصال", subtitle: "صوّر الإيصال، راجع البيانات، ثم احفظ.",
+        stepScan: "الإيصال", stepExtract: "القراءة", stepReview: "المراجعة", stepSave: "الحفظ", capture: "صوّر الإيصال أو اختر ملفًا",
+        fileHint: "JPG أو PNG أو WebP أو PDF · حتى 10 MB", privacy: "يُحفظ الإيصال بشكل خاص. تُقرأ الصور محليًا على خادم SauberPlus ولا تُرسل إلى خدمات ذكاء اصطناعي خارجية.",
+        manual: "يرجى مراجعة البيانات وإكمالها يدويًا.", extracted: "تمت القراءة الآلية. الثقة:", supplier: "المورّد", date: "تاريخ الإيصال",
+        category: "الفئة", customCategory: "فئة مخصصة", description: "الوصف", total: "الإجمالي", vat: "الضريبة", mixed: "مختلطة",
+        mixedHint: "أدخل الإجمالي لكل نسبة ضريبة.", payment: "طريقة الدفع", payer: "دفع بواسطة", partner: "الشريك",
+        more: "تفاصيل إضافية", documentNumber: "رقم الإيصال", notes: "ملاحظة", save: "حفظ المصروف", invalidFile: "ملف غير صالح أو أكبر من 10 MB.",
+        invalidMoney: "أدخل مبلغًا صحيحًا.", required: "أكمل الحقول المطلوبة.", duplicate: "قد يكون هذا الإيصال مسجلاً:",
+        duplicateTitle: "مراجعة التكرار", saveAnyway: "حفظ رغم ذلك", saved: "تم الحفظ:", openPdf: "فتح PDF للمراجعة",
+        net: "الصافي", gross: "الإجمالي", companyAccount: "حساب الشركة", companyCash: "صندوق الشركة", partnerPrivate: "دفعه شريك خاص", other: "أخرى",
+        card: "بطاقة", bankTransfer: "تحويل بنكي", cash: "نقدًا", directDebit: "خصم مباشر", unknown: "غير معروف", paid: "مدفوع", reviewed: "تمت المراجعة", draft: "مسودة"
+      },
+      partners: {
+        kicker: "حساب الشركاء", title: "المساهمات والمصاريف", subtitle: "فصل مساهمات الشركاء عن مصاريفهم الخاصة بوضوح.",
+        addContribution: "+ مساهمة", openAdvances: "مصاريف الشركاء المعلّقة", openAdvancesHint: "التعويضات لا تغيّر المساهمات.",
+        history: "سجل المعاملات", partner: "الشريك", ofTarget: "من الهدف", privateAdvances: "مصاريف خاصة", openReimbursement: "متبقي للتعويض",
+        target: "هدف المساهمة", amount: "المبلغ", noOpenAdvances: "لا توجد مصاريف شركاء معلّقة.", reimburse: "تعويض", reimburseConfirm: "تعويض كامل عبر التحويل:",
+        reimbursed: "تم حفظ التعويض.", contributionSaved: "تم حفظ المساهمة.", targetSaved: "تم حفظ الهدف.", unknownDate: "التاريخ غير معروف",
+        opening: "رصيد افتتاحي", contribution: "مساهمة", advance: "مصروف خاص", reimbursement: "تعويض", reversal: "إلغاء / تصحيح", adjustment: "تصحيح",
+        correct: "تصحيح", correctConfirm: "سيبقى القيد الأصلي محفوظًا ويُصحح بقيد عكسي.", correctionNote: "تصحيح مراقب", corrected: "تم حفظ التصحيح."
       },
       role: {
         super_admin: "المدير العام",

@@ -189,6 +189,32 @@
     markActiveNavLink();
   }
 
+  function ensureExpenseNavLink() {
+    var list = document.querySelector(".admin-nav-list");
+    if (!list || list.querySelector('a[href="expenses.html"]')) { return; }
+    ensureInvoiceNavLink();
+    var invoiceItem = list.querySelector('a[href="invoices.html"]');
+    var anchor = invoiceItem ? invoiceItem.closest("li") : null;
+    if (!anchor) {
+      var label = list.querySelector(".admin-nav-section-label");
+      anchor = label ? label.closest("li") : null;
+    }
+    if (!anchor) { return; }
+    var item = document.createElement("li");
+    item.setAttribute("data-role-gate", "super_admin");
+    item.innerHTML = '<a class="admin-nav-link" href="expenses.html">' +
+      '<span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h5M8 16h8"></path></svg></span>' +
+      '<span data-i18n="nav.expenses">Ausgaben</span></a>';
+    anchor.insertAdjacentElement("afterend", item);
+  }
+
+  function enableFinanceNavLinks() {
+    ensureInvoiceNavLink();
+    ensureExpenseNavLink();
+    if (window.AdminI18N && typeof window.AdminI18N.applyStaticTranslations === "function") { window.AdminI18N.applyStaticTranslations(); }
+    markActiveNavLink();
+  }
+
   function initSidebarToggle() {
     var toggle = document.querySelector(".admin-sidebar-toggle");
     var sidebar = document.querySelector(".admin-sidebar");
@@ -233,8 +259,8 @@
     }
 
     var current = window.location.pathname.split("/").pop() || "dashboard.html";
-    if (current === "invoices.html" || current === "invoice.html") {
-      enableInvoiceNavLink();
+    if (["invoices.html", "invoice.html", "expenses.html", "expense.html", "partners.html"].indexOf(current) >= 0) {
+      enableFinanceNavLinks();
       return;
     }
 
@@ -245,6 +271,9 @@
       if (!result.error) {
         enableInvoiceNavLink();
       }
+    });
+    window.AdminSupabase.getClient().from("expenses").select("id").limit(1).then(function (result) {
+      if (!result.error) { ensureExpenseNavLink(); enableFinanceNavLinks(); }
     });
   }
 
