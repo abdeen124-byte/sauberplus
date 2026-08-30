@@ -45,7 +45,7 @@
     renderPreview(file);
     try {
       var session = await state.client.auth.getSession();
-      var response = await fetch("https://api.sauberplus.plus/api/expense-extract", {
+      var response = await fetch("https://sauberplus.vercel.app/api/expense-extract", {
         method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.data.session.access_token },
         body: JSON.stringify({ receiptId: receipt.id })
       });
