@@ -59,6 +59,7 @@
         activityLog: "Aktivitätsprotokoll",
         invoices: "Rechnungen",
         expenses: "Ausgaben",
+        partners: "Gesellschafter",
         settings: "Einstellungen"
       },
       expenses: {
@@ -565,6 +566,7 @@
         activityLog: "سجل النشاط",
         invoices: "الفواتير",
         expenses: "المصروفات",
+        partners: "الشركاء",
         settings: "الإعدادات"
       },
       expenses: {

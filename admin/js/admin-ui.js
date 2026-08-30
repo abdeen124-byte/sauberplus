@@ -208,9 +208,25 @@
     anchor.insertAdjacentElement("afterend", item);
   }
 
+  function ensurePartnerNavLink() {
+    var list = document.querySelector(".admin-nav-list");
+    if (!list || list.querySelector('a[href="partners.html"]')) { return; }
+    ensureExpenseNavLink();
+    var expenseItem = list.querySelector('a[href="expenses.html"]');
+    var anchor = expenseItem ? expenseItem.closest("li") : null;
+    if (!anchor) { return; }
+    var item = document.createElement("li");
+    item.setAttribute("data-role-gate", "super_admin");
+    item.innerHTML = '<a class="admin-nav-link" href="partners.html">' +
+      '<span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM8 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16 13c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4ZM8 14c-2.33 0-7 1.17-7 3.5V20h5v-3c0-1.1.45-2.08 1.22-2.86A7.15 7.15 0 0 0 8 14Z"></path></svg></span>' +
+      '<span data-i18n="nav.partners">Gesellschafter</span></a>';
+    anchor.insertAdjacentElement("afterend", item);
+  }
+
   function enableFinanceNavLinks() {
     ensureInvoiceNavLink();
     ensureExpenseNavLink();
+    ensurePartnerNavLink();
     if (window.AdminI18N && typeof window.AdminI18N.applyStaticTranslations === "function") { window.AdminI18N.applyStaticTranslations(); }
     markActiveNavLink();
   }
