@@ -7,6 +7,7 @@ const baseUrl = (process.env.SMOKE_BASE_URL || "http://127.0.0.1:3000").replace(
 const projectRoot = path.resolve(__dirname, "..");
 const pages = [
   { path: "/", selector: "body" },
+  { path: "/reinigungsservice-solingen.html", selector: ".seo-main" },
   { path: "/admin/", selector: "#loginForm" },
   { path: "/admin/site-media.html", selector: "body" },
   { path: "/mitarbeiter/", selector: "#loginForm" }

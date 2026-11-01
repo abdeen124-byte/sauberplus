@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /mitarbeiter/
+Disallow: /api/
+Disallow: /supabase/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /mitarbeiter/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /mitarbeiter/
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+Disallow: /mitarbeiter/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /mitarbeiter/
+
+Sitemap: https://www.sauberplus.plus/sitemap.xml

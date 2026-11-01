@@ -1,0 +1,21 @@
+:root{--navy:#08172b;--navy-2:#0d2440;--blue:#2e6be6;--green:#2db34a;--ink:#172536;--muted:#5f7081;--paper:#f6f8f7;--line:#dce5e1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Inter",Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.65}
+a{color:inherit}
+.seo-nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px max(24px,calc((100vw - 1180px)/2));color:white;background:rgba(8,23,43,.96);backdrop-filter:blur(12px)}
+.seo-logo{text-decoration:none;font:900 24px/1 "Montserrat",sans-serif}.seo-logo span:first-child{color:#5591ff}.seo-logo span:last-child{color:var(--green)}
+.seo-nav-links{display:flex;align-items:center;gap:22px}.seo-nav-links a{text-decoration:none;font-size:14px;font-weight:700}.seo-nav-links .seo-cta{padding:11px 17px;border-radius:8px;background:var(--green);color:white}
+.seo-hero{color:white;background:linear-gradient(118deg,#102f78 0%,var(--navy) 56%,#083d27 100%)}
+.seo-hero-inner{max-width:1180px;margin:auto;padding:96px 24px 88px}.seo-eyebrow{margin:0 0 18px;color:#63df82;font-size:13px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.seo-hero h1{max-width:900px;margin:0;font:900 clamp(38px,6vw,72px)/1.06 "Montserrat",sans-serif;letter-spacing:-.04em}.seo-lead{max-width:760px;margin:26px 0 0;color:#d1d9e3;font-size:19px}
+.seo-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}.seo-button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 20px;border:1px solid rgba(255,255,255,.3);border-radius:8px;text-decoration:none;font-weight:900}.seo-button.primary{border-color:var(--green);background:var(--green)}
+.seo-main{max-width:1180px;margin:auto;padding:70px 24px 90px}.seo-intro{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:64px;align-items:start}.seo-main h2{margin:0 0 18px;font:900 clamp(28px,4vw,44px)/1.12 "Montserrat",sans-serif;letter-spacing:-.03em}.seo-main h3{margin:0 0 10px;font:800 22px/1.25 "Montserrat",sans-serif}.seo-main p{color:var(--muted)}
+.seo-fact{padding:28px;border-left:4px solid var(--green);background:white;box-shadow:0 12px 34px rgba(13,36,64,.08)}.seo-fact strong{display:block;margin-bottom:8px;color:var(--navy)}
+.seo-services{margin-top:76px;border-top:1px solid var(--line)}.seo-service{display:grid;grid-template-columns:210px minmax(0,1fr);gap:48px;padding:48px 0;border-bottom:1px solid var(--line);scroll-margin-top:92px}.seo-service-index{color:var(--green);font:900 54px/1 "Montserrat",sans-serif}.seo-service ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 30px;margin:22px 0 0;padding:0;list-style:none}.seo-service li{position:relative;padding-left:19px;color:#415466}.seo-service li:before{content:"";position:absolute;left:0;top:.72em;width:7px;height:7px;border-radius:50%;background:var(--green)}
+.seo-process{margin-top:76px;padding:48px;background:var(--navy);color:white}.seo-process h2{color:white}.seo-process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}.seo-step span{color:#63df82;font-weight:900}.seo-step p{color:#c5d0dc}
+.seo-faq{margin-top:76px}.seo-faq details{padding:22px 0;border-bottom:1px solid var(--line)}.seo-faq summary{cursor:pointer;font-size:18px;font-weight:800}.seo-faq details p{max-width:850px}
+.seo-bottom{margin-top:76px;padding:46px;background:#e9f5ee;border:1px solid #cbe3d4}.seo-bottom p{max-width:760px}.seo-address{font-style:normal;color:#385043}
+.seo-footer{padding:32px 24px;color:#bcc9d4;background:var(--navy);text-align:center}.seo-footer a{margin:0 10px}
+@media(max-width:760px){.seo-nav{padding:15px 18px}.seo-nav-links>a:not(.seo-cta){display:none}.seo-hero-inner{padding:70px 20px 64px}.seo-lead{font-size:17px}.seo-main{padding:54px 20px 70px}.seo-intro,.seo-service{grid-template-columns:1fr;gap:20px}.seo-service-index{font-size:36px}.seo-service ul{grid-template-columns:1fr}.seo-process{padding:34px 24px}.seo-process-grid{grid-template-columns:1fr}.seo-bottom{padding:30px 24px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
