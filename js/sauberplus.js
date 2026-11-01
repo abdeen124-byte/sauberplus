@@ -351,9 +351,9 @@
     countersStarted = true;
 
     [
-      ["c2", 5, 300],
-      ["c3", 5, 300],
-      ["c4", 10, 150]
+      ["c2", 11, 120, ""],
+      ["c3", 5, 300, "+"],
+      ["c4", 10, 150, "+"]
     ].forEach(function (item) {
       var element = getElement(item[0]);
       var target = item[1];
@@ -370,7 +370,7 @@
           clearInterval(timer);
         }
 
-        element.textContent = value + "+";
+        element.textContent = value + item[3];
       }, speed);
     });
   }
