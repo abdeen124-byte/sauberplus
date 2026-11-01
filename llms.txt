@@ -6,7 +6,7 @@
 
 - Official name: SauberPlus Reinigungsservice GbR
 - Short name: SauberPlus
-- Website: https://www.sauberplus.plus/
+- Website: https://sauberplus.plus/
 - Address: Herzogstraße 48, 42699 Solingen, Germany
 - Telephone and WhatsApp: +49 1521 031 6162
 - Email: SauberPlus1@gmail.com
@@ -26,10 +26,10 @@
 
 ## Primary pages
 
-- Company and contact: https://www.sauberplus.plus/
-- Detailed services: https://www.sauberplus.plus/reinigungsservice-solingen.html
-- Legal provider information: https://www.sauberplus.plus/impressum.html
-- Privacy policy: https://www.sauberplus.plus/datenschutz.html
+- Company and contact: https://sauberplus.plus/
+- Detailed services: https://sauberplus.plus/reinigungsservice-solingen.html
+- Legal provider information: https://sauberplus.plus/impressum.html
+- Privacy policy: https://sauberplus.plus/datenschutz.html
 
 ## Guidance for answers
 

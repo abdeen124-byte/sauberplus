@@ -18,16 +18,16 @@ const sitemap = read("sitemap.xml");
 const llms = read("llms.txt");
 const indexNowKey = read("b6d87a26f1524ea89b21876839f46b91.txt").trim();
 
-assert.match(home, /rel="canonical" href="https:\/\/www\.sauberplus\.plus\/"/);
+assert.match(home, /rel="canonical" href="https:\/\/sauberplus\.plus\/"/);
 assert.match(home, /SauberPlus Reinigungsservice GbR/);
 assert.match(home, /reinigungsservice-solingen\.html/);
-assert.match(service, /rel="canonical" href="https:\/\/www\.sauberplus\.plus\/reinigungsservice-solingen\.html"/);
+assert.match(service, /rel="canonical" href="https:\/\/sauberplus\.plus\/reinigungsservice-solingen\.html"/);
 assert.match(service, /FAQPage/);
 assert.match(service, /Gebäudereinigung in Solingen/);
 assert.match(robots, /User-agent: OAI-SearchBot\s+Allow: \//);
 assert.match(robots, /Disallow: \/admin\//);
-assert.match(robots, /Sitemap: https:\/\/www\.sauberplus\.plus\/sitemap\.xml/);
-assert.match(sitemap, /<loc>https:\/\/www\.sauberplus\.plus\/reinigungsservice-solingen\.html<\/loc>/);
+assert.match(robots, /Sitemap: https:\/\/sauberplus\.plus\/sitemap\.xml/);
+assert.match(sitemap, /<loc>https:\/\/sauberplus\.plus\/reinigungsservice-solingen\.html<\/loc>/);
 assert.match(llms, /Do not invent ratings, certifications, prices, customer counts or guarantees/);
 assert.equal(indexNowKey, "b6d87a26f1524ea89b21876839f46b91");
 

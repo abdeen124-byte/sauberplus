@@ -28,4 +28,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /mitarbeiter/
 
-Sitemap: https://www.sauberplus.plus/sitemap.xml
+Sitemap: https://sauberplus.plus/sitemap.xml
