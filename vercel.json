@@ -10,13 +10,13 @@
   },
   "headers": [
     {
-      "source": "/admin/(.*)",
+      "source": "/admin/:path*",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
       ]
     },
     {
-      "source": "/mitarbeiter/(.*)",
+      "source": "/mitarbeiter/:path*",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }
       ]
