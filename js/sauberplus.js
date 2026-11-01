@@ -3,6 +3,10 @@
   var formType = "inquiry";
   var starRating = 0;
   var countersStarted = false;
+  var experienceCounterStarted = false;
+  var experienceTypingStarted = false;
+  var experienceTypingDelay = null;
+  var experienceTypingTimer = null;
   var visitorCounterFailed = false;
   var visitorSessionCookieName = "sp_visitor_session";
   var formLimits = {
@@ -233,6 +237,10 @@
       }
     });
 
+    if (experienceTypingStarted) {
+      finishExperienceTyping(language);
+    }
+
     document.querySelectorAll("select option").forEach(function (option) {
       var translatedText = option.getAttribute("data-" + language);
       if (translatedText) {
@@ -367,6 +375,98 @@
     });
   }
 
+  function runExperienceCounter() {
+    var element = getElement("experienceValue");
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var target;
+    var startedAt;
+
+    if (!element || experienceCounterStarted) return;
+
+    experienceCounterStarted = true;
+    target = Number(element.getAttribute("data-target")) || 5;
+
+    if (reduceMotion || typeof window.requestAnimationFrame !== "function") {
+      element.textContent = target;
+      return;
+    }
+
+    element.textContent = "0";
+
+    function update(timestamp) {
+      if (!startedAt) startedAt = timestamp;
+
+      var progress = Math.min((timestamp - startedAt) / 850, 1);
+      var easedProgress = 1 - Math.pow(1 - progress, 3);
+
+      element.textContent = Math.min(target, Math.floor(easedProgress * (target + 1)));
+
+      if (progress < 1) {
+        window.requestAnimationFrame(update);
+      } else {
+        element.textContent = target;
+      }
+    }
+
+    window.requestAnimationFrame(update);
+  }
+
+  function finishExperienceTyping(language) {
+    var element = document.querySelector(".experience-copy strong");
+
+    if (experienceTypingDelay) {
+      clearTimeout(experienceTypingDelay);
+      experienceTypingDelay = null;
+    }
+
+    if (experienceTypingTimer) {
+      clearInterval(experienceTypingTimer);
+      experienceTypingTimer = null;
+    }
+
+    if (!element) return;
+
+    element.classList.remove("is-typing");
+    element.textContent = element.getAttribute("data-" + language) || element.textContent;
+  }
+
+  function runExperienceTyping() {
+    var element = document.querySelector(".experience-copy strong");
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var targetText;
+    var characters;
+    var characterIndex = 0;
+
+    if (!element || experienceTypingStarted) return;
+
+    experienceTypingStarted = true;
+    targetText = element.textContent.trim();
+
+    if (reduceMotion) {
+      element.textContent = targetText;
+      return;
+    }
+
+    characters = Array.from(targetText);
+    element.textContent = "";
+
+    experienceTypingDelay = setTimeout(function () {
+      experienceTypingDelay = null;
+      element.classList.add("is-typing");
+
+      experienceTypingTimer = setInterval(function () {
+        characterIndex += 1;
+        element.textContent = characters.slice(0, characterIndex).join("");
+
+        if (characterIndex >= characters.length) {
+          clearInterval(experienceTypingTimer);
+          experienceTypingTimer = null;
+          element.classList.remove("is-typing");
+        }
+      }, 34);
+    }, 260);
+  }
+
   function initializeRevealAnimations() {
     var revealElements = document.querySelectorAll(".rv,.rv-l,.rv-r");
     var statsElement = document.querySelector(".hero-stats");
@@ -392,6 +492,10 @@
       new IntersectionObserver(function (entries, observer) {
         if (entries[0] && entries[0].isIntersecting) {
           element.classList.add("on");
+          if (element.querySelector("#experienceValue")) {
+            runExperienceCounter();
+            runExperienceTyping();
+          }
           observer.disconnect();
         }
       }, { threshold: 0.1 }).observe(element);
