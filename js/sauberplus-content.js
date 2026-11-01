@@ -88,6 +88,61 @@
     return config.supabaseUrl + "/storage/v1/object/public/cms-media/" + path;
   }
 
+  function siteMediaPublicUrl(path) {
+    return config.supabaseUrl + "/storage/v1/object/public/site-media/" + path;
+  }
+
+  function localized(row, field) {
+    var lang = document.documentElement.lang || "de";
+    return row[field + "_" + lang] || row[field + "_de"] || "";
+  }
+
+  function initLeadershipProfiles() {
+    restFetch("leadership_profiles?select=*&hidden=eq.false&order=sort_order.asc").then(function (rows) {
+      if (!rows.length) return;
+      var carousel = document.querySelector("[data-leadership-carousel]");
+      if (!carousel) return;
+      var stage = carousel.querySelector(".leadership-stage");
+      stage.innerHTML = "";
+      rows.forEach(function (row, index) {
+        var slide = document.createElement("article");
+        slide.className = "leadership-slide" + (index === 0 ? " is-active" : "");
+        slide.setAttribute("data-leadership-slide", "");
+        slide.setAttribute("aria-hidden", String(index !== 0));
+        slide.innerHTML = '<div class="leadership-photo-wrap"><img class="leadership-photo" loading="lazy" alt=""></div><div class="leadership-content"><p class="leadership-kicker"></p><h3></h3><p class="leadership-role"></p><div class="leadership-rule"></div><p class="leadership-description"></p></div>';
+        var img = slide.querySelector("img"); img.src = siteMediaPublicUrl(row.image_path); img.alt = row.image_alt || row.name;
+        slide.querySelector(".leadership-kicker").textContent = localized(row, "kicker");
+        slide.querySelector("h3").textContent = row.name;
+        slide.querySelector(".leadership-role").textContent = localized(row, "role");
+        slide.querySelector(".leadership-description").textContent = localized(row, "description");
+        stage.appendChild(slide);
+      });
+      var controls = carousel.querySelector(".leadership-pagination");
+      controls.innerHTML = rows.map(function (_, index) { return '<button class="leadership-dot'+(index===0?' is-active':'')+'" type="button" role="tab" aria-selected="'+(index===0)+'" data-leadership-go="'+index+'"><span>'+(index+1)+'</span></button>'; }).join("");
+      var replacement = carousel.cloneNode(true);
+      carousel.replaceWith(replacement);
+      if (window.initializeLeadershipCarousel) window.initializeLeadershipCarousel();
+    }).catch(function () {});
+  }
+
+  function initManagedSiteMedia() {
+    restFetch("site_media?select=*&hidden=eq.false&order=sort_order.asc").then(function (rows) {
+      var vehicle = rows.find(function (row) { return row.placement === "service_vehicle"; });
+      if (vehicle) {
+        var picture = document.querySelector(".servicewagen-visual picture");
+        if (picture) picture.innerHTML = '<img loading="lazy" decoding="async" alt="SauberPlus Servicefahrzeug" src="'+siteMediaPublicUrl(vehicle.media_path)+'">';
+      }
+      var hero = rows.find(function (row) { return row.placement === "hero"; });
+      var heroSection = document.querySelector(".hero");
+      if (hero && heroSection) {
+        var mount = document.createElement("div"); mount.className = "hero-managed-media";
+        if (hero.media_type === "video") mount.innerHTML = '<video muted playsinline '+(hero.autoplay?'autoplay ':'')+(hero.loop?'loop ':'')+'preload="metadata" '+(hero.poster_path?'poster="'+siteMediaPublicUrl(hero.poster_path)+'"':'')+'><source src="'+siteMediaPublicUrl(hero.media_path)+'"></video>';
+        else mount.innerHTML = '<img alt="'+localized(hero,"alt").replace(/"/g,"&quot;")+'" src="'+siteMediaPublicUrl(hero.media_path)+'">';
+        heroSection.prepend(mount);
+      }
+    }).catch(function () {});
+  }
+
   function countdownLabels() {
     var language = document.documentElement.lang || "de";
     if (language === "ar") {
@@ -462,5 +517,7 @@
   if (isConfigured()) {
     initAnnouncements();
     initGallery();
+    initLeadershipProfiles();
+    initManagedSiteMedia();
   }
 })();

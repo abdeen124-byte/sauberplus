@@ -114,6 +114,17 @@
         <div class="employee-today-meta"><span class="employee-status-badge" id="todayShiftStatus" data-i18n="status.none">Keine aktive Zeit</span><strong id="todayHours">00:00</strong><span data-i18n="today.hours">heute erfasst</span></div>
       </section>
 
+      <section class="employee-live-card" id="liveSessionCard" aria-labelledby="liveSessionTitle" hidden>
+        <div class="employee-live-copy"><p data-i18n="live.kicker">LIVE-ZEITERFASSUNG</p><h2 id="liveSessionTitle" data-i18n="live.title">Aktive Arbeitszeit</h2><span id="liveSessionSite"></span></div>
+        <strong class="employee-live-timer" id="liveSessionTimer" aria-live="off">00:00:00</strong>
+        <div class="employee-live-actions">
+          <button type="button" class="employee-live-button" id="pauseSessionButton" data-action="pause" data-i18n="live.pause">Pause</button>
+          <button type="button" class="employee-live-button" id="resumeSessionButton" data-action="resume" data-i18n="live.resume" hidden>Fortsetzen</button>
+          <button type="button" class="employee-live-button danger" id="endSessionButton" data-action="end" data-i18n="live.end">Beenden</button>
+        </div>
+        <p class="employee-live-feedback" id="liveSessionFeedback" role="status" aria-live="polite"></p>
+      </section>
+
       <section class="employee-summary" aria-labelledby="summaryHeading">
         <p data-i18n="summary.kicker">MEINE ZEITERFASSUNG</p>
         <div class="employee-summary-row">
@@ -136,7 +147,7 @@
           <label class="employee-field" for="workNote"><span><span data-i18n="form.note">Bemerkung</span> <small data-i18n="form.optional">(optional)</small></span><textarea id="workNote" name="workNote" maxlength="1000" rows="4" data-i18n-placeholder="form.notePlaceholder" placeholder="z. B. Vertretung, Sonderreinigung oder Zugangshinweis"></textarea></label>
           <fieldset class="employee-signature-field">
             <div class="employee-signature-heading"><div><legend data-i18n="form.signature">Unterschrift des Mitarbeiters</legend><p data-i18n="form.signatureHint">Unterschreiben Sie mit dem Finger oder der Maus im Feld.</p></div><button class="employee-clear-signature" id="clearSignatureButton" type="button" disabled data-i18n="form.clear">Löschen</button></div>
-            <div class="employee-signature-canvas-wrap"><canvas id="signatureCanvas" aria-label="Unterschriftsfeld"></canvas><span id="signaturePlaceholder" data-i18n="form.signHere">Hier unterschreiben</span></div>
+            <div class="employee-signature-canvas-wrap"><canvas id="signatureCanvas" aria-label="Unterschriftsfeld" data-i18n-aria-label="form.signatureField"></canvas><span id="signaturePlaceholder" data-i18n="form.signHere">Hier unterschreiben</span></div>
           </fieldset>
           <label class="employee-confirmation" for="confirmEntry"><input type="checkbox" id="confirmEntry" name="confirmEntry"><span data-i18n="form.confirm">Ich bestätige, dass die Angaben vollständig und richtig sind und dass die Unterschrift von mir stammt.</span></label>
           <div class="employee-form-feedback" id="formFeedback" role="status" aria-live="polite"></div>

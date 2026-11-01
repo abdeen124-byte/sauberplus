@@ -534,7 +534,7 @@ begin
     insert into public.partner_financial_profiles(display_name,created_by,updated_by) values(btrim(v_partner->>'display_name'),v_actor,v_actor) returning id into v_profile;
     if (v_partner->>'opening_cents')::bigint>0 then
       insert into public.partner_transactions(partner_id,transaction_type,amount_cents,transaction_date,date_precision,payment_method,note,created_by)
-      values(v_profile,'opening_contribution',(v_partner->>'opening_cents')::bigint,null,'unknown_opening','unknown','Eröffnungsbestand / Import',v_actor);
+      values(v_profile,'opening_contribution',(v_partner->>'opening_cents')::bigint,null,'unknown_opening',null,'Eröffnungsbestand / Import',v_actor);
     end if;
     v_count:=v_count+1;
   end loop;

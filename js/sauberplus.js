@@ -743,11 +743,127 @@
     });
   }
 
+  function initializeLeadershipCarousel() {
+    var carousel = document.querySelector("[data-leadership-carousel]");
+    if (!carousel) return;
+
+    var slides = Array.from(carousel.querySelectorAll("[data-leadership-slide]"));
+    var tabs = Array.from(carousel.querySelectorAll("[data-leadership-go]"));
+    var previousButton = carousel.querySelector("[data-leadership-prev]");
+    var nextButton = carousel.querySelector("[data-leadership-next]");
+    var progress = carousel.querySelector(".leadership-progress span");
+    var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var activeIndex = 0;
+    var rotationTimer = null;
+    var isOrbiting = false;
+
+    function restartProgress() {
+      if (!progress || prefersReducedMotion.matches) return;
+      progress.style.animation = "none";
+      void progress.offsetWidth;
+      progress.style.animation = "";
+    }
+
+    function showSlide(nextIndex, direction) {
+      var targetIndex = (nextIndex + slides.length) % slides.length;
+      if (targetIndex === activeIndex || isOrbiting) return;
+
+      var outgoingSlide = slides[activeIndex];
+      var incomingSlide = slides[targetIndex];
+      var orbitDirection = direction || 1;
+      isOrbiting = true;
+
+      outgoingSlide.classList.add("is-orbiting");
+      outgoingSlide.classList.remove("is-active");
+      incomingSlide.classList.add("is-active");
+      activeIndex = targetIndex;
+
+      slides.forEach(function (slide, index) {
+        var isActive = index === activeIndex;
+        slide.setAttribute("aria-hidden", String(!isActive));
+      });
+      tabs.forEach(function (tab, index) {
+        var isActive = index === activeIndex;
+        tab.classList.toggle("is-active", isActive);
+        tab.setAttribute("aria-selected", String(isActive));
+      });
+
+      if (!prefersReducedMotion.matches && outgoingSlide.animate && incomingSlide.animate) {
+        outgoingSlide.animate([
+          { opacity: 1, transform: "rotateY(0deg) scale(1)" },
+          { opacity: .92, offset: .72, transform: "rotateY(" + (58 * orbitDirection) + "deg) scale(.975)" },
+          { opacity: 0, transform: "rotateY(" + (88 * orbitDirection) + "deg) scale(.96)" }
+        ], { duration: 460, easing: "cubic-bezier(.55,.02,.72,.42)", fill: "both" });
+        incomingSlide.animate([
+          { opacity: 0, transform: "rotateY(" + (-88 * orbitDirection) + "deg) scale(.96)" },
+          { opacity: .92, offset: .28, transform: "rotateY(" + (-58 * orbitDirection) + "deg) scale(.975)" },
+          { opacity: 1, transform: "rotateY(0deg) scale(1)" }
+        ], { duration: 460, delay: 440, easing: "cubic-bezier(.2,.58,.28,1)", fill: "both" });
+        window.setTimeout(function () {
+          outgoingSlide.classList.remove("is-orbiting");
+          outgoingSlide.getAnimations().forEach(function (animation) { animation.cancel(); });
+          incomingSlide.getAnimations().forEach(function (animation) { animation.cancel(); });
+          isOrbiting = false;
+        }, 920);
+      } else {
+        outgoingSlide.classList.remove("is-orbiting");
+        isOrbiting = false;
+      }
+      restartProgress();
+    }
+
+    function stopRotation() {
+      if (rotationTimer) window.clearInterval(rotationTimer);
+      rotationTimer = null;
+      carousel.classList.add("is-paused");
+    }
+
+    function startRotation() {
+      stopRotation();
+      carousel.classList.remove("is-paused");
+      if (prefersReducedMotion.matches) return;
+      rotationTimer = window.setInterval(function () {
+        showSlide(activeIndex + 1, 1);
+      }, 7000);
+    }
+
+    previousButton.addEventListener("click", function () {
+      showSlide(activeIndex - 1, -1);
+      startRotation();
+    });
+    nextButton.addEventListener("click", function () {
+      showSlide(activeIndex + 1, 1);
+      startRotation();
+    });
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var targetIndex = Number(tab.getAttribute("data-leadership-go"));
+        showSlide(targetIndex, targetIndex > activeIndex ? 1 : -1);
+        startRotation();
+      });
+    });
+    carousel.addEventListener("mouseenter", function () {
+      showSlide(activeIndex + 1, 1);
+      startRotation();
+    });
+    carousel.addEventListener("focusin", stopRotation);
+    carousel.addEventListener("focusout", function (event) {
+      if (!carousel.contains(event.relatedTarget)) startRotation();
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stopRotation();
+      else startRotation();
+    });
+    prefersReducedMotion.addEventListener("change", startRotation);
+    startRotation();
+  }
+
   window.setLang = setLang;
   window.toggleLanguageMenu = toggleLanguageMenu;
   window.pickType = pickType;
   window.rateStar = rateStar;
   window.doSend = doSend;
+  window.initializeLeadershipCarousel = initializeLeadershipCarousel;
 
   initializeBubbles();
   initializeNavbar();
@@ -756,4 +872,5 @@
   initializeRevealAnimations();
   initializeSmoothScroll();
   initializeKeyboardRating();
+  initializeLeadershipCarousel();
 })();

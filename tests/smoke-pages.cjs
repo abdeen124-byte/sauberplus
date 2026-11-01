@@ -8,6 +8,7 @@ const projectRoot = path.resolve(__dirname, "..");
 const pages = [
   { path: "/", selector: "body" },
   { path: "/admin/", selector: "#loginForm" },
+  { path: "/admin/site-media.html", selector: "body" },
   { path: "/mitarbeiter/", selector: "#loginForm" }
 ];
 const viewports = [

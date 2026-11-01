@@ -263,6 +263,16 @@
     });
   }
 
+  function ensureSiteMediaNavLink() {
+    var list = document.querySelector(".admin-nav-list");
+    if (!list || list.querySelector('a[href="site-media.html"]')) return;
+    var galleryItem = list.querySelector('a[href="gallery.html"]');
+    if (!galleryItem) return;
+    var item = document.createElement("li");
+    item.innerHTML = '<a class="admin-nav-link" href="site-media.html"><span class="admin-nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 15 3-3 3 3 2-2 3 3"></path><circle cx="16.5" cy="8.5" r="1.5"></circle></svg></span><span data-i18n="nav.siteMedia">Website-Medien</span></a>';
+    galleryItem.closest("li").insertAdjacentElement("afterend", item);
+  }
+
   /** Hides any element marked data-role-gate="super_admin" unless role matches. */
   function applyRoleGatedNav(role) {
     document.querySelectorAll('[data-role-gate="super_admin"]').forEach(function (el) {
@@ -293,6 +303,8 @@
     });
   }
 
+  ensureSiteMediaNavLink();
+  if (window.AdminI18N && typeof window.AdminI18N.applyStaticTranslations === "function") window.AdminI18N.applyStaticTranslations();
   initSidebarToggle();
   markActiveNavLink();
 

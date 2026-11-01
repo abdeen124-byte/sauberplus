@@ -24,8 +24,9 @@
       var percentageText = percentage === null ? t("partners.states.no_target") : percentage + "%";
       var targetText = hasTarget ? core.formatMoney(targetCents, lang()) : "—";
       var remainingText = remainingCents === null ? "—" : core.formatMoney(remainingCents, lang());
-      var actionText = hasTarget ? t("common.save") : t("partners.setTarget");
-      return '<article class="partner-account" data-state="' + financialState + '" data-partner-name="' + esc(partnerName(item)) + '"><header><div><span>' + esc(t("partners.partner")) + '</span><h2>' + esc(partnerName(item)) + '</h2></div></header><div class="partner-balance-layout"><div class="partner-money"><span>' + esc(t("partners.paid")) + '</span><strong>' + esc(core.formatMoney(paidCents, lang())) + '</strong></div><div class="partner-ring-stack"><div class="partner-status-ring" style="--partner-progress:' + ringProgress + '" role="img" aria-label="' + esc(t("partners.percentage") + ': ' + percentageText + '. ' + stateText(financialState)) + '"><span>' + esc(percentageText) + '</span></div><b class="partner-status-badge">' + esc(stateText(financialState)) + '</b></div></div><dl class="partner-facts"><div><dt>' + esc(t("partners.target")) + '</dt><dd>' + esc(targetText) + '</dd></div><div><dt>' + esc(t("partners.remaining")) + '</dt><dd>' + esc(remainingText) + '</dd></div><div><dt>' + esc(t("partners.percentage")) + '</dt><dd>' + esc(percentageText) + '</dd></div></dl><form class="partner-target" data-target-form="' + item.partner_id + '"><label>' + esc(t("partners.target")) + '<input inputmode="decimal" value="' + (hasTarget ? (targetCents / 100).toFixed(2).replace(".", ",") : "") + '" placeholder="—"></label><button class="btn-secondary" type="submit">' + esc(actionText) + "</button></form></article>";
+      var actionText = hasTarget ? t("partners.changeTarget") : t("partners.setTarget");
+      var removeAction = hasTarget ? '<button class="btn-secondary partner-target-remove" type="button" data-target-remove="' + item.partner_id + '">' + esc(t("partners.removeTarget")) + '</button>' : "";
+      return '<article class="partner-account" data-state="' + financialState + '" data-partner-name="' + esc(partnerName(item)) + '"><header><div><span>' + esc(t("partners.partner")) + '</span><h2>' + esc(partnerName(item)) + '</h2></div></header><div class="partner-balance-layout"><div class="partner-money"><span>' + esc(t("partners.paid")) + '</span><strong>' + esc(core.formatMoney(paidCents, lang())) + '</strong></div><div class="partner-ring-stack"><div class="partner-status-ring" style="--partner-progress:' + ringProgress + '" role="img" aria-label="' + esc(t("partners.percentage") + ': ' + percentageText + '. ' + stateText(financialState)) + '"><span>' + esc(percentageText) + '</span></div><b class="partner-status-badge">' + esc(stateText(financialState)) + '</b></div></div><dl class="partner-facts"><div><dt>' + esc(t("partners.target")) + '</dt><dd>' + esc(targetText) + '</dd></div><div><dt>' + esc(t("partners.remaining")) + '</dt><dd>' + esc(remainingText) + '</dd></div><div><dt>' + esc(t("partners.percentage")) + '</dt><dd>' + esc(percentageText) + '</dd></div></dl><div class="partner-target-actions"><button class="btn-secondary" type="button" data-target-edit="' + item.partner_id + '">' + esc(actionText) + '</button>' + removeAction + '</div></article>';
     }).join("");
   }
   function openAmounts() {
@@ -57,7 +58,45 @@
   }
   byId("openContribution").addEventListener("click", function () { byId("contributionDate").value = core.isoToday(); window.AdminUI.openModal(byId("contributionModal")); });
   byId("contributionForm").addEventListener("submit", async function (event) { event.preventDefault(); try { var result = await state.client.rpc("add_partner_contribution", { p_partner_id: byId("contributionPartner").value, p_amount_cents: core.parseMoney(byId("contributionAmount").value), p_date: byId("contributionDate").value, p_payment_method: byId("contributionPayment").value, p_note: byId("contributionNote").value, p_proof_receipt_id: null }); if (result.error) throw result.error; window.AdminUI.closeModal(byId("contributionModal")); event.target.reset(); window.AdminUI.toast(t("partners.contributionSaved"), "success"); await load(); } catch (error) { window.AdminUI.toast(error.message, "error"); } });
-  byId("partnerSummary").addEventListener("submit", async function (event) { var form = event.target.closest("[data-target-form]"); if (!form) return; event.preventDefault(); try { var input = form.querySelector("input"); var result = await state.client.rpc("set_partner_target", { p_partner_id: form.dataset.targetForm, p_target_cents: input.value.trim() ? core.parseMoney(input.value) : null }); if (result.error) throw result.error; window.AdminUI.toast(t("partners.targetSaved"), "success"); await load(); } catch (error) { window.AdminUI.toast(error.message, "error"); } });
+  function profileFor(partnerId) { return state.profileById[String(partnerId)] || null; }
+  function openTargetEditor(partnerId) {
+    var profile = profileFor(partnerId);
+    if (!profile) { return; }
+    var targetCents = Number(profile.target_cents);
+    var hasTarget = Number.isFinite(targetCents) && targetCents > 0;
+    var form = byId("partnerTargetForm");
+    form.dataset.partnerId = partnerId;
+    byId("partnerTargetModalTitle").textContent = hasTarget ? t("partners.changeTarget") : t("partners.setTarget");
+    byId("partnerTargetName").textContent = profile.display_name;
+    byId("partnerTargetAmount").value = hasTarget ? (targetCents / 100).toFixed(2).replace(".", ",") : "";
+    window.AdminUI.openModal(byId("partnerTargetModal"));
+    window.setTimeout(function () { byId("partnerTargetAmount").focus(); }, 0);
+  }
+  async function savePartnerTarget(partnerId, targetCents) {
+    var result = await state.client.rpc("set_partner_target", { p_partner_id: partnerId, p_target_cents: targetCents });
+    if (result.error) { throw result.error; }
+    await load();
+  }
+  byId("partnerSummary").addEventListener("click", async function (event) {
+    var editButton = event.target.closest("[data-target-edit]");
+    if (editButton) { openTargetEditor(editButton.dataset.targetEdit); return; }
+    var removeButton = event.target.closest("[data-target-remove]");
+    if (!removeButton) { return; }
+    var profile = profileFor(removeButton.dataset.targetRemove);
+    var confirmed = await window.AdminUI.confirmDialog({ title: t("partners.removeTarget"), message: t("partners.removeTargetConfirm") + " " + (profile ? profile.display_name : ""), danger: true });
+    if (!confirmed) { return; }
+    try { await savePartnerTarget(removeButton.dataset.targetRemove, null); window.AdminUI.toast(t("partners.targetRemoved"), "success"); } catch (error) { window.AdminUI.toast(error.message, "error"); }
+  });
+  byId("partnerTargetForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    try {
+      var targetCents = core.parseMoney(byId("partnerTargetAmount").value);
+      if (targetCents <= 0) { throw new Error(t("partners.targetMustBePositive")); }
+      await savePartnerTarget(event.target.dataset.partnerId, targetCents);
+      window.AdminUI.closeModal(byId("partnerTargetModal"));
+      window.AdminUI.toast(t("partners.targetSaved"), "success");
+    } catch (error) { window.AdminUI.toast(error.message === "INVALID_MONEY" ? t("expenseEditor.invalidMoney") : error.message, "error"); }
+  });
   byId("advanceList").addEventListener("click", async function (event) { var button = event.target.closest("[data-reimburse]"); if (!button) return; var ok = await window.AdminUI.confirmDialog({ title: t("partners.reimburse"), message: t("partners.reimburseConfirm") + " " + core.formatMoney(Number(button.dataset.amount), lang()) }); if (!ok) return; var result = await state.client.rpc("reimburse_partner_expense", { p_expense_id: button.dataset.reimburse, p_amount_cents: Number(button.dataset.amount), p_date: core.isoToday(), p_payment_method: "bank_transfer", p_note: "", p_proof_receipt_id: null }); if (result.error) return window.AdminUI.toast(result.error.message, "error"); window.AdminUI.toast(t("partners.reimbursed"), "success"); load().catch(function (e) { window.AdminUI.toast(e.message, "error"); }); });
   byId("partnerHistory").addEventListener("click", async function (event) { var button = event.target.closest("[data-reverse]"); if (!button) return; var ok = await window.AdminUI.confirmDialog({ title: t("partners.correct"), message: t("partners.correctConfirm"), danger: true }); if (!ok) return; var result = await state.client.rpc("reverse_partner_transaction", { p_transaction_id: button.dataset.reverse, p_date: core.isoToday(), p_note: t("partners.correctionNote") }); if (result.error) return window.AdminUI.toast(result.error.message, "error"); window.AdminUI.toast(t("partners.corrected"), "success"); load().catch(function (e) { window.AdminUI.toast(e.message, "error"); }); });
   byId("logoutBtn").addEventListener("click", function () { window.AdminAuth.signOut().then(function () { window.location.href = "index.html"; }); });

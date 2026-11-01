@@ -72,6 +72,9 @@ requireMatch(employeeJs, /rpc\("get_time_summary"/, "Employee monthly total must
 requireMatch(employeeJs, /p_signature_data_url: signatureDataUrl/, "Employee signature must be submitted through the RPC");
 requireMatch(employeeJs, /crypto\.randomUUID/, "Employee submissions must carry unique idempotency IDs");
 requireMatch(employeeJs, /server_now/, "The employee timer must synchronize with server time");
+requireMatch(employeeJs, /entry_status \|\| activeTimeState\.status/, "Employee live status must use the RPC entry_status field");
+requireMatch(employeeJs, /setInterval\(updateLiveTimer, 1000\)/, "Employee live timer must update every second");
+requireMatch(employeeJs, /record_time_event/, "Employee live controls must use the transactional time event RPC");
 requireMatch(employeeJs, /document\.documentElement\.dir = currentLanguage === "ar" \? "rtl" : "ltr"/, "Arabic must switch the employee portal to RTL");
 requireMatch(employeeHtml, /id="inviteView"[\s\S]*id="invitePassword"[\s\S]*id="invitePasswordConfirm"/, "Employee invitations must include a password setup view");
 requireMatch(employeeJs, /auth\.updateUser\(\{ password: password \}\)/, "Employee invitation passwords must be persisted through Supabase Auth");

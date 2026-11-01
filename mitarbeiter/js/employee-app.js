@@ -41,6 +41,7 @@
       "today.noShiftDetail": "Für heute ist kein Einsatzort hinterlegt.",
       "today.activeDetail": "Aktive Zeiterfassung an diesem Einsatzort.",
       "today.shiftDetail": "Geplante Arbeitszeit",
+      "live.kicker": "LIVE-ZEITERFASSUNG", "live.title": "Aktive Arbeitszeit", "live.pause": "Pause", "live.resume": "Fortsetzen", "live.end": "Beenden", "live.error": "Die Aktion konnte nicht gespeichert werden. Bitte erneut versuchen.",
       "summary.kicker": "MEINE ZEITERFASSUNG",
       "summary.title": "Arbeitszeiten klar erfassen.",
       "summary.copy": "Wählen Sie Ihren Einsatzort, tragen Sie Ihre Schicht ein und reichen Sie sie direkt ein.",
@@ -60,6 +61,7 @@
       "form.optional": "(optional)",
       "form.notePlaceholder": "z. B. Vertretung, Sonderreinigung oder Zugangshinweis",
       "form.signature": "Unterschrift des Mitarbeiters",
+      "form.signatureField": "Unterschriftsfeld",
       "form.signatureHint": "Unterschreiben Sie mit dem Finger oder der Maus im Feld.",
       "form.clear": "Löschen",
       "form.signHere": "Hier unterschreiben",
@@ -116,8 +118,9 @@
       "app.greeting": "Good day",
       "app.install": "Install app",
       "today.kicker": "TODAY", "today.loading": "Loading shift", "today.hours": "recorded today", "today.noShift": "No shift planned", "today.noShiftDetail": "No work site is scheduled for today.", "today.activeDetail": "Active time tracking at this work site.", "today.shiftDetail": "Scheduled working time",
+      "live.kicker": "LIVE TIME TRACKING", "live.title": "Active working time", "live.pause": "Pause", "live.resume": "Resume", "live.end": "End", "live.error": "The action could not be saved. Please try again.",
       "summary.kicker": "MY TIME TRACKING", "summary.title": "Record working hours clearly.", "summary.copy": "Choose your work site, enter your shift and submit it directly.", "summary.action": "Enter hours",
-      "form.title": "Record new working time", "form.copy": "Complete your times at the end of each shift.", "form.date": "Date", "form.site": "Work site", "form.sitePlaceholder": "Choose a site", "form.start": "Start", "form.end": "End", "form.break": "Break in minutes", "form.estimated": "Estimated working time:", "form.completeTimes": "Complete the time fields", "form.overnight": "Overnight shifts are supported.", "form.note": "Note", "form.optional": "(optional)", "form.notePlaceholder": "e.g. cover shift, special cleaning or access note", "form.signature": "Employee signature", "form.signatureHint": "Sign in the field with your finger or mouse.", "form.clear": "Clear", "form.signHere": "Sign here", "form.confirm": "I confirm that the information is complete and correct and that this is my signature.", "form.submit": "Sign & submit",
+      "form.title": "Record new working time", "form.copy": "Complete your times at the end of each shift.", "form.date": "Date", "form.site": "Work site", "form.sitePlaceholder": "Choose a site", "form.start": "Start", "form.end": "End", "form.break": "Break in minutes", "form.estimated": "Estimated working time:", "form.completeTimes": "Complete the time fields", "form.overnight": "Overnight shifts are supported.", "form.note": "Note", "form.optional": "(optional)", "form.notePlaceholder": "e.g. cover shift, special cleaning or access note", "form.signature": "Employee signature", "form.signatureField": "Signature field", "form.signatureHint": "Sign in the field with your finger or mouse.", "form.clear": "Clear", "form.signHere": "Sign here", "form.confirm": "I confirm that the information is complete and correct and that this is my signature.", "form.submit": "Sign & submit",
       "stats.month": "THIS MONTH", "stats.monthHelp": "recorded working time", "stats.active": "IN PROGRESS", "stats.activeHelp": "running or paused entries", "stats.completed": "COMPLETED", "stats.completedHelp": "entries this month",
       "recent.title": "Latest entries", "recent.copy": "Your most recently recorded working hours.", "recent.empty": "No entry yet. Start with your first shift.",
       "contact.title": "Important for your shift", "contact.copy": "Record the start, end and break in full. Check your details before submitting.", "contact.questions": "Questions:",
@@ -135,8 +138,9 @@
       "app.greeting": "مرحبًا",
       "app.install": "تثبيت التطبيق",
       "today.kicker": "اليوم", "today.loading": "جارٍ تحميل الوردية", "today.hours": "مسجّل اليوم", "today.noShift": "لا توجد وردية مجدولة", "today.noShiftDetail": "لا يوجد موقع عمل مجدول لليوم.", "today.activeDetail": "تسجيل الوقت نشط في موقع العمل هذا.", "today.shiftDetail": "وقت العمل المجدول",
+      "live.kicker": "تسجيل الوقت المباشر", "live.title": "وقت عمل نشط", "live.pause": "إيقاف مؤقت", "live.resume": "متابعة", "live.end": "إنهاء", "live.error": "تعذر حفظ الإجراء. حاول مرة أخرى.",
       "summary.kicker": "تسجيل ساعاتي", "summary.title": "سجّل ساعات العمل بوضوح.", "summary.copy": "اختر موقع العمل، أدخل فترة عملك ثم أرسلها مباشرة.", "summary.action": "تسجيل الساعات",
-      "form.title": "تسجيل ساعات عمل جديدة", "form.copy": "أدخل الأوقات كاملة بعد نهاية كل فترة عمل.", "form.date": "التاريخ", "form.site": "موقع العمل", "form.sitePlaceholder": "اختر الموقع", "form.start": "البداية", "form.end": "النهاية", "form.break": "الاستراحة بالدقائق", "form.estimated": "ساعات العمل المتوقعة:", "form.completeTimes": "أكمل حقول الوقت", "form.overnight": "فترات العمل الليلية مدعومة.", "form.note": "الملاحظة", "form.optional": "(اختياري)", "form.notePlaceholder": "مثال: مناوبة بديلة أو تنظيف خاص أو ملاحظة دخول", "form.signature": "توقيع الموظف", "form.signatureHint": "وقّع داخل الحقل بالإصبع أو الماوس.", "form.clear": "مسح", "form.signHere": "وقّع هنا", "form.confirm": "أؤكد أن البيانات المدخلة كاملة وصحيحة وأن هذا التوقيع يعود إليّ.", "form.submit": "التوقيع والإرسال",
+      "form.title": "تسجيل ساعات عمل جديدة", "form.copy": "أدخل الأوقات كاملة بعد نهاية كل فترة عمل.", "form.date": "التاريخ", "form.site": "موقع العمل", "form.sitePlaceholder": "اختر الموقع", "form.start": "البداية", "form.end": "النهاية", "form.break": "الاستراحة بالدقائق", "form.estimated": "ساعات العمل المتوقعة:", "form.completeTimes": "أكمل حقول الوقت", "form.overnight": "فترات العمل الليلية مدعومة.", "form.note": "الملاحظة", "form.optional": "(اختياري)", "form.notePlaceholder": "مثال: مناوبة بديلة أو تنظيف خاص أو ملاحظة دخول", "form.signature": "توقيع الموظف", "form.signatureField": "حقل التوقيع", "form.signatureHint": "وقّع داخل الحقل بالإصبع أو الماوس.", "form.clear": "مسح", "form.signHere": "وقّع هنا", "form.confirm": "أؤكد أن البيانات المدخلة كاملة وصحيحة وأن هذا التوقيع يعود إليّ.", "form.submit": "التوقيع والإرسال",
       "stats.month": "هذا الشهر", "stats.monthHelp": "ساعات العمل المسجلة", "stats.active": "قيد التنفيذ", "stats.activeHelp": "إدخالات جارية أو متوقفة", "stats.completed": "مكتملة", "stats.completedHelp": "إدخالات هذا الشهر",
       "recent.title": "أحدث المشاركات", "recent.copy": "أحدث ساعات العمل التي سجلتها.", "recent.empty": "لا توجد مشاركات بعد. ابدأ بأول فترة عمل.",
       "contact.title": "مهم لفترة عملك", "contact.copy": "سجّل البداية والنهاية والاستراحة بالكامل، وراجع بياناتك قبل الإرسال.", "contact.questions": "للاستفسار:",
@@ -168,6 +172,8 @@
   var pendingSubmissionId = null;
   var inviteFlow = readAuthFlowType() === "invite";
   var deferredInstallPrompt = null;
+  var liveTimerInterval = null;
+  var liveActionPending = false;
 
   document.addEventListener("DOMContentLoaded", initialize);
   registerServiceWorker();
@@ -188,7 +194,8 @@
       "startTime", "endTime", "breakMinutes", "durationPreview", "workNote", "signatureCanvas",
       "signaturePlaceholder", "clearSignatureButton", "confirmEntry", "formFeedback", "submitTimeButton",
       "monthHours", "activeEntries", "completedEntries", "recentEntries", "inviteForm", "invitePassword",
-      "invitePasswordConfirm", "inviteButton", "inviteError"
+      "invitePasswordConfirm", "inviteButton", "inviteError", "liveSessionCard", "liveSessionTitle",
+      "liveSessionSite", "liveSessionTimer", "pauseSessionButton", "resumeSessionButton", "endSessionButton", "liveSessionFeedback"
     ].forEach(function (id) { elements[id] = document.getElementById(id); });
   }
 
@@ -215,6 +222,9 @@
     elements.timeEntryForm.addEventListener("input", updateSubmitAvailability);
     elements.timeEntryForm.addEventListener("submit", submitTimeEntry);
     elements.clearSignatureButton.addEventListener("click", clearSignature);
+    elements.pauseSessionButton.addEventListener("click", function () { runLiveAction("pause"); });
+    elements.resumeSessionButton.addEventListener("click", function () { runLiveAction("resume"); });
+    elements.endSessionButton.addEventListener("click", function () { runLiveAction("end"); });
     initializeSignaturePad();
   }
 
@@ -446,6 +456,7 @@
       elements.completedEntries.textContent = String(monthStatuses.filter(function (entry) { return entry.status === "completed"; }).length);
       renderAvailableSites();
       renderTodayOverview();
+      renderLiveSession();
       renderRecentEntries();
       renderDuration();
       if (activeTimeState) showGlobalAlert(t("error.activeSession"), "");
@@ -506,7 +517,7 @@
     elements.todayHours.textContent = formatDuration(todaySeconds);
 
     if (activeTimeState) {
-      status = activeTimeState.status === "paused" ? "paused" : "working";
+      status = getActiveStatus() === "paused" ? "paused" : "working";
       elements.todayShiftHeading.textContent = activeSite ? activeSite.name : t("form.site");
       elements.todayShiftDetail.textContent = t("today.activeDetail");
     } else if (scheduledShift) {
@@ -520,6 +531,59 @@
 
     elements.todayShiftStatus.setAttribute("data-status", status);
     elements.todayShiftStatus.textContent = t("status." + status);
+  }
+
+  function getActiveStatus() {
+    return activeTimeState ? (activeTimeState.entry_status || activeTimeState.status || "working") : "none";
+  }
+
+  function renderLiveSession() {
+    window.clearInterval(liveTimerInterval);
+    liveTimerInterval = null;
+    elements.liveSessionCard.hidden = !activeTimeState;
+    if (!activeTimeState) return;
+    var site = workSites.find(function (candidate) { return candidate.id === activeTimeState.work_site_id; });
+    var paused = getActiveStatus() === "paused";
+    elements.liveSessionSite.textContent = site ? site.name : t("form.site");
+    elements.pauseSessionButton.hidden = paused;
+    elements.resumeSessionButton.hidden = !paused;
+    [elements.pauseSessionButton, elements.resumeSessionButton, elements.endSessionButton].forEach(function (button) {
+      button.disabled = liveActionPending;
+    });
+    updateLiveTimer();
+    liveTimerInterval = window.setInterval(updateLiveTimer, 1000);
+  }
+
+  function updateLiveTimer() {
+    if (!activeTimeState) return;
+    var seconds = toSafeSeconds(activeTimeState.worked_seconds);
+    if (getActiveStatus() === "working" && activeTimeState.server_now) {
+      seconds += Math.max(0, Math.floor((getServerNowMs() - Date.parse(activeTimeState.server_now)) / 1000));
+    }
+    elements.liveSessionTimer.textContent = formatClock(seconds);
+  }
+
+  async function runLiveAction(action) {
+    if (!activeTimeState || liveActionPending) return;
+    liveActionPending = true;
+    elements.liveSessionFeedback.textContent = "";
+    renderLiveSession();
+    try {
+      var result = await client.rpc("record_time_event", {
+        p_action: action,
+        p_request_id: createRequestId(),
+        p_work_site_id: null,
+        p_shift_id: null,
+        p_note: null
+      });
+      if (result.error) throw result.error;
+      await refreshPortal({ keepAlert: action !== "end" });
+    } catch (error) {
+      elements.liveSessionFeedback.textContent = t("live.error");
+    } finally {
+      liveActionPending = false;
+      renderLiveSession();
+    }
   }
 
   function renderRecentEntries() {
@@ -760,6 +824,9 @@
     document.querySelectorAll("[data-i18n-placeholder]").forEach(function (element) {
       element.placeholder = t(element.getAttribute("data-i18n-placeholder"));
     });
+    document.querySelectorAll("[data-i18n-aria-label]").forEach(function (element) {
+      element.setAttribute("aria-label", t(element.getAttribute("data-i18n-aria-label")));
+    });
     document.querySelectorAll("[data-language]").forEach(function (button) {
       button.setAttribute("aria-pressed", String(button.getAttribute("data-language") === currentLanguage));
     });
@@ -789,6 +856,9 @@
   }
 
   function resetEmployeeState() {
+    window.clearInterval(liveTimerInterval);
+    liveTimerInterval = null;
+    liveActionPending = false;
     activeProfile = null;
     activeEmployee = null;
     activeTimeState = null;
@@ -857,6 +927,11 @@
   function formatDuration(secondsValue) {
     var totalMinutes = Math.floor(toSafeSeconds(secondsValue) / 60);
     return padNumber(Math.floor(totalMinutes / 60)) + ":" + padNumber(totalMinutes % 60);
+  }
+
+  function formatClock(secondsValue) {
+    var total = toSafeSeconds(secondsValue);
+    return padNumber(Math.floor(total / 3600)) + ":" + padNumber(Math.floor(total / 60) % 60) + ":" + padNumber(total % 60);
   }
 
   function formatMinutes(minutes) { return padNumber(Math.floor(minutes / 60)) + ":" + padNumber(minutes % 60); }

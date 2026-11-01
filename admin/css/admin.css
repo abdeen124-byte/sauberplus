@@ -49,7 +49,10 @@ html[dir=rtl] .finance-page,html[dir=rtl] .receipt-form{text-align:right}html[di
 .partner-facts div:first-child{border-inline-start:0!important}
 .partner-facts dt{font-size:10px!important;letter-spacing:.05em;text-transform:uppercase}
 .partner-facts dd{font-size:14px;font-variant-numeric:tabular-nums}
-.partner-target{padding-top:2px}
+.partner-target-actions{display:flex;flex-wrap:wrap;gap:8px;padding-top:2px}
+.partner-target-actions .btn-secondary{min-height:43px}
+.partner-target-remove{color:#ffb2a9}
+.partner-target-modal-name{margin:0 0 18px;color:#fff;font:800 16px/1.3 Montserrat,Cairo,sans-serif}
 @media(max-width:680px){.partner-balance-layout{gap:14px;margin:20px 0}.partner-ring-stack{flex-basis:94px}.partner-status-ring{width:94px;height:94px;font-size:21px}.partner-status-badge{max-width:94px}.partner-account h2{font-size:20px}.partner-money strong{font-size:30px}.partner-facts div{padding:11px 8px!important}.partner-facts dd{font-size:13px}}
 
 /* ---------- Login screen ---------- */

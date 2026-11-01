@@ -4232,12 +4232,17 @@ $$;
 
 create or replace function public.set_partner_target(p_partner_id uuid,p_target_cents bigint default null)
 returns public.partner_financial_profiles language plpgsql security definer set search_path=public,pg_temp as $$
-declare v_actor uuid:=(select auth.uid()); v_profile public.partner_financial_profiles%rowtype;
+declare v_actor uuid:=(select auth.uid()); v_previous public.partner_financial_profiles%rowtype; v_profile public.partner_financial_profiles%rowtype; v_action text;
 begin
   if not public.is_super_admin() then raise exception using errcode='42501',message='Super Admin access is required.'; end if;
-  if p_target_cents is not null and p_target_cents not between 0 and 999999999999 then raise exception using errcode='22023',message='Invalid contribution target.'; end if;
-  update public.partner_financial_profiles set target_cents=p_target_cents,updated_by=v_actor where id=p_partner_id returning * into v_profile;
+  if p_partner_id is null or (p_target_cents is not null and p_target_cents not between 0 and 999999999999) then raise exception using errcode='22023',message='Invalid contribution target.'; end if;
+  select * into v_previous from public.partner_financial_profiles where id=p_partner_id for update;
   if not found then raise exception using errcode='P0002',message='Partner not found.'; end if;
+  if v_previous.target_cents is not distinct from p_target_cents then return v_previous; end if;
+  update public.partner_financial_profiles set target_cents=p_target_cents,updated_by=v_actor where id=p_partner_id returning * into v_profile;
+  v_action := case when p_target_cents is null then 'partner_target_removed' when v_previous.target_cents is null then 'partner_target_set' else 'partner_target_changed' end;
+  insert into public.activity_log(actor_user_id,actor_email,action,entity_type,entity_id,previous_value,new_value)
+  values(v_actor,(select email from public.user_profiles where id=v_actor),v_action,'partner_financial_profiles',v_profile.id::text,jsonb_build_object('target_cents',v_previous.target_cents),jsonb_build_object('target_cents',v_profile.target_cents,'partner_id',v_profile.id));
   return v_profile;
 end;
 $$;
@@ -4306,7 +4311,7 @@ begin
     insert into public.partner_financial_profiles(display_name,created_by,updated_by) values(btrim(v_partner->>'display_name'),v_actor,v_actor) returning id into v_profile;
     if (v_partner->>'opening_cents')::bigint>0 then
       insert into public.partner_transactions(partner_id,transaction_type,amount_cents,transaction_date,date_precision,payment_method,note,created_by)
-      values(v_profile,'opening_contribution',(v_partner->>'opening_cents')::bigint,null,'unknown_opening','unknown','Eröffnungsbestand / Import',v_actor);
+      values(v_profile,'opening_contribution',(v_partner->>'opening_cents')::bigint,null,'unknown_opening',null,'Eröffnungsbestand / Import',v_actor);
     end if;
     v_count:=v_count+1;
   end loop;
@@ -4344,6 +4349,51 @@ grant execute on function public.partner_financial_summary() to authenticated;
 grant execute on function public.financial_overview(date,date) to authenticated;
 grant execute on function public.bootstrap_partner_finances(jsonb) to service_role;
 
+-- Website media CMS (see 20261101000100_site_media_cms.sql)
+create table public.leadership_profiles (
+  id uuid primary key default gen_random_uuid(), name text not null check(char_length(name) between 2 and 120),
+  kicker_de text not null default '', kicker_en text not null default '', kicker_ar text not null default '',
+  role_de text not null, role_en text not null default '', role_ar text not null default '',
+  description_de text not null default '', description_en text not null default '', description_ar text not null default '',
+  image_path text not null check(char_length(image_path) between 1 and 500), image_alt text not null default '',
+  hidden boolean not null default false, sort_order integer not null default 1000,
+  created_by uuid references public.user_profiles(id), updated_by uuid references public.user_profiles(id),
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now()
+);
+create table public.site_media (
+  id uuid primary key default gen_random_uuid(), placement text not null check(placement in('hero','service_vehicle')),
+  media_type text not null check(media_type in('image','animated_image','video')),
+  media_path text not null check(char_length(media_path) between 1 and 500), poster_path text check(poster_path is null or char_length(poster_path) between 1 and 500),
+  alt_de text not null default '', alt_en text not null default '', alt_ar text not null default '', hidden boolean not null default false,
+  autoplay boolean not null default true, loop boolean not null default true, duration_ms integer not null default 7000 check(duration_ms between 2000 and 30000),
+  sort_order integer not null default 1000, created_by uuid references public.user_profiles(id), updated_by uuid references public.user_profiles(id),
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now(),
+  constraint site_media_placement_type_check check(placement='hero' or (placement='service_vehicle' and media_type='image')),
+  constraint site_media_video_poster_check check(media_type='video' or poster_path is null)
+);
+create trigger leadership_profiles_activity_log after insert or update or delete on public.leadership_profiles for each row execute function public.trg_log_content_change();
+create trigger site_media_activity_log after insert or update or delete on public.site_media for each row execute function public.trg_log_content_change();
+create trigger leadership_profiles_touch_updated_at before update on public.leadership_profiles for each row execute function public.trg_touch_updated_at();
+create trigger site_media_touch_updated_at before update on public.site_media for each row execute function public.trg_touch_updated_at();
+alter table public.leadership_profiles enable row level security; alter table public.site_media enable row level security;
+grant select on public.leadership_profiles,public.site_media to anon,authenticated; grant insert,update,delete on public.leadership_profiles,public.site_media to authenticated;
+create policy leadership_profiles_public_read on public.leadership_profiles for select to anon,authenticated using(hidden=false);
+create policy leadership_profiles_staff_read on public.leadership_profiles for select to authenticated using(public.is_staff());
+create policy leadership_profiles_staff_insert on public.leadership_profiles for insert to authenticated with check(public.is_staff());
+create policy leadership_profiles_staff_update on public.leadership_profiles for update to authenticated using(public.is_staff()) with check(public.is_staff());
+create policy leadership_profiles_staff_delete on public.leadership_profiles for delete to authenticated using(public.is_staff());
+create policy site_media_public_read on public.site_media for select to anon,authenticated using(hidden=false);
+create policy site_media_staff_read on public.site_media for select to authenticated using(public.is_staff());
+create policy site_media_staff_insert on public.site_media for insert to authenticated with check(public.is_staff());
+create policy site_media_staff_update on public.site_media for update to authenticated using(public.is_staff()) with check(public.is_staff());
+create policy site_media_staff_delete on public.site_media for delete to authenticated using(public.is_staff());
+create index leadership_profiles_sort_order_idx on public.leadership_profiles(sort_order); create index site_media_placement_sort_order_idx on public.site_media(placement,sort_order);
+insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) values('site-media','site-media',true,31457280,array['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm']) on conflict(id) do update set public=excluded.public,file_size_limit=excluded.file_size_limit,allowed_mime_types=excluded.allowed_mime_types;
+create policy site_media_storage_staff_read on storage.objects for select to authenticated using(bucket_id='site-media' and public.is_staff());
+create policy site_media_storage_staff_insert on storage.objects for insert to authenticated with check(bucket_id='site-media' and public.is_staff());
+create policy site_media_storage_staff_update on storage.objects for update to authenticated using(bucket_id='site-media' and public.is_staff()) with check(bucket_id='site-media' and public.is_staff());
+create policy site_media_storage_staff_delete on storage.objects for delete to authenticated using(bucket_id='site-media' and public.is_staff());
+
 alter table public.expense_categories enable row level security;
 alter table public.partner_financial_profiles enable row level security;
 alter table public.expense_number_sequences enable row level security;
@@ -4368,3 +4418,39 @@ create policy expense_receipts_super_admin_read_storage on storage.objects for s
 using(bucket_id='expense-receipts' and public.expense_receipt_path_is_allowed(name));
 create policy expense_receipts_super_admin_insert_storage on storage.objects for insert to authenticated
 with check(bucket_id='expense-receipts' and public.expense_receipt_path_is_allowed(name));
+
+alter table public.partner_transactions alter column payment_method drop not null;
+alter table public.partner_transactions drop constraint if exists partner_transactions_amount_cents_check;
+alter table public.partner_transactions add constraint partner_transactions_amount_cents_check check (
+  amount_cents between 0 and 999999999999 and (amount_cents > 0 or transaction_type = 'opening_contribution')
+);
+alter table public.partner_transactions drop constraint if exists partner_transactions_payment_method_check;
+alter table public.partner_transactions add constraint partner_transactions_payment_method_check check (
+  (transaction_type = 'opening_contribution' and payment_method is null)
+  or (transaction_type <> 'opening_contribution' and payment_method in ('bank_transfer', 'cash', 'card', 'direct_debit', 'other', 'unknown'))
+);
+create unique index if not exists partner_transactions_one_opening_idx on public.partner_transactions (partner_id)
+where transaction_type = 'opening_contribution' and reverses_transaction_id is null;
+
+create or replace function public.set_partner_opening_balance(p_partner_id uuid, p_amount_cents bigint, p_note text default 'Opening balance')
+returns jsonb language plpgsql security definer set search_path=public,pg_temp as $$
+declare v_actor uuid := (select auth.uid()); v_existing public.partner_transactions%rowtype; v_transaction public.partner_transactions%rowtype;
+begin
+  if not public.is_super_admin() then raise exception using errcode='42501',message='Super Admin access is required.'; end if;
+  if p_partner_id is null or p_amount_cents not between 0 and 999999999999 or char_length(coalesce(p_note,''))>1000 then raise exception using errcode='22023',message='Invalid opening balance.'; end if;
+  perform 1 from public.partner_financial_profiles where id=p_partner_id and active for update;
+  if not found then raise exception using errcode='P0002',message='Partner not found.'; end if;
+  select * into v_existing from public.partner_transactions where partner_id=p_partner_id and transaction_type='opening_contribution' and reverses_transaction_id is null for share;
+  if found then
+    if v_existing.amount_cents<>p_amount_cents then raise exception using errcode='55000',message='Opening balance already exists; use a controlled correction.'; end if;
+    return jsonb_build_object('partner_id',p_partner_id,'amount_cents',v_existing.amount_cents,'transaction_id',v_existing.id,'created_at',v_existing.created_at,'created_by',v_existing.created_by,'idempotent',true);
+  end if;
+  insert into public.partner_transactions(partner_id,transaction_type,amount_cents,transaction_date,date_precision,payment_method,note,created_by)
+  values(p_partner_id,'opening_contribution',p_amount_cents,null,'unknown_opening',null,coalesce(p_note,'Opening balance'),v_actor) returning * into v_transaction;
+  insert into public.activity_log(actor_user_id,actor_email,action,entity_type,entity_id,new_value)
+  values(v_actor,(select email from public.user_profiles where id=v_actor),'opening_balance_set','partner_transactions',v_transaction.id::text,jsonb_build_object('partner_id',p_partner_id,'amount_cents',p_amount_cents,'transaction_type','opening_contribution'));
+  return jsonb_build_object('partner_id',p_partner_id,'amount_cents',v_transaction.amount_cents,'transaction_id',v_transaction.id,'created_at',v_transaction.created_at,'created_by',v_transaction.created_by,'idempotent',false);
+end;
+$$;
+revoke all on function public.set_partner_opening_balance(uuid,bigint,text) from public,anon,authenticated;
+grant execute on function public.set_partner_opening_balance(uuid,bigint,text) to authenticated;

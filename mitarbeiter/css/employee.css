@@ -286,6 +286,18 @@ html[dir="rtl"] .employee-page-heading h1 { font-family: "Cairo", sans-serif; le
 .employee-install-button:focus-visible { outline: 3px solid rgba(22, 167, 101, 0.28); outline-offset: 2px; }
 
 .employee-today-card { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-block-end: 16px; padding: 18px 19px; border: 1px solid #cfe1d7; border-radius: 15px; background: #fff; box-shadow: 0 8px 20px rgba(11, 41, 72, 0.05); }
+.employee-live-card { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:14px 24px; margin-block-end:16px; padding:18px 20px; border:1px solid #bfd8cc; border-radius:14px; background:#f6fbf8; box-shadow:0 8px 18px rgba(11,41,72,.05); }
+.employee-live-card[hidden] { display:none; }
+.employee-live-copy p { margin:0 0 5px; color:var(--employee-green); font-size:10px; font-weight:900; letter-spacing:.08em; }
+.employee-live-copy h2 { margin:0; font-family:"Montserrat",sans-serif; font-size:17px; }
+.employee-live-copy span { display:block; margin-top:5px; color:var(--employee-muted); font-size:11px; }
+.employee-live-timer { font-family:"Montserrat",sans-serif; color:var(--employee-navy); font-size:clamp(26px,5vw,38px); font-variant-numeric:tabular-nums; letter-spacing:-.04em; }
+.employee-live-actions { display:flex; flex-wrap:wrap; gap:8px; }
+.employee-live-button { min-height:38px; padding:8px 14px; border:1px solid #a9c9ba; border-radius:8px; background:#fff; color:#165d42; font-size:12px; font-weight:800; cursor:pointer; }
+.employee-live-button:hover:not(:disabled) { border-color:var(--employee-green); }
+.employee-live-button.danger { border-color:#e9b7b7; color:#9d3030; }
+.employee-live-button:disabled { cursor:wait; opacity:.55; }
+.employee-live-feedback { min-height:16px; margin:0; color:var(--employee-danger); font-size:11px; text-align:end; }
 .employee-today-card p { margin: 0; }
 .employee-today-card > div:first-child > p:first-child { color: var(--employee-green); font-size: 10px; font-weight: 800; letter-spacing: 0.13em; }
 .employee-today-card h2 { margin: 5px 0 4px; font-family: "Montserrat", sans-serif; font-size: 17px; letter-spacing: -0.02em; }
@@ -425,6 +437,9 @@ html[dir="rtl"] input[type="number"] { direction: rtl; }
   .employee-page-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
   .employee-install-button { margin-block-start: 0; }
   .employee-today-card { align-items: flex-start; }
+  .employee-live-card { grid-template-columns:1fr; }
+  .employee-live-timer { grid-row:2; }
+  .employee-live-feedback { text-align:start; }
   .employee-summary { padding: 19px; border-radius: 16px; }
   .employee-summary-row { align-items: stretch; flex-direction: column; gap: 18px; }
   .employee-summary-action { width: 100%; }
